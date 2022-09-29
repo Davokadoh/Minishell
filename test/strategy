@@ -1,0 +1,24 @@
+1.	Prompt
+	1.1 Readline
+	1.2 Check <<delimiter
+2.	Lexer
+	2.0 Check if quotes are closed
+	2.1 Split around quotes
+	2.2 ft_split(" ")
+	2.3 ft_split("|<&>")
+	2.4 BONUS: Check doubles && || + ()
+3.	Expander
+	3.1 Replace $X
+	3.2 BONUS: Replace *
+4.	Parser
+	4.1 Create a cmdlist
+5.	Executor
+	5.1 Expand $?
+	5.2 Apply redirections
+	5.3 Strip quotes
+	5.4 Pipex || Builtins
+
+free readline's buffer if leak
+
+Does still not handle signals
+use signalaction, as signal is deprecated

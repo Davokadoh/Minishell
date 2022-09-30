@@ -2,7 +2,7 @@
 
 ## Aussi mignon qu’un vrai shell
 
-## From [Davokadoh](https://github.com/Davokadoh) and [BlaiseK](https://github.com/blaisek)
+## Auteurs [Davokadoh](https://github.com/Davokadoh) and [BlaiseK](https://github.com/blaisek)
 
 ## Fonctions externes autorises
 ![Fonctions externes](https://github.com/blaisek/Minishell/blob/main/Fonctions%20externes.png)

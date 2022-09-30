@@ -6,10 +6,12 @@ var=salut
 var="Salut, ceci est un $test"
 test=coucou
 echo $var
+//"Salut, ceci est un "
 
 test=coucou
 var="Salut, ceci est un $test"
 echo $var
+//"Salut, ceci est un coucou"
 
 cat file1 | <file2 cat
 //Only prints file2

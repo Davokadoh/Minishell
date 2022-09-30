@@ -39,11 +39,11 @@ void	pipex(t_cmd *cmds)
 
 	create_pipes();
 	i = -1;
-	while (cmds[i])
+	while (cmds[0][i])
 	{
-		expand_errno(cmds[i]);
+		expand_errno(cmds[0][i]);
 		strip_quotes(tokens); //Warning: Don't remove quotes inside quotes
-		execute(cmds[i]);
+		execute(cmds[0][i]);
 	}
 }
 */
@@ -61,35 +61,48 @@ struct	s_cmd
 
 char	*ft_strinsert(const char *str1, const char *str2, int start, int end)
 {
+	char	*ptr;
 	char	*new_str;
 
-	new_str = ft_substr(str1, 0, start - 2);
+	new_str = ft_substr(str1, 0, start);
+	ptr = new_str;
 	new_str = ft_strjoin(new_str, str2);
+	ft_free(ptr);
+	ptr = new_str;
 	new_str = ft_strjoin(new_str, &str1[end]);
+	ft_free(ptr);
 	//ft_free(str1);
 	//ft_free(str2);
 	return (new_str);
 }
 
-void	expand(const char *str)
+int	get_var_end(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && str[i] != ' ' && str[i] != '$' && str[i] != '"')
+		i++;
+	return (i);
+}
+
+
+char	*expand(char **str)
 {
 	int		i;
 	char	*var;
-	char	*new_str;
 
 	i = -1;
-	while (str[++i])
+	while (str[0][++i])
 	{
-		if (str[i] == '$' && str[i + 1] != '?')
+		if (str[0][i] == '$' && str[0][i + 1] != '?')
 		{
-			var = ft_strtrim(str, "$");
-			printf("%s\n", var);
-			new_str = ft_strinsert(str, getenv(var), i, i + ft_strlen(var));
-			printf("%s\n", new_str);
+			var = ft_substr(*str, i + 1, get_var_end(&str[0][i + 1]));
+			*str = ft_strinsert(*str, getenv(var), i, i + ft_strlen(var) + 1);
 			ft_free(var);
 		}
 	}
-	return ;
+	return (*str);
 }
 
 char	**lex(char const *s)
@@ -136,7 +149,7 @@ int	launch_minishell(char *line)
 
 	tokens = lex(line); //Warning: Check some syntax errors beforehand
 	for (int i = 0; tokens[i]; i++)
-		expand(tokens[i]);
+		expand(&tokens[i]);
 	for (int i = 0; tokens[i]; i++)
 		printf("%s\n", tokens[i]);
 	/*

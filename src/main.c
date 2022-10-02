@@ -1,16 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include "libft.h"
-
-typedef struct	s_envp
-{
-	char	*key[3];
-	char	*value[3];
-}				t_envp;
-
-t_envp		envp = {{"KEY1", "USER", "KEY2"}, {"VAL1", "jleroux", "VAL2"}};
+#include "../minishell.h"
 
 char	*find_var(const char *str)
 {
@@ -38,43 +26,6 @@ char	*expand(const char *str)
 	return (var);
 }
 
-char	*rl_gets()
-{
-	static char	*line_read = (char *) NULL;
-	static char	*previous_line;
-	char		*prmpt;
-
-	prmpt = ft_strjoin(getenv("USER"), "@minishell> ");
-	line_read = readline(prmpt);
-	ft_free(prmpt);
-	if (line_read && *line_read)
-	{
-		if (!previous_line)
-			add_history(line_read);
-		else
-			if (ft_strncmp(previous_line, line_read, ft_strlen(line_read)))
-				add_history(line_read);
-		ft_free(previous_line);
-		previous_line = ft_strdup(line_read);
-	}
-	return (line_read);
-}
-
-/*
-void	pipex(t_cmd *cmds)
-{
-	int	i;
-
-	create_pipes();
-	i = -1;
-	while (cmds[i])
-	{
-		expand_errno(cmds[i]);
-		strip_quotes(tokens); //Warning: Don't remove quotes inside quotes
-		execute(cmds[i]);
-	}
-}
-*/
 
 int	launch_minishell(char *cmdline)
 {
@@ -101,7 +52,7 @@ int	main(int ac, char **av, char **envp)
 	(void) envp;
 	errno = 0;
 	signal = -1;
-	//handle_signals();
+	welcome();
 	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
 		return (launch_minishell(av[2]));
 	while (signal != EXIT)
@@ -110,7 +61,7 @@ int	main(int ac, char **av, char **envp)
 		//errno = launch_minishell(line);
 		printf("%s\n", line);
 		free(line);
-		signal += 1;
+		//signal += 1;
 	}
 	return (errno);
 }

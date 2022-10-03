@@ -1,6 +1,6 @@
 NAME			=	minishell
 
-CC				=	clang
+CC				=	gcc
 CFLAGS			=	-Wall -Werror -Wextra
 CPPFLAGS		=	-I include -I $(LIBFT_DIR)/include
 LDFLAGS			=	-lreadline
@@ -15,6 +15,7 @@ OBJS 			=	$(patsubst %.c, $(OBJS_DIR)/%.o, $(SRCS))
 SRCS			=	main.c \
                     prompt.c \
                     lexer.c \
+					expander.c
 
 
 UNAME= $(shell uname -s)

@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 17:08:00 by Blaze             #+#    #+#             */
-/*   Updated: 2022/10/02 17:09:11 by Blaze            ###    42Lausanne.ch    */
+/*   Updated: 2022/10/03 13:26:47 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*rl_gets(void)
 
     prmpt = ft_strjoin(getenv("USER"), "@minishell> ");
     line_read = readline(prmpt);
-    free(prmpt);
+    ft_free(prmpt);
     if (line_read && *line_read)
     {
         if (!previous_line)
@@ -29,7 +29,7 @@ char	*rl_gets(void)
         else
         if (ft_strncmp(previous_line, line_read, ft_strlen(line_read)))
             add_history(line_read);
-        free(previous_line);
+        ft_free(previous_line);
         previous_line = ft_strdup(line_read);
     }
     return (line_read);

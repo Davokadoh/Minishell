@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 17:01:25 by Blaze             #+#    #+#             */
-/*   Updated: 2022/10/02 17:03:16 by Blaze            ###    42Lausanne.ch    */
+/*   Updated: 2022/10/03 13:56:19 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ struct s_envp
     char	*value[3];
 };
 
-
-
 char	*rl_gets(void);
 void	welcome(void);
+char	*expand(char **str);
+char	**lex(const char *str);

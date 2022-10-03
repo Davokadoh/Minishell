@@ -21,7 +21,7 @@ SRCS			=	main.c \
 UNAME= $(shell uname -s)
 ifeq ($(UNAME), Darwin)
 CPPFLAGS += -I $(HOME)/.brew/Cellar/readline/8.1.2/include
-#LDFLAGS += -L$(HOME)/.brew/Cellar/readline/8.1.2/lib
+LDFLAGS += -L$(HOME)/.brew/Cellar/readline/8.1.2/lib
 endif
 
 all: $(NAME)

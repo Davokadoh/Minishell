@@ -42,13 +42,15 @@ int	main(int ac, char **av, char **envp)
 
 	(void) envp;
 	errno = 0;
-	signal = 0;
+	signal = -1;
 	welcome();
 	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
 		return (launch_minishell(av[2]));
 	while (signal != EXIT)
 	{
 		line = rl_gets();
+		if (!line)
+			return (0);
 		errno = launch_minishell(line);
 		//printf("%s\n", line);
 		free(line);

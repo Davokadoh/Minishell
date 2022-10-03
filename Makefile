@@ -1,6 +1,6 @@
 NAME			=	minishell
 
-CC				=	clang
+CC				=	gcc
 CFLAGS			=	-Wall -Werror -Wextra
 CPPFLAGS		=	-I include -I $(LIBFT_DIR)/include
 LDFLAGS			=	-lreadline
@@ -12,12 +12,16 @@ LDFLAGS			+=	$(LIBFT)
 SRCS_DIR		=	src
 OBJS_DIR		=	obj
 OBJS 			=	$(patsubst %.c, $(OBJS_DIR)/%.o, $(SRCS))
-SRCS			=	main.c
+SRCS			=	main.c \
+                    prompt.c \
+                    lexer.c \
+					expander.c
+
 
 UNAME= $(shell uname -s)
 ifeq ($(UNAME), Darwin)
 CPPFLAGS += -I $(HOME)/.brew/Cellar/readline/8.1.2/include
-LDFLAGS += -L$(HOME)/.brew/Cellar/readline/8.1.2/lib
+#LDFLAGS += -L$(HOME)/.brew/Cellar/readline/8.1.2/lib
 endif
 
 all: $(NAME)
@@ -42,7 +46,7 @@ $(NAME): $(LIBFT) $(OBJS)
 	$(CC) -o $(NAME) $(OBJS) $(LDFLAGS)
 
 $(LIBFT):
-	$(MAKE) -sC $(LIBFT_DIR) bonus
+	$(MAKE) -sC $(LIBFT_DIR) #bonus
 
 asan: CFLAGS += -g3 -fsanitize=address -fno-omit-frame-pointer
 asan: LDFLAGS += -fsanitize=address

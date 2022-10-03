@@ -32,15 +32,15 @@ un analyseur lexical ou lexer prend les caractères d'entrée et
 rassemble ces caractères en mots appelés jetons.
 
 ### Parser
-L'analyseur recupere la sortie du lexer et la met
+L'analyseur syntaxique ou parser , récupere la sortie du lexer et la met
 dans une structure de données appelée Command Table qui stockera les commandes et les arguments qui seront
-execute.
+exécuté.
 
 ### Expander
 
-L'expandeur prendra les jetons de l'analyseur comme argument.<br>
+L'expandeur prendra les jetons du parser comme argument.<br>
 L'expandeur interprétera les variables d'environnement dans leur valeur correspondante.<br>
-Il gère également les sous-shells gère toutes les redirections.<br>
+Il gère également les sous-shells et toutes les redirections.<br>
 Les sous-shells sont exécutés en créant un processus enfant qui exécute un minishell sans readline lisant l'entrée, mais en lui transmettant directement les commandes correctes et non analysées. Et une fois l'analyseur lexical terminé, il appellera l'analyseur syntaxique et ainsi de suite.<br>
 Après avoir passé chacune de ces parties sans erreur, il appelle l'exécuteur dans une boucle et donne à l'exécuteur les valeurs correctes avec lesquelles travailler.<br>
 Après un appel de l'exécuteur, une valeur d'erreur, similaire à errno, est définie sur le code de sortie de l'exécuteur.<br>

@@ -1,11 +1,21 @@
 #include "../minishell.h"
 
-int	launch_minishell(char *cmdline)
+struct	s_cmd
+{
+	char	*argv;
+	char	*input_name;
+	char	*output_name;
+	int		input_fd;
+	int		output_fd;
+}		t_cmd;
+
+//t_cmd	cmdlist[];
+
+int	launch_minishell(char *line)
 {
 	char	**tokens;
 
-	tokens = lex(cmdline); //Warning: Check some syntax errors beforehand
-	expand(tokens); //Warning: Don't expand inside single quotes + $?
+	tokens = lex(line); //Warning: Check some syntax errors beforehand
 	for (int i = 0; tokens[i]; i++)
 		expand(&tokens[i]);
 	for (int i = 0; tokens[i]; i++)
@@ -14,13 +24,16 @@ int	launch_minishell(char *cmdline)
 	split_metachar(tokens); //Warning: Don't split >>, && and ||
 	cmds = parse(tokens); //Create a list of cmds w/ corresponding i/o
 	pipex(cmds); //Warning: Be sure to execute OUR built-ins + $?
+
+	pipex(parse(expand(lex(line))));
 	*/
 	return (0);
 }
 
+#define EXIT 1
+
 //Warnings!
 //Try to run w/o env: env -i ./minishell
-#define EXIT 1
 int	main(int ac, char **av, char **envp)
 {
 	char	*line;
@@ -36,10 +49,12 @@ int	main(int ac, char **av, char **envp)
 	while (signal != EXIT)
 	{
 		line = rl_gets();
+		if (!line)
+			return (0);
 		errno = launch_minishell(line);
 		//printf("%s\n", line);
 		free(line);
-		signal += 1;
+		signal ++;
 	}
 	return (errno);
 }

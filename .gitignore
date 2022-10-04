@@ -1,4 +1,4 @@
 *.o
 .idea
 minishell
-README.md
+obj/

@@ -19,7 +19,7 @@
 typedef struct	s_envp t_envp;
 struct s_envp
 {
-    char	*key[3];
+    char	*key;
     char	*value[3];
 };
 

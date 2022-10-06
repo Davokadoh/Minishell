@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 17:01:25 by Blaze             #+#    #+#             */
-/*   Updated: 2022/10/03 13:56:19 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/10/06 15:47:35 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include "libft/libft.h"
+#include "libft.h"
 
 typedef struct	s_envp t_envp;
 struct s_envp

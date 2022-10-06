@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 struct	s_cmd
 {
@@ -43,9 +43,9 @@ int	main(int ac, char **av, char **envp)
 	(void) envp;
 	errno = 0;
 	signal = -1;
-	welcome();
-	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
+	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3)) // || stdin)
 		return (launch_minishell(av[2]));
+	welcome();
 	while (signal != EXIT)
 	{
 		line = rl_gets();

@@ -1,42 +1,21 @@
+SRC_DIR = src/
+OBJ_DIR = obj/
+INC_DIR = inc/
+DEP_DIR = dep/
 
-# VARIABLES & FLAGS
-NAME		=	minishell
-CC			=	gcc
-CFLAGS		=	-Wall -Werror -Wextra
-CPPFLAGS	=	-I include -I $(LIBFT_DIR)/include
-LDFLAGS		=	-lreadline
+CFLAGS += -I $(INC_DIR)
 
-LIBFT_DIR	=	libft
-LIBFT		=	$(LIBFT_DIR)/libft.a
-LDFLAGS		+=	$(LIBFT)
+include settings.mk
 
-SRCS_DIR	=	src
-OBJS_DIR	=	obj
-OBJS 		=	$(patsubst %.c, $(OBJS_DIR)/%.o, $(SRCS))
-SRCS		=	main.c \
-				prompt.c \
-				lexer.c \
-				expander.c
+OBJ = $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
+DEP = $(SRC:$(SRC_DIR)%.c=$(DEP_DIR)%.d)
 
+RM = rm -rf
 
-UNAME= $(shell uname -s)
-ifeq ($(UNAME), Darwin)
-CPPFLAGS	+=	-I $(HOME)/.brew/Cellar/readline/8.1.2/include
-LDFLAGS		+=	-L$(HOME)/.brew/Cellar/readline/8.1.2/lib
-#else ifeq ($(UNAME), Linux)
-#LDFLAGS		=	-lreadline
-endif
+.PHONY: all clean fclean re asan debug
 
-all: $(NAME)
-
-$(NAME): $(LIBFT) $(OBJS)
-	$(CC) -o $(NAME) $(OBJS) $(LDFLAGS)
-
-$(OBJS_DIR):
-	@mkdir -p $(dir $(OBJS))
-
+# USE TPUTS INSTEAD!!!
 # COLORS
-# USE TPUTS INSTEAD!!! 
 Y = "\033[33m"
 R = "\033[31m"
 G = "\033[32m"
@@ -45,28 +24,43 @@ X = "\033[0m"
 UP = "\033[A"
 CUT = "\033[K"
 
-$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c | $(OBJS_DIR)
-	@echo $(Y)Compiling [$@]...$(X)
-	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
-	@printf $(UP)$(CUT)
-	@echo $(G)Finished [$@]$(X)
-	@printf $(UP)$(CUT)
+all: $(NAME)
+	@echo $(G)
+	@cat $(NAME).asciiart
+	@echo $(X)
 
+$(NAME): $(OBJ) $(LIBFT)
+	$(CC) -o $@ $(LDFLAGS) $^
 
-$(LIBFT):
-	$(MAKE) -sC $(LIBFT_DIR) #bonus
+$(OBJ_DIR):
+	@mkdir -p $@
 
-clean:
-	$(MAKE) -C $(LIBFT_DIR) clean
-	rm -rf $(OBJS_DIR)
+$(OBJ): | $(OBJ_DIR)
+
+$(OBJ): $(OBJ_DIR)%.o: $(SRC_DIR)%.c
+	$(CC) $(CFLAGS) -c $< -o $@ $(DEP)
+
+$(DEP_DIR):
+	@mkdir -p $@
+
+$(DEP): | $(DEP_DIR)
+
+DEP = -MMD -MF $(@:.o=.d)
+#$(DEP): $(DEP_DIR)%.d: $(SRC_DIR)%.c | $(DEP_DIR)
+#	$(CC) $(CFLAGS) -MM -MF $@ -MT "$(OBJ) $@" $<
+
+cleanobj:
+	$(RM) $(OBJ_DIR)
+
+cleandep:
+	$(RM) $(DEP_DIR)
+
+clean: cleanobj cleandep
 
 fclean: clean
-	$(MAKE) -C $(LIBFT_DIR) fclean
-	rm -rf $(NAME)
+	$(RM) $(NAME)
 
-re:	fclean all
-
+re: fclean all
 
 asan:
 	CFLAGS += -g3 -fsanitize=address -fno-omit-frame-pointer
@@ -77,5 +71,6 @@ debug:
 	CFLAGS += -g3
 	all
 
-.PHONY: all fclean clean re debug valgrind
+-include $(DEP)
 
+include custom_rules.mk

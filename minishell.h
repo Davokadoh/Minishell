@@ -16,11 +16,20 @@
 #include <readline/history.h>
 #include "libft/libft.h"
 
-typedef struct	s_envp t_envp;
+typedef struct	s_envp  t_envp;
+typedef struct s_cmd    t_cmd;
 struct s_envp
 {
     char	*key[3];
     char	*value[3];
+};
+struct	s_cmd
+{
+    char	*argv;
+    char	*input_name;
+    char	*output_name;
+    int		input_fd;
+    int		output_fd;
 };
 
 char	*rl_gets(void);

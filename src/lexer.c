@@ -1,4 +1,4 @@
-#include "../inc/minishell.h"
+#include "../include/minishell.h"
 
 char	**lex(char const *s)
 {

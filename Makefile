@@ -31,8 +31,8 @@ all: $(NAME)
 	@echo $(X)
 
 $(NAME): $(OBJS) $(LIBS_TARGET)
-    $(CC) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $(NAME)
-    $(info CREATED $(NAME))
+	$(CC) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $(NAME)
+	$(info CREATED $(NAME))
 
 $(LIBS_TARGET):
 	$(MAKE) -C $(@D)
@@ -41,8 +41,8 @@ $(BUILD_DIR):
 	mkdir -p $@
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
-    $(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
-    $(info CREATED $@)
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+	$(info CREATED $@)
 
 -include $(DEPS)
 
@@ -66,5 +66,3 @@ asan:
 debug:
 	CFLAGS += -g3
 	all
-
-include custom_rules.mk

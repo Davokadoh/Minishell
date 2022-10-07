@@ -1,4 +1,4 @@
-#include "../inc/minishell.h"
+#include "../include/minishell.h"
 
 static char	*ft_strinsert(const char *str1, const char *str2, int start, int end)
 {

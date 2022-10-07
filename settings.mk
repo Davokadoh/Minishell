@@ -17,7 +17,6 @@ LDFLAGS		+=	-L$(HOME)/.brew/Cellar/readline/8.1.2/lib
 #LDFLAGS		=	-lreadline
 endif
 
-
 SRC_DIR     :=	src
 SRCS 		:=	$(SRC_DIR)/main.c\
 				$(SRC_DIR)/prompt.c\
@@ -31,7 +30,7 @@ DEPS        :=	$(OBJS:.o=.d)
 CC          :=	gcc
 CFLAGS      :=	-Wall -Wextra -Werror
 CPPFLAGS    :=	$(addprefix -I,$(INCS)) -MMD -MP
-LDFLAGS     :=	$(addprefix -L,$(dir $(LIBS_TARGET)))
+LDFLAGS     +=	$(addprefix -L,$(dir $(LIBS_TARGET)))
 LDLIBS      :=	$(addprefix -l,$(LIBS))
 
 RM          := rm

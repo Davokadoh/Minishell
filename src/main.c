@@ -1,4 +1,4 @@
-#include "../inc/minishell.h"
+#include "../include/minishell.h"
 
 struct	s_cmd
 {

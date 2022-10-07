@@ -1,0 +1,69 @@
+SRC_DIR = src/
+OBJ_DIR = obj/
+INC_DIR = inc/
+DEP_DIR = dep/
+
+CFLAGS += -I $(INC_DIR) -MMD 
+
+include settings.mk
+
+OBJ = $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
+DEP = -MMD -MF $(@:$(OBJ_DIR)%.o=$(DEP_DIR)%.d)
+
+RM = rm
+
+.PHONY: all clean fclean re asan debug
+
+# USE TPUTS INSTEAD!!!
+# COLORS
+Y = "\033[33m"
+R = "\033[31m"
+G = "\033[32m"
+B = "\033[34m"
+X = "\033[0m"
+UP = "\033[A"
+CUT = "\033[K"
+
+all: $(NAME)
+	@echo $(G)
+	@cat $(NAME).asciiart
+	@echo $(X)
+
+$(NAME): $(OBJ) $(LIBFT)
+	$(CC) -o $@ $(LDFLAGS) $^
+
+$(OBJ_DIR):
+	mkdir -p $@
+
+$(DEP_DIR):
+	mkdir -p $@
+
+$(OBJ): $(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJ_DIR) $(DEP_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@ $(DEP)
+
+#$(DEP): $(DEP_DIR)%.d: $(SRC_DIR)%.c | $(DEP_DIR)
+#	$(CC) $(CFLAGS) -MM -MF $@ -MT "$(OBJ_DIR)%.o $@" $<
+
+-include $(DEP)
+
+clean:
+	$(RM) -r $(DEP_DIR)
+	$(RM) -r $(OBJ_DIR)
+	$(MAKE) clean -C $(LIBFT_DIR)
+
+fclean: clean
+	$(RM) $(NAME)
+	$(RM) $(LIBFT)
+
+re: fclean all
+
+asan:
+	CFLAGS += -g3 -fsanitize=address -fno-omit-frame-pointer
+	LDFLAGS += -fsanitize=address
+	all
+
+debug:
+	CFLAGS += -g3
+	all
+
+include custom_rules.mk

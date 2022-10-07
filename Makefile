@@ -1,16 +1,17 @@
-SRC_DIR = src/
-OBJ_DIR = obj/
-INC_DIR = inc/
-DEP_DIR = dep/
-
-CFLAGS += -I $(INC_DIR)
-
 include settings.mk
 
-OBJ = $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
-DEP = $(SRC:$(SRC_DIR)%.c=$(DEP_DIR)%.d)
-
-RM = rm -rf
+#------------------------------------------------#
+#   RECIPES                                      #
+#------------------------------------------------#
+# all       default goal
+# $(NAME)   link .o -> archive
+# $(LIBS)   build libraries
+# %.o       compilation .c -> .o
+# clean     remove .o
+# fclean    remove .o + binary
+# re        remake default goal
+# run       run the program
+# info      print the default goal recipe
 
 .PHONY: all clean fclean re asan debug
 
@@ -29,38 +30,33 @@ all: $(NAME)
 	@cat $(NAME).asciiart
 	@echo $(X)
 
-$(NAME): $(OBJ) $(LIBFT)
-	$(CC) -o $@ $(LDFLAGS) $^
+$(NAME): $(OBJS) $(LIBS_TARGET)
+    $(CC) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $(NAME)
+    $(info CREATED $(NAME))
 
-$(OBJ_DIR):
-	@mkdir -p $@
+$(LIBS_TARGET):
+	$(MAKE) -C $(@D)
 
-$(OBJ): | $(OBJ_DIR)
+$(BUILD_DIR):
+	mkdir -p $@
 
-$(OBJ): $(OBJ_DIR)%.o: $(SRC_DIR)%.c
-	$(CC) $(CFLAGS) -c $< -o $@ $(DEP)
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
+    $(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+    $(info CREATED $@)
 
-$(DEP_DIR):
-	@mkdir -p $@
+-include $(DEPS)
 
-$(DEP): | $(DEP_DIR)
-
-DEP = -MMD -MF $(@:.o=.d)
-#$(DEP): $(DEP_DIR)%.d: $(SRC_DIR)%.c | $(DEP_DIR)
-#	$(CC) $(CFLAGS) -MM -MF $@ -MT "$(OBJ) $@" $<
-
-cleanobj:
-	$(RM) $(OBJ_DIR)
-
-cleandep:
-	$(RM) $(DEP_DIR)
-
-clean: cleanobj cleandep
+clean:
+	for f in $(dir $(LIBS_TARGET)); do $(MAKE) -C $$f clean; done
+	$(RM) $(OBJS) $(DEPS)
 
 fclean: clean
+	for f in $(dir $(LIBS_TARGET)); do $(MAKE) -C $$f fclean; done
 	$(RM) $(NAME)
 
-re: fclean all
+re:
+	$(MAKE) fclean
+	$(MAKE) all
 
 asan:
 	CFLAGS += -g3 -fsanitize=address -fno-omit-frame-pointer
@@ -70,7 +66,5 @@ asan:
 debug:
 	CFLAGS += -g3
 	all
-
--include $(DEP)
 
 include custom_rules.mk

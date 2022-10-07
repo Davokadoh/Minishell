@@ -33,7 +33,7 @@ int	launch_minishell(char *line)
 #define EXIT 1
 
 //Warnings!
-//Try to run w/o env: env -i ./minishell
+//env -i ./minishell
 int	main(int ac, char **av, char **envp)
 {
 	char	*line;

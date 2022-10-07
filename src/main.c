@@ -3,14 +3,23 @@
 int	launch_minishell(char *cmdline)
 {
 	char	**tokens;
+    int     len;
 
 	tokens = lex(cmdline); //Warning: Check some syntax errors beforehand
-	expand(tokens); //Warning: Don't expand inside single quotes + $?
+    len = ft_strlen(tokens[0]);
+    //printf("TOKENS: %s",tokens[0]);
+	//expand(tokens); //Warning: Don't expand inside single quotes + $?
 	for (int i = 0; tokens[i]; i++)
 		expand(&tokens[i]);
-	for (int i = 0; tokens[i]; i++)
-		printf("%s\n", tokens[i]);
+    // a mettre dans l'executor car c'est une commande
+    for (int i = 0; i < len; i++)
+        tokens[0][i] = ft_toupper(tokens[0][i]);
+    if(getenv(tokens[0]))
+        printf("%s\n", getenv(tokens[0]));
+    else
+        printf("minishell: command not found: %s\n", tokens[0]);
 	/*
+	 * if get_key(token) => printf value
 	split_metachar(tokens); //Warning: Don't split >>, && and ||
 	cmds = parse(tokens); //Create a list of cmds w/ corresponding i/o
 	pipex(cmds); //Warning: Be sure to execute OUR built-ins + $?
@@ -18,7 +27,18 @@ int	launch_minishell(char *cmdline)
 	return (0);
 }
 
-t_envp *get_key(char **env)
+int init_envp(char **envp)
+{
+    int i = -1;
+    while(envp[++i])
+    {
+        printf("env %s",envp[i]);
+    }
+    return (0);
+}
+
+/*
+t_envp *get_envp(char **env)
 {
     int		i;
     char    *key;
@@ -37,35 +57,8 @@ t_envp *get_key(char **env)
     printf("%s",envp->key);
     return (envp);
 }
-/*
-char *get_value(char *key, char **env)
-{
-    char	**paths;
-    char	*path;
-    int		i;
-    int     k;
+*/
 
-    k = ft_strlen(key);
-    key = *ft_split(key, ' ');
-    i = 0;
-
-    paths = get_env(env);
-    paths = ft_split(env[i] + k+1, '=');
-    i = -1;
-    while (paths[++i])
-    {
-            return (path);
-
-    }
-}*/
-/*
-t_envp init_env()
-{
-
-
-
-    return (env);
-}*/
 //Warnings!
 //Try to run w/o env: env -i ./minishell
 #define EXIT 1
@@ -73,26 +66,34 @@ int	main(int ac, char **av, char **envp)
 {
 	//char	*line;
 	int		errno;
-	//int		signal;
+	int		signal;
 
 	(void) envp;
 	errno = 0;
-	//signal = -1;
-    get_key(envp);
-
+	signal = -1;
+    // TODO init_envp
+    init_envp(envp);
+    // TODO see getcwd()
+    // si envp est vide afficher getcwd(), SHLVL = 1 sinon SHLVL +1 et afficher "_" + le chemin de la derniere commande tapee
+    // TODO get_envp
+    // les variables d'environement ne s'affiche que si il ya un $
+    //get_key(envp);
+    // avant de lunch minishell initialiser ft_envp qui contient les envp
+    // fonction ft_get_env qui doit chercher dans ft_envp
 	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
-		return (launch_minishell(av[2]));/*
-    welcome();
-    get_env("User",envp);
+		return (launch_minishell(av[2]));
+    /*welcome();
+    //get_env("User",envp);
+    // env -i ./minshell
     while (signal != EXIT)
 	{
 		line = rl_gets();
-        if(!line)
+        if(!line || !*line)
             return (0);
 		errno = launch_minishell(line);
 		//printf("%s\n", line);
 		ft_free(line);
-		signal += 1;
+		//signal += 1;
 	}*/
 	return (errno);
 }

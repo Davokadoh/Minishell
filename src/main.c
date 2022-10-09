@@ -1,10 +1,11 @@
 #include "../minishell.h"
 
-int	launch_minishell(char *cmdline)
+int	launch_minishell(char *cmdline,t_envp *env)
 {
 	char	**tokens;
     int     len;
 
+    printf("ENV HOME : %s",env->home);
 	tokens = lex(cmdline); //Warning: Check some syntax errors beforehand
     len = ft_strlen(tokens[0]);
     //printf("TOKENS: %s",tokens[0]);
@@ -27,52 +28,85 @@ int	launch_minishell(char *cmdline)
 	return (0);
 }
 
-int init_envp(char **envp)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-    int i = -1;
-    while(envp[++i])
+    const unsigned char	*buf1;
+    const unsigned char	*buf2;
+
+    buf1 = (const unsigned char *)s1;
+    buf2 = (const unsigned char *)s2;
+    if (*buf1 != *buf2)
+        return (*buf1 - *buf2);
+    while (*buf1 && *buf2)
     {
-        printf("env %s",envp[i]);
+        if (*buf1 != *buf2)
+            return (*buf1 - *buf2);
+        buf1++;
+        buf2++;
     }
+    if (*buf1 == '\0' && *buf2 != '\0')
+        return (0 - *buf2);
+    else if (*buf2 == '\0' && *buf1 != '\0')
+        return (*buf1);
     return (0);
 }
 
-/*
-t_envp *get_envp(char **env)
+char	*mini_getenv(char *var, char **envp, int n)
 {
-    int		i;
-    char    *key;
+	int	i;
+	int	n2;
+    int str_len;
 
-    t_envp *envp;
-
-    envp = malloc(100);
-    i = 0;
-    while (!ft_strchr(env[i], '=') && env && env[i])
-    {
-        if (ft_strchr(env[i], '='))
-            key = ft_strchr(env[i],'=');
-        i++;
-    }
-    envp->key = key;
-    printf("%s",envp->key);
-    return (envp);
+	i = 0;
+	if (n < 0)
+		n = ft_strlen(var);
+	while (!ft_strchr(var, '=') && envp && envp[i])
+	{
+		n2 = n;
+        str_len = ft_strlen(ft_strchr(envp[i], '='));
+		if (n2 < str_len)
+			n2 = str_len;
+		if (!ft_strncmp(envp[i], var, n2))
+			return (ft_substr(envp[i], n2 + 1, ft_strlen(envp[i])));
+		i++;
+	}
+	return (NULL);
 }
-*/
+
+t_envp *init_envp(char **envp)
+{
+    t_envp *env;
+
+    env = malloc(sizeof(t_envp));
+    if(!env)
+        return (NULL);
+    if (envp != NULL && *envp != NULL)
+    {
+        env->envp = envp;
+        env->path = mini_getenv("PATH", envp, -1);
+        env->pwd = mini_getenv("PWD", envp, -1);
+        env->oldpwd = mini_getenv("OLDPWD", envp, -1);
+        env->home = mini_getenv("HOME", envp, -1);
+        env->user = mini_getenv("USER", envp, -1);
+        env->shlvl = mini_getenv("SHLVL", envp, -1);
+    }
+    return (env);
+}
 
 //Warnings!
 //Try to run w/o env: env -i ./minishell
 #define EXIT 1
 int	main(int ac, char **av, char **envp)
 {
-	//char	*line;
+	char	*line;
 	int		errno;
 	int		signal;
-
+    t_envp *env;
 	(void) envp;
 	errno = 0;
 	signal = -1;
     // TODO init_envp
-    init_envp(envp);
+    env = init_envp(envp);
     // TODO see getcwd()
     // si envp est vide afficher getcwd(), SHLVL = 1 sinon SHLVL +1 et afficher "_" + le chemin de la derniere commande tapee
     // TODO get_envp
@@ -81,8 +115,8 @@ int	main(int ac, char **av, char **envp)
     // avant de lunch minishell initialiser ft_envp qui contient les envp
     // fonction ft_get_env qui doit chercher dans ft_envp
 	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
-		return (launch_minishell(av[2]));
-    /*welcome();
+		return (launch_minishell(av[2], env));
+    welcome();
     //get_env("User",envp);
     // env -i ./minshell
     while (signal != EXIT)
@@ -90,11 +124,11 @@ int	main(int ac, char **av, char **envp)
 		line = rl_gets();
         if(!line || !*line)
             return (0);
-		errno = launch_minishell(line);
+		errno = launch_minishell(line, env);
 		//printf("%s\n", line);
 		ft_free(line);
-		//signal += 1;
-	}*/
+		signal += 1;
+	}
 	return (errno);
 }
 

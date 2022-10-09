@@ -20,9 +20,15 @@ typedef struct  s_envp  t_envp;
 typedef struct  s_cmd   t_cmd;
 struct s_envp
 {
-    char	*key[3];
-    char	*value[3];
+    char    **envp;
+    char    *path;
+    char    *pwd;
+    char    *oldpwd;
+    char    *home;
+    char    *user;
+    char    *shlvl;
 };
+
 struct	s_cmd
 {
     char	*argv;

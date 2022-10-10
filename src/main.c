@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../include/minishell.h"
 
 int	launch_minishell(char *line)
 {
@@ -22,7 +22,7 @@ int	launch_minishell(char *line)
 #define EXIT 1
 
 //Warnings!
-//Try to run w/o env: env -i ./minishell
+//env -i ./minishell
 int	main(int ac, char **av, char **envp)
 {
 	char	*line;
@@ -32,9 +32,9 @@ int	main(int ac, char **av, char **envp)
 	(void) envp;
 	errno = 0;
 	signal = -1;
-	welcome();
-	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
+	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3)) // || stdin)
 		return (launch_minishell(av[2]));
+	welcome();
 	while (signal != EXIT)
 	{
 		line = rl_gets();

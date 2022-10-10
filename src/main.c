@@ -1,16 +1,5 @@
 #include "../include/minishell.h"
 
-struct	s_cmd
-{
-	char	*argv;
-	char	*input_name;
-	char	*output_name;
-	int		input_fd;
-	int		output_fd;
-}		t_cmd;
-
-//t_cmd	cmdlist[];
-
 int	launch_minishell(char *line)
 {
 	char	**tokens;

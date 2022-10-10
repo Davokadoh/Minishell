@@ -50,18 +50,16 @@ MAKEFLAGS   += --silent --no-print-directory
 
 # USE TPUTS INSTEAD!!!
 # COLORS
-Y = "\033[33m"
-R = "\033[31m"
-G = "\033[32m"
-B = "\033[34m"
-X = "\033[0m"
-UP = "\033[A"
-CUT = "\033[K"
+R=$$(tput setaf 1)
+G=$$(tput setaf 2)
+Y=$$(tput setaf 3)
+B=$$(tput setaf 4)
+W=$$(tput setaf 7)
 
 all: $(NAME)
 	@echo $(G)
 	@cat $(NAME).asciiart
-	@echo $(X)
+	@echo $(W)
 
 $(NAME): $(OBJS) $(LIBS_TARGET)
 	$(CC) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $(NAME)

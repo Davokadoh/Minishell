@@ -20,13 +20,7 @@ typedef struct  s_envp  t_envp;
 typedef struct  s_cmd   t_cmd;
 struct s_envp
 {
-    char    **envp;
-    char    *path;
-    char    *pwd;
-    char    *oldpwd;
-    char    *home;
-    char    *user;
-    char    *shlvl;
+    char    *env[31];
 };
 
 struct	s_cmd
@@ -42,3 +36,4 @@ char	*rl_gets(void);
 void	welcome(void);
 char	*expand(char **str);
 char	**lex(const char *str);
+char	*ft_getenv(char *var, t_envp *envp);

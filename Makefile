@@ -15,7 +15,8 @@ OBJS 			=	$(patsubst %.c, $(OBJS_DIR)/%.o, $(SRCS))
 SRCS			=	main.c \
                     prompt.c \
                     lexer.c \
-					expander.c
+					expander.c \
+					ft_env.c \
 
 
 UNAME= $(shell uname -s)

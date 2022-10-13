@@ -36,4 +36,6 @@ char	*rl_gets(void);
 void	welcome(void);
 char	*expand(char **str);
 char	**lex(const char *str);
-char	*ft_getenv(char *var, t_envp *envp);
+char	*ft_getenv(char *var, t_envp *env);
+t_envp  *init_envp(char **env);
+void    ft_setenv(char *var, char *var2, t_envp *env);

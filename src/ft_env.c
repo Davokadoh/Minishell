@@ -1,5 +1,14 @@
 #include "../minishell.h"
 
+void    ft_env(t_envp *env)
+{
+    int i;
+
+    i = -1;
+    while (env->env[++i])
+        printf("%s\n", env->env[i]);
+}
+
 void    ft_setenv(char *var, char *var2, t_envp *env)
 {
     int i;
@@ -48,6 +57,13 @@ t_envp *init_envp(char **envp)
     {
         while(envp[++i])
             env->env[i] = envp[i];
+    }
+    else
+    {
+        getcwd(env->env[0], 256);
+        env->env[0] = ft_strjoin("PWD=", env->env[0]);
+        env->env[1] = ft_strdup("SHLVL=1");
+        env->env[2] = ft_strdup("_=/usr/bin/env");
     }
     // si envp est vide afficher getcwd(), SHLVL = 1 sinon SHLVL +1 et afficher "_" + le chemin de la derniere commande tapee
     //else

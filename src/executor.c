@@ -11,3 +11,9 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+// a mettre dans l'executeur car c'est une commande
+/*for (int i = 0; i < len; i++)
+    tokens[0][i] = ft_toupper(tokens[0][i]);
+if(getenv(tokens[0]))
+    printf("%s\n", getenv(tokens[0]));*/

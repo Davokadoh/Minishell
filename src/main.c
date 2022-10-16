@@ -12,18 +12,20 @@ int	launch_minishell(char *cmdline,t_envp *env)
 	tokens = lex(cmdline); //Warning: Check some syntax errors beforehand
     len = ft_strlen(tokens[0]);
     //printf("TOKENS: %s",tokens[0]);
-	//expand(tokens); //Warning: Don't expand inside single quotes + $?
+	expand(tokens); //Warning: Don't expand inside single quotes + $?
 	for (int i = 0; tokens[i]; i++)
 		expand(&tokens[i]);
     if (ft_strncmp(tokens[0],"env",3) == 0)
         ft_env(env);
+    if (ft_strncmp(tokens[0],"pwd",3) == 0)
+        ft_pwd();
     else
         printf("minishell: command not found: %s\n", tokens[0]);
     /*
 	if get_key(token) => printf value
 	split_metachar(tokens); //Warning: Don't split >>, && and ||
 	cmds = parse(tokens); //Create a list of cmds w/ corresponding i/o
-	pipex(cmds); //Warning: Be sure to execute OUR built-ins + $?
+	executor(cmds); //Warning: Be sure to execute OUR built-ins + $?
 	*/
 	return (0);
 }
@@ -53,7 +55,6 @@ int	main(int ac, char **av, char **envp)
         if(!line || !*line)
             return (0);
 		errno = launch_minishell(line, env);
-		//printf("%s\n", line);
 		ft_free(line);
 		//signal += 1;
 	}

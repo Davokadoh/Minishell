@@ -17,6 +17,7 @@ SRCS			=	main.c \
                     lexer.c \
 					expander.c \
 					ft_env.c \
+					builtins.c \
 
 
 UNAME= $(shell uname -s)

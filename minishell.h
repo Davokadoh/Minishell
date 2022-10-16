@@ -40,3 +40,4 @@ char	*ft_getenv(char *var, t_envp *env);
 t_envp  *init_envp(char **env);
 void    ft_setenv(char *var, char *var2, t_envp *env);
 void    ft_env(t_envp *env);
+void    ft_pwd(void);

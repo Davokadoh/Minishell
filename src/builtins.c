@@ -19,3 +19,27 @@ void ft_pwd(void)
 	printf("%s\n",buf);
 	free(buf);
 }
+
+void ft_echo(char *cmd)
+{
+    int i;
+    i = 0;
+    while (cmd[i] != '\0')
+    {
+        if (cmd[i] == '$')
+        {
+            i++;
+            while (cmd[i] != ' ' && cmd[i] != '\0')
+            {
+                printf("%c",cmd[i]);
+                i++;
+            }
+        }
+        else
+        {
+            printf("%c",cmd[i]);
+            i++;
+        }
+    }
+    printf("\n");
+}

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../include/minishell.h"
 
 // a mettre dans l'executeur car c'est une commande
 /*for (int i = 0; i < len; i++)

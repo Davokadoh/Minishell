@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include "libft/libft.h"
+#include "../libft/libft.h"
 
 typedef struct  s_envp  t_envp;
 typedef struct  s_cmd   t_cmd;

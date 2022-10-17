@@ -1,10 +1,25 @@
 # 42 Minishell
 
-## Aussi mignon qu’un vrai shell
+### Aussi mignon qu’un vrai shell
 
 ## Auteurs:  [Davokadoh](https://github.com/Davokadoh) && [BlaiseK](https://github.com/blaisek)
 
+### Menu
+* [Fonctions externes autorises](Fonctions-externes-autorises)
+* [Description](#description)
+* [Introduction](#introduction)
+* [Structure du Projet](Structure-du-Projet)
+  *  [Prompt](Prompt)
+	*  [Lexer](Lexer)
+	*  [Parser](Parser)
+  *  [Expander](Expander)
+	*  [Executor](Executor)
+* [Schema](Schema)
+* [Resources](Resources)
+
 ## Fonctions externes autorises
+
+
 ![Fonctions externes](https://github.com/blaisek/Minishell/blob/main/Fonctions%20externes.png)
 
 ## Description
@@ -23,7 +38,9 @@ pouvait avoir au temps où Windows n’existait pas encore
 
 ## Structure du Projet
 
-## Prompt
+Nous avons subdivisé le projet en plusieurs modules
+
+### Prompt
 
 Le Prompt attend une nouvelle commande et permet d'acceder a l'hisorique de ce qui a ete envoye au lexer
 
@@ -56,3 +73,10 @@ L'exécuteur renvoie toujours le code de sortie de tout ce qu'il a fait.<br>
 
 ### Schema
 ![Graphique](https://github.com/blaisek/Minishell/blob/main/Diagramme%20Minishell.drawio.png)
+
+### Resources
+[Bash manual](https://www.gnu.org/software/bash/manual/bash.html)
+
+[shell command](https://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html)
+
+[Writing your shell](https://www.cs.purdue.edu/homes/grr/SystemsProgrammingBook/Book/Chapter5-WritingYourOwnShell.pdf)

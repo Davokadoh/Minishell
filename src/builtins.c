@@ -20,26 +20,21 @@ void ft_pwd(void)
 	free(buf);
 }
 
-void ft_echo(char *cmd)
+int ft_echo(char *cmd)
 {
     int i;
+    int newLine;
+
+    newLine = 1;
     i = 0;
     while (cmd[i] != '\0')
     {
-        if (cmd[i] == '$')
-        {
-            i++;
-            while (cmd[i] != ' ' && cmd[i] != '\0')
-            {
-                printf("%c",cmd[i]);
-                i++;
-            }
-        }
+        if (!ft_strncmp(&cmd[i],"-n", 2))
+            newLine = 0;
         else
-        {
-            printf("%c",cmd[i]);
-            i++;
-        }
+            write(1,&cmd[i],newLine);
+        i++;
     }
-    printf("\n");
+    printf("\x20");
+    return (write(1,"\n",newLine) == 2);
 }

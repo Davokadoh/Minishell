@@ -20,7 +20,11 @@ int	launch_minishell(char *cmdline,t_envp *env)
     if (ft_strncmp(tokens[0],"pwd",3) == 0)
         ft_pwd();
     if (ft_strncmp(tokens[0],"echo",4) == 0)
-        ft_echo(tokens[1]);
+    {
+        for(int i = 1; tokens[i]; i++)
+            ft_echo(tokens[i]);
+        printf("\n");
+    }
     else
         printf("minishell: command not found: %s\n", tokens[0]);
     /*

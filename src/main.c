@@ -3,31 +3,23 @@
 int	launch_minishell(char *cmdline,t_envp *env)
 {
 	char	**tokens;
-    int     len;
+
     //char    *home;
 
     //ft_setenv("HOME","shadow/of/colossus",env);
     //home = ft_getenv("HOME",env);
     //printf("%s \n",home);
 	tokens = lex(cmdline); //Warning: Check some syntax errors beforehand
-    len = ft_strlen(tokens[0]);
     //printf("TOKENS: %s",tokens[0]);
 	expand(tokens); //Warning: Don't expand inside single quotes + $?
 	for (int i = 0; tokens[i]; i++)
 		expand(&tokens[i]);
-    if (ft_strncmp(tokens[0],"env",3) == 0)
-        ft_env(env);
-    if (ft_strncmp(tokens[0],"pwd",3) == 0)
-        ft_pwd();
-    if (ft_strncmp(tokens[0],"echo",4) == 0)
-    {
-        for(int i = 1; tokens[i]; i++)
-            ft_echo(tokens[i]);
-        printf("\n");
-    }
-    else
+    builtin(tokens,env);
+
+
+    /*else
         printf("minishell: command not found: %s\n", tokens[0]);
-    /*
+
 	if get_key(token) => printf value
 	split_metachar(tokens); //Warning: Don't split >>, && and ||
 	cmds = parse(tokens); //Create a list of cmds w/ corresponding i/o

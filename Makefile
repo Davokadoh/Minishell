@@ -13,12 +13,15 @@ SRCS_DIR		=	src
 OBJS_DIR		=	obj
 OBJS 			=	$(patsubst %.c, $(OBJS_DIR)/%.o, $(SRCS))
 SRCS			=	main.c \
-                    prompt.c \
-                    lexer.c \
-					expander.c \
-					ft_env.c \
-					builtins.c \
-
+ 					prompt.c \
+ 					lexer.c \
+ 					expander.c \
+ 					executor.c \
+ 					builtins.c \
+					builtins/ft_echo.c \
+					builtins/ft_env.c \
+					builtins/ft_pwd.c \
+					builtins/ft_export.c \
 
 UNAME= $(shell uname -s)
 ifeq ($(UNAME), Darwin)
@@ -30,11 +33,12 @@ all: $(NAME)
 
 clean:
 	$(MAKE) -C $(LIBFT_DIR) clean
-	rm -rf $(OBJS_DIR)
+	@rm -rf $(OBJS_DIR)
+	@rm -f *.o
 
 fclean: clean
 	$(MAKE) -C $(LIBFT_DIR) fclean
-	rm -rf $(NAME)
+	@rm -rf $(NAME)
 
 re:	fclean all
 

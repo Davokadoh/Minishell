@@ -12,29 +12,22 @@
 
 #include "../include/minishell.h"
 
-void ft_pwd(void)
-{
-	char *buf;
-	buf = getcwd(NULL,0);
-	printf("%s\n",buf);
-	free(buf);
-}
-
-int ft_echo(char *cmd)
+int	builtin(char **tokens, t_envp *env)
 {
     int i;
-    int newLine;
 
-    newLine = 1;
     i = 0;
-    while (cmd[i] != '\0')
+    while (tokens[i])
     {
-        if (!ft_strncmp(&cmd[i],"-n", 2))
-            newLine = 0;
-        else
-            write(1,&cmd[i],newLine);
+        if (ft_strncmp(tokens[i],"env",3) == 0)
+            ft_env(env);
+        if (ft_strncmp(tokens[i],"pwd",3) == 0)
+            ft_pwd();
+        if (ft_strncmp(tokens[i],"echo",4) == 0)
+            ft_echo(tokens);
         i++;
     }
-    printf("\x20");
-    return (write(1,"\n",newLine) == 2);
+    return (0);
 }
+
+

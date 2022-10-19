@@ -19,6 +19,8 @@
 
 typedef struct  s_envp  t_envp;
 typedef struct  s_cmd   t_cmd;
+typedef struct  s_export t_export;
+
 struct s_envp
 {
     char    *env[31];
@@ -31,6 +33,11 @@ struct	s_cmd
     char	*output_name;
     int		input_fd;
     int		output_fd;
+};
+
+struct s_export
+{
+    char **var;
 };
 
 char	*rl_gets(void);

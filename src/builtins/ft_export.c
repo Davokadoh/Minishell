@@ -10,17 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
-/*
- * // ajoute a la liste de variable d'environnement
-int ft_export(char **args)
+#include "../../include/minishell.h"
+
+char *malloc_substrcpy(char *variable, int start, int end)
 {
-    //t_envp  *env;
+    int len;
+    int i;
+    char *name;
 
-}*/
+    i = 0;
+    len = end - start;
 
-/*
- * char	*get_variable_name(char *variable)
+    name = malloc(sizeof len + 1);
+    while (i++ < len)
+    {
+       name[i] = variable[i];
+    }
+    name[i] = '\0';
+    return (name);
+}
+
+
+char *get_variable_name(char *variable)
 {
 	int		index;
 	int		start;
@@ -46,7 +57,7 @@ int ft_export(char **args)
 	return (name);
 }
 
- char	*get_env_variable_value(char *variable)
+char *get_env_variable_value(char *variable)
 {
 	int		i;
 	int		start;
@@ -58,21 +69,47 @@ int ft_export(char **args)
 		return (NULL);
 	while (variable[i])
 	{
-		if (variable[i] == '=' && !(is_blank(variable[i + 1])))
+		if (variable[i] == '=')
 		{
 			start = i + 1;
 			end = ft_strlen(variable);
 			value = malloc_substrcpy(variable, start, end);
-			if (is_value_null(value))
-			{
-				free(value);
-				return (NULL);
-			}
 			return (value);
 		}
 		i++;
 	}
 	return (NULL);
 }
+//TODO creer un nouveau tableau de longeur envp +1 mettre la nouvelle entree
+// dans le nouveau tableau et dans un tableau export puis liberer l'ancien tableau envp
 
- */
+void add_env_var(char *l_value, char *r_value, t_envp *env)
+{
+    char *new_entry;
+    int i;
+
+    i = 0;
+    new_entry = ft_strjoin(l_value,r_value);
+
+    env = realloc(env->env,sizeof (*env)+1);
+
+    while(env->env[i])
+        i++;
+    env->env[i] = new_entry;
+    ft_free(new_entry);
+}
+// ajoute un element au tableau de variable d'environnement et au tableau d'export
+int ft_export(char **args, t_envp *env)
+{
+    char    *l_value;
+    char    *r_value;
+
+    l_value = get_variable_name(args[0]);
+    r_value = get_env_variable_value(args[0]);
+    if(l_value && r_value)
+        add_env_var(l_value,r_value,env);
+    return (1);
+}
+
+ // TODO export loop
+ // print_export()

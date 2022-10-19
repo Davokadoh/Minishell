@@ -1,4 +1,3 @@
-*.o
 .idea
+./build
 minishell
-obj/

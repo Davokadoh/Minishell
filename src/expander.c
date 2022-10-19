@@ -1,20 +1,22 @@
 #include "../include/minishell.h"
 
-static char	*ft_strinsert(const char *str1, const char *str2, int start, int end)
+static char	*ft_strinsert(const char *s1, const char *s2, int start, int end)
 {
-	char	*ptr;
-	char	*new_str;
+	char	*str;
+	int		l1;
+	int		l2;
 
-	new_str = ft_substr(str1, 0, start);
-	ptr = new_str;
-	new_str = ft_strjoin(new_str, str2);
-	ft_free(ptr);
-	ptr = new_str;
-	new_str = ft_strjoin(new_str, &str1[end]);
-	ft_free(ptr);
-	//ft_free(str1);
-	//ft_free(str2);
-	return (new_str);
+	if (!s1 || !s2)
+		return (NULL);
+	str = (char *) malloc((ft_strlen(s1) + ft_strlen(s2)) * sizeof(*s1) + 1);
+	if (!str)
+		return (NULL);
+	l1 = ft_strlen(s1);
+	l2 = ft_strlen(s2);
+	ft_strlcpy(str, s1, l1 + 1);
+	ft_strlcpy(&str[start], s2, l2 + 1);
+	ft_strlcpy(&str[ft_strlen(str)], &s1[end], ft_strlen(&s1[end]) + l2 + 1);
+	return (str);
 }
 
 static int	get_var_end(char *str)
@@ -27,21 +29,32 @@ static int	get_var_end(char *str)
 	return (i);
 }
 
-
-char	*expand(char **str)
+char	*expand(char **tokens, char **envp)
 {
 	int		i;
-	char	*var;
+	char	*key;
+	char	*val;
+	char	*tmp;
 
 	i = -1;
-	while (str[0][++i])
+	while (tokens[0][++i])
 	{
-		if (str[0][i] == '$' && str[0][i + 1] != '?')
+		if (tokens[0][i] == '$' && tokens[0][i + 1] != '?')
 		{
-			var = ft_substr(*str, i + 1, get_var_end(&str[0][i + 1]));
-			*str = ft_strinsert(*str, getenv(var), i, i + ft_strlen(var) + 1);
-			ft_free(var);
+			key = ft_substr(*tokens, i + 1, get_var_end(&tokens[0][i + 1]));
+			tmp = getenv(key);
+			if (!tmp)
+			{
+				ft_free(key);
+				continue ;
+			}
+			val = ft_strdup(getenv(key));
+			tmp = *tokens;
+			*tokens = ft_strinsert(*tokens, val, i, i + ft_strlen(key) + 1);
+			ft_free(tmp);
+			ft_free(key);
+			ft_free(val);
 		}
 	}
-	return (*str);
+	return (*tokens);
 }

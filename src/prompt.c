@@ -2,24 +2,26 @@
 
 char	*rl_gets(void)
 {
-    static char	*line_read = (char *) NULL;
-    static char	*previous_line;
-    char		*prmpt;
+	static char	*line_read = (char *) NULL;
+	static char	*previous_line;
+	char		*prmpt;
+	char		*tmp = "@minishell> ";
 
-    prmpt = ft_strjoin(getenv("USER"), "@minishell> ");
-    line_read = readline(prmpt);
-    ft_free(prmpt);
-    if (line_read && *line_read)
-    {
-        if (!previous_line)
-            add_history(line_read);
-        else
-        if (ft_strncmp(previous_line, line_read, ft_strlen(line_read)))
-            add_history(line_read);
-        ft_free(previous_line);
-        previous_line = ft_strdup(line_read);
-    }
-    return (line_read);
+	prmpt = ft_strjoin(getenv("USER"), tmp);
+	//prmpt = "test@minishell> ";
+	line_read = readline(prmpt);
+	ft_free(prmpt);
+	if (line_read && *line_read)
+	{
+		if (!previous_line)
+			add_history(line_read);
+		else
+			if (ft_strncmp(previous_line, line_read, ft_strlen(line_read)))
+				add_history(line_read);
+		ft_free(previous_line);
+		previous_line = ft_strdup(line_read);
+	}
+	return (line_read);
 }
 
 void	welcome(void)

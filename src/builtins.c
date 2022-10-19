@@ -6,11 +6,11 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/16 14:57:03 by Blaze             #+#    #+#             */
-/*   Updated: 2022/10/16 15:01:05 by Blaze            ###    42Lausanne.ch    */
+/*   Updated: 2022/10/19 12:17:02 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 void ft_pwd(void)
 {

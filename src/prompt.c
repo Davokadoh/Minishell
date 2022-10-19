@@ -6,6 +6,7 @@ char	*rl_gets(void)
 	static char	*previous_line;
 	char		*prmpt;
 	char		*tmp = "@minishell> ";
+	char		*res;
 
 	prmpt = ft_strjoin(getenv("USER"), tmp);
 	//prmpt = "test@minishell> ";
@@ -21,7 +22,9 @@ char	*rl_gets(void)
 		ft_free(previous_line);
 		previous_line = ft_strdup(line_read);
 	}
-	return (line_read);
+	res = ft_strdup(line_read);
+	rl_redisplay();
+	return (res);
 }
 
 void	welcome(void)

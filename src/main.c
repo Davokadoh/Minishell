@@ -82,7 +82,7 @@ int	main(int ac, char **av, char **envp)
 		fflush(0);
 		return (g_errno);
 	}
-	//welcome();
+	welcome();
 	while (signal != EXIT)
 	{
 		line = rl_gets();

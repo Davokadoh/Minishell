@@ -18,7 +18,6 @@ SRCS 		:=	$(SRC_DIR)/main.c \
 				$(SRC_DIR)/prompt.c \
 				$(SRC_DIR)/lexer.c \
 				$(SRC_DIR)/expander.c \
-				$(SRC_DIR)/metachar.c \
 				$(SRC_DIR)/parser.c \
 				$(SRC_DIR)/executor.c \
 				$(SRC_DIR)/ft_free_tab.c \

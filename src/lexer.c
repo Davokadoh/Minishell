@@ -12,7 +12,7 @@ int	is_meta(const char ch)
 		return (0);
 }
 
-char	*copy_meta(const char *ch, int *end)
+char	*copy_meta(const char *ch, unsigned int *end)
 {
 	if (ch[0] == '|' && ch[1] == '|')
 	{

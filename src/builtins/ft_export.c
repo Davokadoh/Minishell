@@ -16,15 +16,19 @@ char *malloc_substrcpy(char *variable, int start, int end)
 {
     int len;
     int i;
+    int j;
     char *name;
 
     i = 0;
+    j = start;
     len = end - start;
 
-    name = malloc(sizeof len + 1);
-    while (i++ < len)
+    name = malloc(sizeof(char) * len + 1);
+    while (i <= len)
     {
-       name[i] = variable[i];
+        name[i] = variable[j];
+        i++;
+        j++;
     }
     name[i] = '\0';
     return (name);
@@ -83,32 +87,38 @@ char *get_env_variable_value(char *variable)
 //TODO creer un nouveau tableau de longeur envp +1 mettre la nouvelle entree
 // dans le nouveau tableau et dans un tableau export puis liberer l'ancien tableau envp
 
-void add_env_var(char *l_value, char *r_value, t_envp *env)
+t_envp *add_env_var(char *l_value, char *r_value, t_envp **env)
 {
     char *new_entry;
     int i;
 
     i = 0;
-    new_entry = ft_strjoin(l_value,r_value);
+    new_entry = ft_strjoin(l_value,"=");
+    new_entry = ft_strjoin(new_entry,r_value);
 
-    env = realloc(env->env,sizeof (*env)+1);
+    env = realloc((*env)->env,sizeof  (*env) + 1 );
 
-    while(env->env[i])
+    while((*env)->env[i])
         i++;
-    env->env[i] = new_entry;
-    ft_free(new_entry);
+    (*env)->env[i++] = new_entry;
+    (*env)->env[i++] = NULL;
+    //ft_free(new_entry);
+    return (*env);
 }
 // ajoute un element au tableau de variable d'environnement et au tableau d'export
-int ft_export(char **args, t_envp *env)
+t_envp **ft_export(char **args, t_envp **env)
 {
     char    *l_value;
     char    *r_value;
 
+
+
+    args++;
     l_value = get_variable_name(args[0]);
     r_value = get_env_variable_value(args[0]);
     if(l_value && r_value)
-        add_env_var(l_value,r_value,env);
-    return (1);
+        *env = add_env_var(l_value,r_value,env);
+    return (env);
 }
 
  // TODO export loop

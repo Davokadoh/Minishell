@@ -50,4 +50,5 @@ void    ft_setenv(char *var, char *var2, t_envp *env);
 void    ft_env(t_envp *env);
 void    ft_pwd(void);
 int     ft_echo(char **args);
-int     builtin(char **tokens, t_envp *env);
+int     builtin(char **tokens, t_envp **env);
+t_envp     **ft_export(char **args, t_envp **env);

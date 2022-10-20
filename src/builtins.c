@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-int	builtin(char **tokens, t_envp *env)
+int	builtin(char **tokens, t_envp **env)
 {
     int i;
 
@@ -20,11 +20,13 @@ int	builtin(char **tokens, t_envp *env)
     while (tokens[i])
     {
         if (ft_strncmp(tokens[i],"env",3) == 0)
-            ft_env(env);
+            ft_env(*env);
         if (ft_strncmp(tokens[i],"pwd",3) == 0)
             ft_pwd();
         if (ft_strncmp(tokens[i],"echo",4) == 0)
             ft_echo(tokens);
+        if (ft_strncmp(tokens[i],"export",6) == 0)
+            *env = *ft_export(tokens,env);
         i++;
     }
     return (0);

@@ -60,6 +60,7 @@ int	run(t_cmd cmd, int argc, char **argv, char **ft_env)
 	pid_t	pid;
 	int		status;
 
+	status = 0;
 	pid = fork();
 	if (pid != 0)
 	{

@@ -65,6 +65,7 @@ int	run(t_cmd cmd, int argc, char **argv, char **ft_env)
 	if (pid != 0)
 	{
 		set_io(cmd.input_fd, cmd.output_fd);
+		dprintf(0, "cmd:%s\n", cmd.argv[0]);
 		if (execve(get_path(argv[0], ft_env), argv, ft_env) == -1)
 		{
 			perror(NULL);

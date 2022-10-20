@@ -72,7 +72,9 @@ int	main(int ac, char **av, char **envp)
 		return (launch_minishell(av[2], envp));
 	if (!isatty(0))
 	{
-		g_errno = launch_minishell(readline(NULL), envp);
+		line = readline(NULL);
+		g_errno = launch_minishell(line, envp);
+		ft_free(line);
 		printf("\033[A\33[2K\r");
 		fflush(0);
 		return (g_errno);

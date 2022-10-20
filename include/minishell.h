@@ -21,11 +21,6 @@ typedef struct  s_envp  t_envp;
 typedef struct  s_cmd   t_cmd;
 typedef struct  s_export t_export;
 
-struct s_envp
-{
-    char    *env[31];
-};
-
 struct	s_cmd
 {
     char	*argv;
@@ -44,11 +39,11 @@ char	*rl_gets(void);
 void	welcome(void);
 char	*expand(char **tokens);
 char	**lex(const char *str);
-char	*ft_getenv(char *var, t_envp *env);
-t_envp  *init_envp(char **env);
-void    ft_setenv(char *var, char *var2, t_envp *env);
-void    ft_env(t_envp *env);
+char	*ft_getenv(char *var, char **env);
+char    **init_envp(char **env);
+void    ft_setenv(char *var, char *var2, char **env);
+void    ft_env(char **env);
 void    ft_pwd(void);
 int     ft_echo(char **args);
-int     builtin(char **tokens, t_envp **env);
-t_envp     **ft_export(char **args, t_envp **env);
+int     builtin(char **tokens, char **env);
+char     **ft_export(char **args, char **env);

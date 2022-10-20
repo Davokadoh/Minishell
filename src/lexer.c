@@ -1,5 +1,54 @@
 #include "../include/minishell.h"
 
+int	is_meta(const char ch)
+{
+	if (ch == '|')
+		return (1);
+	else if (ch == '<')
+		return (1);
+	else if (ch == '>')
+		return (1);
+	else
+		return (0);
+}
+
+char	*copy_meta(const char *ch, int *end)
+{
+	if (ch[0] == '|' && ch[1] == '|')
+	{
+		*end += 2;
+		return (ft_strdup("||"));
+	}
+	else if (ch[0] == '|')
+	{
+		*end += 1;
+		return (ft_strdup("|"));
+	}
+	else if (ch[0] == '<' && ch[1] == '<')
+	{
+		*end += 2;
+		return (ft_strdup("|"));
+	}
+	else if (ch[0] == '<')
+	{
+		*end += 2;
+		return (ft_strdup("|"));
+	}
+	else if (ch[0] == '>' && ch[1] == '>')
+	{
+		*end += 2;
+		return (ft_strdup("|"));
+	}
+	else if (ch[0] == '>')
+	{
+		*end += 2;
+		return (ft_strdup("|"));
+	}
+	else
+		return (NULL);
+
+}
+
 char	**lex(char const *s)
 {
 	unsigned int	start;
@@ -23,7 +72,7 @@ char	**lex(char const *s)
 		while (s[start] == ' ')
 			start++;
 		end = start;
-		while (s[end] && (s[end] != ' ' || s_quote || d_quote))
+		while (s[end] && (s[end] != ' ' && !is_meta(s[end]) || s_quote || d_quote))
 		{
 			if (s[end] == '"' && !s_quote)
 				d_quote = (d_quote + 1) % 2;
@@ -31,7 +80,10 @@ char	**lex(char const *s)
 				s_quote = (s_quote + 1) % 2;
 			end++;
 		}
-		list[nb++] = ft_substr(s, start, end - start);
+		if (end - start)
+			list[nb++] = ft_substr(s, start, end - start);
+		if (is_meta(s[end]))
+			list[nb++] = copy_meta(&s[end], &end);
 		start = end;
 	}
 	list[nb] = NULL;

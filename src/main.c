@@ -2,7 +2,7 @@
 
 int	g_errno = 0;
 
-#define test 0
+#define test 1
 void	print_tab(char **tokens, char *part_name)
 {
 	if (test)
@@ -17,7 +17,6 @@ void	print_tab(char **tokens, char *part_name)
 static int	launch_minishell(char *line, char **envp)
 {
 	char	**tokens;
-	char	**metatokens;
 	t_cmd	*cmds;
 
 	tokens = lex(line); //Warning: Check some syntax errors beforehand
@@ -25,13 +24,9 @@ static int	launch_minishell(char *line, char **envp)
 	for (int i = 0; tokens[i]; i++)
 		expand(&tokens[i], envp);
 	print_tab(tokens, "EXPANDER");
-	metatokens = split_metachar(tokens);
+	cmds = parse(tokens); //Create a list of cmds w/ corresponding i/o
 	ft_free_tab(tokens);
 	ft_free(tokens);
-	print_tab(metatokens, "METACHAR");
-	cmds = parse(metatokens); //Create a list of cmds w/ corresponding i/o
-	ft_free_tab(metatokens);
-	ft_free(metatokens);
 	int i = -1;
 	if (test)
 	{

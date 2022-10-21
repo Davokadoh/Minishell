@@ -2,10 +2,10 @@
 
 char	*rl_gets(void)
 {
-	static char	*line_read = (char *) NULL;
+	char		*line_read = NULL;
 	static char	*previous_line;
 	char		*prmpt;
-	char		*tmp = "@minishell> ";
+	char		*tmp = "@msh> ";
 
 	prmpt = ft_strjoin(getenv("USER"), tmp);
 	line_read = readline(prmpt);

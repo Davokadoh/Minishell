@@ -28,7 +28,7 @@ OBJS        :=	$(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 DEPS        :=	$(OBJS:.o=.d)
 
 CC          :=	gcc
-#CFLAGS      :=	-Wall -Wextra -Werror
+CFLAGS      :=	-Wall -Wextra -Werror
 CPPFLAGS    :=	$(addprefix -I,$(INCS)) -MMD -MP
 LDFLAGS     +=	$(addprefix -L,$(dir $(LIBS_TARGET)))
 LDLIBS      :=	$(addprefix -l,$(LIBS))
@@ -49,7 +49,7 @@ MAKEFLAGS   += --no-print-directory #--silent
 # asan		run with fsanitize
 # debug		compile with debug info
 
-.PHONY: all clean fclean re asan leaks debug
+.PHONY: all clean fclean re asan debug
 
 # USE TPUTS INSTEAD!!!
 # COLORS
@@ -97,10 +97,6 @@ re:
 asan: CFLAGS += -g3 -fsanitize=address -fno-omit-frame-pointer
 asan: LDFLAGS += -fsanitize=address
 asan: all
-
-leaks: CFLAGS += -g3 -fsanitize=leaks -fno-omit-frame-pointer
-leaks: LDFLAGS += -fsanitize=leaks
-leaks: all
 
 debug: CFLAGS += -g3
 debug: all

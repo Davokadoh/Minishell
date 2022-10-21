@@ -27,22 +27,22 @@ char	*copy_meta(const char *ch, unsigned int *end)
 	else if (ch[0] == '<' && ch[1] == '<')
 	{
 		*end += 2;
-		return (ft_strdup("|"));
+		return (ft_strdup("<<"));
 	}
 	else if (ch[0] == '<')
 	{
-		*end += 2;
-		return (ft_strdup("|"));
+		*end += 1;
+		return (ft_strdup("<"));
 	}
 	else if (ch[0] == '>' && ch[1] == '>')
 	{
 		*end += 2;
-		return (ft_strdup("|"));
+		return (ft_strdup(">>"));
 	}
 	else if (ch[0] == '>')
 	{
-		*end += 2;
-		return (ft_strdup("|"));
+		*end += 1;
+		return (ft_strdup(">"));
 	}
 	else
 		return (NULL);
@@ -72,7 +72,7 @@ char	**lex(char const *s)
 		while (s[start] == ' ')
 			start++;
 		end = start;
-		while (s[end] && (s[end] != ' ' && !is_meta(s[end]) || s_quote || d_quote))
+		while (s[end] && ((s[end] != ' ' && !is_meta(s[end])) || s_quote || d_quote))
 		{
 			if (s[end] == '"' && !s_quote)
 				d_quote = (d_quote + 1) % 2;

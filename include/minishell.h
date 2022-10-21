@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 17:01:25 by Blaze             #+#    #+#             */
-/*   Updated: 2022/10/21 13:19:06 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/10/21 14:40:37 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ struct	s_cmd
 	int		do_run;
 };
 
-int	g_errno;
+extern int	g_errno;
 
 void	welcome(void);
 char	*rl_gets(void);

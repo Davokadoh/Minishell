@@ -1,8 +1,8 @@
 #include "../include/minishell.h"
 
-//int	g_errno = 0;
+int	g_errno = 0;
 
-#define test 0
+#define test 1
 void	print_tab(char **tokens, char *part_name)
 {
 	if (test)

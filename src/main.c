@@ -1,8 +1,8 @@
 #include "../include/minishell.h"
 
-int	g_errno = 0;
+//int	g_errno = 0;
 
-#define test 1
+#define test 0
 void	print_tab(char **tokens, char *part_name)
 {
 	if (test)
@@ -18,16 +18,17 @@ static int	launch_minishell(char *line, char **envp)
 {
 	char	**tokens;
 	t_cmd	*cmds;
+	int i = -1;
 
 	tokens = lex(line); //Warning: Check some syntax errors beforehand
 	print_tab(tokens, "LEXER");
-	for (int i = 0; tokens[i]; i++)
-		expand(&tokens[i], envp);
+	while (tokens[++i])
+		expand(&tokens[i]);//, envp);
 	print_tab(tokens, "EXPANDER");
 	cmds = parse(tokens); //Create a list of cmds w/ corresponding i/o
 	ft_free_tab(tokens);
 	ft_free(tokens);
-	int i = -1;
+	i = -1;
 	if (test)
 	{
 		printf("PARSER:\n");
@@ -40,9 +41,11 @@ static int	launch_minishell(char *line, char **envp)
 		printf("\n");
 	}
 	else
-		while (cmds[++i].argv[0]);
+		while (cmds[++i].argv[0])
+			;
 	execute(cmds, envp);
-	for (int i = 0; cmds[i].argv[0]; i++)
+	i = -1;
+	while (cmds[++i].argv[0])
 	{
 		ft_free_tab(cmds[i].argv);
 		ft_free(cmds[i].argv);
@@ -50,24 +53,16 @@ static int	launch_minishell(char *line, char **envp)
 	ft_free_tab(cmds[i].argv);
 	ft_free(cmds[i].argv);
 	ft_free(cmds);
-	/*
-	pipex(cmds); //Warning: Be sure to execute OUR built-ins + $?
-	pipex(parse(expand(lex(line))));
-	*/
 	return (0);
 }
-
-#define EXIT 3
 
 //Warnings!
 //env -i ./minishell
 int	main(int ac, char **av, char **envp)
 {
 	char	*line;
-	int		signal;
-	int		n;
+	int		line_counter;
 
-	signal = 0;
 	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
 		return (launch_minishell(av[2], envp));
 	if (!isatty(0))
@@ -80,18 +75,20 @@ int	main(int ac, char **av, char **envp)
 		return (g_errno);
 	}
 	welcome();
-	while (signal != EXIT)
+	line_counter = 0;
+	while (line_counter < 3)
 	{
 		line = rl_gets();
-		if (!*line)
+		if (!line || !*line)
 		{
 			ft_free(line);
-			return (0);
+			break ;
 		}
 		g_errno = launch_minishell(line, envp);
 		ft_free(line);
-		signal++;
+		line_counter++;
 	}
 	rl_clear_history();
+	printf("Goodbye!\n");
 	return (g_errno);
 }

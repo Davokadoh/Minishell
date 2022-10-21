@@ -70,7 +70,7 @@ static void	out(t_cmd *cmd, char *token)
 		close(cmd->output_fd);
 	if (access(token, W_OK))
 	{
-		cmd->output_fd = open(token, O_CREAT | O_WRONLY, 0444);
+		cmd->output_fd = open(token, O_CREAT | O_WRONLY, 0666);
 	}
 }
 
@@ -89,12 +89,10 @@ t_cmd	*parse(char **tokens)
 {
 	int		i;
 	int		a;
-	int		b;
 	t_cmd	*cmds;
 
 	i = -1;
 	a = 0;
-	b = -1;
 	cmds = malloc(100 * sizeof(t_cmd *) + 1);
 	cmds[a] = new_cmd();
 	while (tokens[++i])

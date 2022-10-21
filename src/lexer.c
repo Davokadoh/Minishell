@@ -72,7 +72,7 @@ char	**lex(char const *s)
 		while (s[start] == ' ')
 			start++;
 		end = start;
-		while (s[end] && (s[end] != ' ' && !is_meta(s[end]) || s_quote || d_quote))
+		while (s[end] && ((s[end] != ' ' && !is_meta(s[end])) || s_quote || d_quote))
 		{
 			if (s[end] == '"' && !s_quote)
 				d_quote = (d_quote + 1) % 2;

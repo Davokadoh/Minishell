@@ -6,30 +6,23 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/16 14:57:03 by Blaze             #+#    #+#             */
-/*   Updated: 2022/10/16 15:01:05 by Blaze            ###    42Lausanne.ch    */
+/*   Updated: 2022/10/21 16:01:18 by btchiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int	builtin(char **tokens, char **env)
+int	builtin(char **tokens, char ***env)
 {
-    int i;
-
-    i = 0;
-    while (tokens[i])
-    {
-        if (ft_strncmp(tokens[i],"env",3) == 0)
-            ft_env(env);
-        if (ft_strncmp(tokens[i],"pwd",3) == 0)
-            ft_pwd();
-        if (ft_strncmp(tokens[i],"echo",4) == 0)
-            ft_echo(tokens);
-        if (ft_strncmp(tokens[i],"export",6) == 0)
-            *env = *ft_export(tokens,env);
-        i++;
-    }
-    return (0);
+	if (ft_strncmp(tokens[0],"env",3) == 0)
+		ft_env(*env);
+	if (ft_strncmp(tokens[0],"pwd",3) == 0)
+		ft_pwd();
+	if (ft_strncmp(tokens[0],"echo",4) == 0)
+		ft_echo(tokens);
+	if (ft_strncmp(tokens[0],"export",6) == 0)
+		*env = ft_export(tokens,*env);
+	return (0);
 }
 
 

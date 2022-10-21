@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 17:01:25 by Blaze             #+#    #+#             */
-/*   Updated: 2022/10/03 13:56:19 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/10/21 15:42:05 by btchiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,5 @@ void    ft_setenv(char *var, char *var2, char **env);
 void    ft_env(char **env);
 void    ft_pwd(void);
 int     ft_echo(char **args);
-int     builtin(char **tokens, char **env);
-char     **ft_export(char **args, char **env);
+int     builtin(char **tokens, char ***env);
+char    **ft_export(char **args, char **env);

@@ -2,8 +2,10 @@
 
 static void	unset_io(int input_fd, int output_fd)
 {
-	close(input_fd);
-	close(output_fd);
+	if (input_fd != -1)// && input_fd != 0)
+		close(input_fd);
+	if (output_fd != -1)// && output_fd != 1)
+		close(output_fd);
 }
 
 static void	set_io(int input_fd, int output_fd)
@@ -55,41 +57,27 @@ char	*get_path(char *program_name, char **envp)
 	return (path);
 }
 
-int	run(t_cmd cmd, int argc, char **argv, char **ft_env)
+int	run(t_cmd cmd, char **argv, char **ft_env)
 {
 	pid_t	pid;
 	int		status;
 
 	status = 0;
 	pid = fork();
-	if (pid != 0)
+	if (pid == 0)
 	{
 		set_io(cmd.input_fd, cmd.output_fd);
-		dprintf(0, "cmd:%s\n", cmd.argv[0]);
 		if (execve(get_path(argv[0], ft_env), argv, ft_env) == -1)
 		{
-			perror(NULL);
+			perror("execve fail\n");
 			return (127);
 		}
 		return (0);
 	}
-	else
-	{
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			return (WEXITSTATUS(status));
-		return (0);
-	}
-}
-
-int	tab_len(char **tab)
-{
-	int	i;
-	
-	i = -1;
-	while (tab[++i])
-		;
-	return (i);
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	return (0);
 }
 
 int	execute(t_cmd *cmds, char **ft_env)
@@ -102,7 +90,7 @@ int	execute(t_cmd *cmds, char **ft_env)
 		//if (is_builtin())
 		//	run_builtin();
 		//else
-			g_errno = run(cmds[i], tab_len(cmds[i].argv), cmds[i].argv, ft_env);
+		g_errno = run(cmds[i], cmds[i].argv, ft_env);
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}
 	return (0);

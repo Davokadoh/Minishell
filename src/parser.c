@@ -77,9 +77,10 @@ static void	append(t_cmd *cmd, char *token)
 
 static void	out(t_cmd *cmd, char *token)
 {
+	printf("PING\n");
 	if (cmd->output_fd != -1)
 		close(cmd->output_fd);
-	cmd->output_fd = open(token, O_CREAT, 0666);
+	cmd->output_fd = open(token, O_TRUNC | O_CREAT | O_RDWR);
 }
 
 static void	add_argv(t_cmd *cmd, char *token)

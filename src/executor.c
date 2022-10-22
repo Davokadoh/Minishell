@@ -103,7 +103,7 @@ int	execute(t_cmd *cmds, char **ft_env)
 		//	run_builtin();
 		//else
 			g_errno = run(cmds[i], tab_len(cmds[i].argv), cmds[i].argv, ft_env);
-		//unset_io(cmds[i].input_fd, cmds[i].output_fd);
+		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}
 	return (0);
 }

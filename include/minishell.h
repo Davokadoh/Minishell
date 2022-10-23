@@ -21,7 +21,7 @@
 # include <sys/ioctl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include "libft.h"
+# include "../libft/libft.h"
 
 typedef struct	s_envp  t_envp;
 typedef struct s_cmd    t_cmd;
@@ -46,11 +46,11 @@ char	**split_metachar(char **tokens);
 t_cmd	*parse(char **tokens);
 int		execute(t_cmd *cmds, char **ft_env);
 
-char	*ft_getenv(char *var, t_envp *env);
-void    ft_setenv(char *var, char *var2, t_envp *env);
-void    ft_env(t_envp *env);
+
+
+
 void    ft_pwd(void);
-void    ft_echo(char *cmd);
+
 
 void	ft_free_tab(char **str);
 

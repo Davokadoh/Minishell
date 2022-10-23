@@ -21,12 +21,12 @@ static char	*ft_strinsert(const char *s1, const char *s2, int start, int end)
 
 static int	get_var_end(char *str)
 {
-	int	i;
+    int	i;
 
-	i = 0;
-	while (str[i] && str[i] != ' ' && str[i] != '$' && str[i] != '"')
-		i++;
-	return (i);
+    i = 0;
+    while (str[i] && str[i] != ' ' && str[i] != '$' && str[i] != '"')
+        i++;
+    return (i);
 }
 
 char	*expand(char **tokens)//, char **envp)

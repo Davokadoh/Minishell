@@ -53,6 +53,7 @@ static int	launch_minishell(char *line, char **envp)
 	ft_free_tab(cmds[i].argv);
 	ft_free(cmds[i].argv);
 	ft_free(cmds);
+
 	return (0);
 }
 

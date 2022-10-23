@@ -26,11 +26,6 @@
 typedef struct	s_envp  t_envp;
 typedef struct s_cmd    t_cmd;
 
-struct s_envp
-{
-	char	*env[31];
-};
-
 struct	s_cmd
 {
     char	**argv;
@@ -52,11 +47,26 @@ t_cmd	*parse(char **tokens);
 int		execute(t_cmd *cmds, char **ft_env);
 
 char	*ft_getenv(char *var, t_envp *env);
-t_envp  *init_envp(char **env);
 void    ft_setenv(char *var, char *var2, t_envp *env);
 void    ft_env(t_envp *env);
 void    ft_pwd(void);
 void    ft_echo(char *cmd);
 
 void	ft_free_tab(char **str);
+
+char	**lex(const char *str);
+char	*ft_getenv(char *var, char **env);
+char    **init_envp(char **env);
+void    ft_setenv(char *var, char *var2, char **env);
+void    ft_env(char **env);
+void    ft_pwd(void);
+int     ft_echo(char **args);
+int     builtin(char **tokens, char ***env);
+char    **ft_export(char **args, char **env);
+// utils
+char **ft_increnv(char **env, char *new_entry);
+char *malloc_substrcpy(char *variable, int start, int end);
+char *get_variable_name(char *variable);
+char *get_env_variable_value(char *variable);
+
 #endif

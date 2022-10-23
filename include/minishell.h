@@ -17,10 +17,7 @@
 #include <readline/history.h>
 #include "../libft/libft.h"
 
-typedef struct  s_envp  t_envp;
 typedef struct  s_cmd   t_cmd;
-typedef struct  s_export t_export;
-
 struct	s_cmd
 {
     char	*argv;
@@ -28,11 +25,6 @@ struct	s_cmd
     char	*output_name;
     int		input_fd;
     int		output_fd;
-};
-
-struct s_export
-{
-    char **var;
 };
 
 char	*rl_gets(void);
@@ -47,3 +39,8 @@ void    ft_pwd(void);
 int     ft_echo(char **args);
 int     builtin(char **tokens, char ***env);
 char    **ft_export(char **args, char **env);
+// utils
+char **ft_increnv(char **env, char *new_entry);
+char *malloc_substrcpy(char *variable, int start, int end);
+char *get_variable_name(char *variable);
+char *get_env_variable_value(char *variable);

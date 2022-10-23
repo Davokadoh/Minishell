@@ -4,7 +4,7 @@ int	launch_minishell(char *cmdline,char ***env)
 {
 	char	**tokens;
 
-	tokens = lex(cmdline); //Warning: Check some syntax errors beforehand
+	tokens = lex(cmdline);
     for (int i = 0; tokens[i]; i++)
         expand(&tokens[i]);
     builtin(tokens,env);

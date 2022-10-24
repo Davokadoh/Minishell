@@ -89,7 +89,7 @@ int	main(int ac, char **av, char **envp)
 		ft_free(line);
 		line_counter++;
 	}
-	rl_clear_history();
+	//rl_clear_history();
 	printf("Goodbye!\n");
 	return (g_errno);
 }

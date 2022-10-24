@@ -4,4 +4,4 @@ minishell
 obj/
 libft/
 .DS_Store
-*.build
+.build

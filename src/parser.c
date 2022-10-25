@@ -110,7 +110,7 @@ t_cmd	*parse(char **tokens)
 
 	a = 0;
 	cmds = malloc(2 * sizeof(t_cmd));
-	cmds[0] = new_cmd(a);
+	cmds[0] = new_cmd();
 	cmds[1] = new_cmd();
 	i = -1;
 	while (tokens[++i])

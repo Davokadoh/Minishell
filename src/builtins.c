@@ -6,40 +6,23 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/16 14:57:03 by Blaze             #+#    #+#             */
-/*   Updated: 2022/10/19 12:17:02 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/10/21 16:01:18 by btchiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
-void ft_pwd(void)
+int	builtin(char **tokens, char ***env)
 {
-	char *buf;
-	buf = getcwd(NULL,0);
-	printf("%s\n",buf);
-	free(buf);
+	if (ft_strncmp(tokens[0],"env",3) == 0)
+		ft_env(*env);
+	if (ft_strncmp(tokens[0],"pwd",3) == 0)
+		ft_pwd();
+	if (ft_strncmp(tokens[0],"echo",4) == 0)
+		ft_echo(tokens);
+	if (ft_strncmp(tokens[0],"export",6) == 0)
+		*env = ft_export(tokens,*env);
+	return (0);
 }
 
-void ft_echo(char *cmd)
-{
-    int i;
-    i = 0;
-    while (cmd[i] != '\0')
-    {
-        if (cmd[i] == '$')
-        {
-            i++;
-            while (cmd[i] != ' ' && cmd[i] != '\0')
-            {
-                printf("%c",cmd[i]);
-                i++;
-            }
-        }
-        else
-        {
-            printf("%c",cmd[i]);
-            i++;
-        }
-    }
-    printf("\n");
-}
+

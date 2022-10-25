@@ -53,6 +53,7 @@ static int	launch_minishell(char *line, char **envp)
 	ft_free_tab(cmds[i].argv);
 	ft_free(cmds[i].argv);
 	ft_free(cmds);
+
 	return (0);
 }
 
@@ -88,7 +89,7 @@ int	main(int ac, char **av, char **envp)
 		ft_free(line);
 		line_counter++;
 	}
-	rl_clear_history();
+	//rl_clear_history();
 	printf("Goodbye!\n");
 	return (g_errno);
 }

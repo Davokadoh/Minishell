@@ -24,28 +24,39 @@ static void	add_pipe(t_cmd *cmds, int *a)
 
 	if (pipe(pipefd) != 0)
 		perror("Pipe creation failed!");
-	if (cmds[*a].output_fd != -1)
+	if (cmds[*a].output_fd == -1)
+	{
 		close(cmds[*a].output_fd);
-	cmds[*a].output_fd = pipefd[1];
-	cmds[++*a] = new_cmd();
-	cmds[*a].input_fd = pipefd[0];
+		cmds[*a].output_fd = pipefd[1];
+		cmds[++*a] = new_cmd();
+		cmds[*a].input_fd = pipefd[0];
+	}
+	else
+		cmds[++*a] = new_cmd();
 }
 
 //Need to unlink heredoc once cmd has been run
 static void	heredoc(t_cmd *cmd, char *token)
 {
 	char	*line;
+	int		pipefd[2];
 	
-	if (cmd->input_fd != -1)
-		close(cmd->input_fd);
-	cmd->input_fd = open(token, O_CREAT);
-	while (ft_strncmp(line, token, ft_strlen(line)))
+	if (pipe(pipefd) != 0)
+		perror("Pipe creation failed!");
+	while (1)
 	{
-		line = rl_gets();
-		write(cmd->input_fd, line, ft_strlen(line));
-		write(cmd->input_fd, "\n", 2);
+		line = readline("> ");
+		if (!ft_strncmp(line, token, ft_strlen(token) + 1))
+			break ;
+		write(pipefd[1], line, ft_strlen(line));
+		write(pipefd[1], "\n", 2);
 		ft_free(line);
 	}
+	close(pipefd[1]);
+	if (cmd->input_fd != -1)
+		close(cmd->input_fd);
+	cmd->input_fd = pipefd[0];
+	ft_free(line);
 }
 
 static void	in(t_cmd *cmd, char *token)
@@ -60,18 +71,16 @@ static void	append(t_cmd *cmd, char *token)
 {
 	if (cmd->output_fd != -1)
 		close(cmd->output_fd);
-	if (!access(token, W_OK)) //Check if W_OK enough to append
+	if (!access(token, W_OK))
 		cmd->output_fd = open(token, O_APPEND);
 }
 
 static void	out(t_cmd *cmd, char *token)
 {
+	printf("PING\n");
 	if (cmd->output_fd != -1)
 		close(cmd->output_fd);
-	if (access(token, W_OK))
-	{
-		cmd->output_fd = open(token, O_CREAT | O_WRONLY, 0666);
-	}
+	cmd->output_fd = open(token, O_TRUNC | O_CREAT | O_RDWR, 0666);
 }
 
 static void	add_argv(t_cmd *cmd, char *token)

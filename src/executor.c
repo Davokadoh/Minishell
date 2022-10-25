@@ -74,6 +74,7 @@ int	run(t_cmd cmd, char **argv, char **ft_env)
 		}
 		return (0);
 	}
+	printf("Waiting on cmd %s\n", cmd.argv[0]);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
@@ -87,6 +88,9 @@ int	execute(t_cmd *cmds, char **ft_env)
 	i = -1;
 	while (cmds[++i].argv[0])
 	{
+		//if (is_builtin())
+		//	run_builtin();
+		//else
 		g_errno = run(cmds[i], cmds[i].argv, ft_env);
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}

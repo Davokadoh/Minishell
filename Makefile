@@ -8,8 +8,8 @@ INCS        :=	include\
 
 UNAME= $(shell uname -s)
 ifeq ($(UNAME), Darwin)
-INCS		+=	$(HOME)/.brew/Cellar/readline/8.1.2/include
-LDFLAGS		+=	-L$(HOME)/.brew/Cellar/readline/8.1.2/lib
+INCS		+=	/usr/local/Cellar/readline/8.2.1/include
+LDFLAGS		+=	-L/usr/local/Cellar/readline/8.2.1/lib
 #else ifeq ($(UNAME), Linux)
 endif
 

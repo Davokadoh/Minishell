@@ -15,6 +15,7 @@
 // enleve un element de la liste d'env
 char **ft_unset(char **args,char **env)
 {
+    int i;
 	char **new_env;
 	int	i;
 	int n;

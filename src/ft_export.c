@@ -6,11 +6,11 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 17:41:12 by btchiman          #+#    #+#             */
-/*   Updated: 2022/10/21 17:22:07 by btchiman         ###   ########.fr       */
+/*   Updated: 2022/10/25 14:10:03 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../include/minishell.h"
 
 char **init_exp(char **env)
 {

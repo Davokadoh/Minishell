@@ -6,11 +6,11 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 14:04:58 by btchiman          #+#    #+#             */
-/*   Updated: 2022/10/18 14:05:52 by btchiman         ###   ########.fr       */
+/*   Updated: 2022/10/25 14:10:19 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../include/minishell.h"
 
 void ft_pwd(void)
 {

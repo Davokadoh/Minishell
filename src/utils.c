@@ -6,11 +6,11 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 15:41:37 by Blaze             #+#    #+#             */
-/*   Updated: 2022/10/23 15:41:41 by Blaze            ###    42Lausanne.ch    */
+/*   Updated: 2022/10/25 14:10:34 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../include/minishell.h"
 
 char **ft_increnv(char **env, char *new_entry)
 {

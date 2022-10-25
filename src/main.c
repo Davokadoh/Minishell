@@ -2,7 +2,7 @@
 
 int	g_errno = 0;
 
-#define test 1
+#define test 0
 void	print_tab(char **tokens, char *part_name)
 {
 	if (test)
@@ -27,7 +27,6 @@ static int	launch_minishell(char *line, char **envp)
 	print_tab(tokens, "EXPANDER");
 	cmds = parse(tokens); //Create a list of cmds w/ corresponding i/o
 	ft_free_tab(tokens);
-	ft_free(tokens);
 	i = -1;
 	if (test)
 	{
@@ -46,14 +45,9 @@ static int	launch_minishell(char *line, char **envp)
 	execute(cmds, envp);
 	i = -1;
 	while (cmds[++i].argv[0])
-	{
 		ft_free_tab(cmds[i].argv);
-		ft_free(cmds[i].argv);
-	}
 	ft_free_tab(cmds[i].argv);
-	ft_free(cmds[i].argv);
 	ft_free(cmds);
-
 	return (0);
 }
 
@@ -80,7 +74,7 @@ int	main(int ac, char **av, char **envp)
 	while (line_counter < 3)
 	{
 		line = rl_gets();
-		if (!line || !*line)
+		if (!line || !*line) //rm !*line do stop exiting
 		{
 			ft_free(line);
 			break ;

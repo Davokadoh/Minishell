@@ -74,7 +74,6 @@ int	run(t_cmd cmd, char **argv, char **ft_env)
 		}
 		return (0);
 	}
-	printf("Waiting on cmd %s\n", cmd.argv[0]);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));

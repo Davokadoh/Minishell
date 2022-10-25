@@ -6,13 +6,13 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 15:07:50 by btchiman          #+#    #+#             */
-/*   Updated: 2022/10/24 15:09:06 by btchiman         ###   ########.fr       */
+/*   Updated: 2022/10/25 13:10:07 by btchiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void ft_exit(void watever)
+void ft_exit()
 {
-
+	exit(0);
 }

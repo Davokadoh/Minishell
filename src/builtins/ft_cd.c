@@ -6,13 +6,13 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 14:41:59 by btchiman          #+#    #+#             */
-/*   Updated: 2022/10/24 15:02:53 by btchiman         ###   ########.fr       */
+/*   Updated: 2022/10/25 12:49:51 by btchiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	ft_cd(char **args, char **env)
+void	ft_cd()//char **args, char **env)
 {
 	
 }

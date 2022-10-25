@@ -13,8 +13,8 @@ LDFLAGS		+=	-L/usr/local/Cellar/readline/8.2.1/lib
 #else ifeq ($(UNAME), Linux)
 endif
 
-SRC_DIR     :=	src
-SRCS 		:=	$(SRC_DIR)/main.c \
+SRC_DIR		:=	src
+SRCS		:=	$(SRC_DIR)/main.c \
 				$(SRC_DIR)/prompt.c \
 				$(SRC_DIR)/lexer.c \
 				$(SRC_DIR)/expander.c \
@@ -22,11 +22,11 @@ SRCS 		:=	$(SRC_DIR)/main.c \
 				$(SRC_DIR)/executor.c \
 				$(SRC_DIR)/ft_free_tab.c \
 				$(SRC_DIR)/builtins.c \
-				$(SRC_DIR)/builtins/ft_echo.c \
-                $(SRC_DIR)/builtins/ft_env.c \
-                $(SRC_DIR)/builtins/ft_pwd.c \
-                $(SRC_DIR)/builtins/ft_export.c \
-                $(SRC_DIR)/builtins/utils.c \
+				$(SRC_DIR)/ft_echo.c \
+				$(SRC_DIR)/ft_env.c \
+				$(SRC_DIR)/ft_pwd.c \
+				$(SRC_DIR)/ft_export.c \
+				$(SRC_DIR)/utils.c \
 
 BUILD_DIR   :=	.build
 OBJS        :=	$(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)

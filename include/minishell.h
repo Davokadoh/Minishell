@@ -62,8 +62,12 @@ void    ft_setenv(char *var, char *var2, char **env);
 void    ft_env(char **env);
 void    ft_pwd(void);
 int     ft_echo(char **args);
+void	ft_cd(char **args, char **env);
 int     builtin(char **tokens, char ***env);
 char    **ft_export(char **args, char **env);
+char	**ft_unset(char **args, char **env);
+void	ft_exit(void);
+
 // utils
 char **ft_increnv(char **env, char *new_entry);
 char *malloc_substrcpy(char *variable, int start, int end);

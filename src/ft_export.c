@@ -6,7 +6,7 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 17:41:12 by btchiman          #+#    #+#             */
-/*   Updated: 2022/10/25 14:10:03 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/10/26 15:30:30 by btchiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,18 @@ char **init_exp(char **env)
     char **exp;
     int i;
     int j;
-    // ou est passe path ??
+    
     i = 0;
     j = 0;
     while (env[i])
         i++;
     exp = malloc(sizeof(char **) * i);
-    while (env[j] && j < (i-1))
+    while (env[j])
     {
         if(ft_strnstr(env[j],"PATH",4))
             exp[j] = ft_strdup(env[j]);
-        exp[j] = ft_strdup(env[j]);
+        if(ft_strncmp(env[j],"_=",2) != 0)
+            exp[j] = ft_strdup(env[j]);
         j++;
     }
     exp[i] = NULL;
@@ -48,28 +49,31 @@ char **add_env_var(char *l_value, char *r_value, char **env)
 // ajoute un element au tableau de variable d'environnement et au tableau d'export
 char **ft_export(char **args, char **env)
 {
-    char    *l_value;
-    char    *r_value;
-	char	**new_env;
-    int    i;
-	static char		**exp_lst;
+    char    	*l_value;
+    char    	*r_value;
+	char		**new_env;
+	static char	**exp_lst;
+    int     	i;
 
     i = -1;
 	if (!exp_lst)
-        exp_lst = init_exp(env);
+    	exp_lst = init_exp(env);
 	if (args[1] == NULL)
 	{
-        while (exp_lst[++i])
+			while (exp_lst[++i])
             printf("%s\n", exp_lst[i]);
 	}
-	else
+	if (args[1])
 	{
         if (!ft_strchr(args[1],'='))
-            return (add_env_var(args[1],"",exp_lst));
+		{
+			exp_lst = add_env_var(args[1],"",exp_lst);
+			return (env);
+		}         
     	l_value = get_variable_name(args[1]);
     	r_value = get_env_variable_value(args[1]);
     	new_env = add_env_var(l_value,r_value,env);
-        exp_lst = add_env_var(l_value,r_value,exp_lst);
+		exp_lst = add_env_var(l_value,r_value,exp_lst);
 		return (new_env);
 	}
     return (env);

@@ -24,6 +24,8 @@ SRCS		:=	$(SRC_DIR)/main.c \
 				$(SRC_DIR)/builtins.c \
 				$(SRC_DIR)/ft_echo.c \
 				$(SRC_DIR)/ft_env.c \
+				$(SRC_DIR)/ft_cd.c \
+				$(SRC_DIR)/ft_exit.c \
 				$(SRC_DIR)/ft_pwd.c \
 				$(SRC_DIR)/ft_export.c \
 				$(SRC_DIR)/utils.c \

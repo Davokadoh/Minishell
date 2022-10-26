@@ -79,6 +79,14 @@ int	run(t_cmd cmd, char **argv, char **ft_env)
 		return (WEXITSTATUS(status));
 	return (0);
 }
+int is_builtin(char *cmd)
+{
+    if (!ft_strncmp(cmd, "echo", 4) || !ft_strncmp(cmd, "cd", 2) || !ft_strncmp(cmd, "pwd", 3)
+    || !ft_strncmp(cmd, "export", 6) || !ft_strncmp(cmd, "unset", 5) || !ft_strncmp(cmd, "env", 3)
+    || !ft_strncmp(cmd, "exit", 4))
+        return (1);
+    return (0);
+}
 
 int	execute(t_cmd *cmds, char **ft_env)
 {
@@ -87,9 +95,9 @@ int	execute(t_cmd *cmds, char **ft_env)
 	i = -1;
 	while (cmds[++i].argv[0])
 	{
-		//if (is_builtin())
-		//	run_builtin();
-		//else
+		if (is_builtin(cmds[++i].argv[0]))
+			builtin(cmds[i].argv, &ft_env);
+		else
 		g_errno = run(cmds[i], cmds[i].argv, ft_env);
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}

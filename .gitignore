@@ -6,5 +6,4 @@ minishell
 obj/
 libft/
 .DS_Store
-.build
 *.swp

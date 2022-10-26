@@ -25,7 +25,7 @@ static int	launch_minishell(char *line, char **envp)
 	while (tokens[++i])
 		expand(&tokens[i]);//, envp);
 	print_tab(tokens, "EXPANDER");
-	builtin(tokens,&envp); // insert builtins*
+	//builtin(tokens,&envp); // insert builtins*
 	cmds = parse(tokens); //Create a list of cmds w/ corresponding i/o
 	ft_free_tab(tokens);
 	i = -1;

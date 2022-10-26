@@ -1,5 +1,6 @@
 #include "../include/minishell.h"
 
+/*
 static void	unset_io(int input_fd, int output_fd)
 {
 	if (input_fd != -1)
@@ -7,6 +8,7 @@ static void	unset_io(int input_fd, int output_fd)
 	if (output_fd != -1)
 		close(output_fd);
 }
+*/
 
 static void	set_io(int input_fd, int output_fd)
 {
@@ -60,26 +62,23 @@ static char	*get_path(char *program_name, char **envp)
 static int	run(t_cmd cmd, char **argv, char **ft_env)
 {
 	pid_t	pid;
-	int		status;
 
-	status = 0;
 	pid = fork();
 	if (pid == 0)
 	{
 		set_io(cmd.input_fd, cmd.output_fd);
 		execve(get_path(argv[0], ft_env), argv, ft_env);
 		perror("execve fail\n");
-		return (127);
+		return (0);
 	}
-	wait(0);
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	return (0);
+	//unset_io(cmd.input_fd, cmd.output_fd);
+	return (127);
 }
 
 int	execute(t_cmd *cmds, char **ft_env)
 {
 	int	i;
+	int	status;
 
 	i = -1;
 	while (cmds[++i].argv[0])
@@ -87,8 +86,9 @@ int	execute(t_cmd *cmds, char **ft_env)
 		//if (is_builtin())
 		//	run_builtin();
 		//else
-		g_errno = run(cmds[i], cmds[i].argv, ft_env);
-		unset_io(cmds[i].input_fd, cmds[i].output_fd);
+		status = 0;
+			g_errno = run(cmds[i], cmds[i].argv, ft_env);
 	}
+	wait(&status);
 	return (0);
 }

@@ -1,8 +1,9 @@
 *.o
+.vscode
 .idea
 minishell
 obj/
 libft/
 .DS_Store
-*.build
+.build
 *.swp

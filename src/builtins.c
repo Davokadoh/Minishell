@@ -24,8 +24,8 @@ int	builtin(char **tokens, char ***env)
 		*env = ft_export(tokens,*env);
 	if (ft_strncmp(tokens[0],"unset",5) == 0)
 		*env = ft_unset(tokens,*env);
-	if (ft_strncmp(tokens[0],"cd",2) == 0)
-		ft_cd(tokens, *env);
+	/*if (ft_strncmp(tokens[0],"cd",2) == 0)
+		ft_cd(tokens, *env);*/
 	if (ft_strncmp(tokens[0],"exit",4) == 0)
 		ft_exit();
 	return (0);

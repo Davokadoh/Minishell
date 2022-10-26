@@ -26,9 +26,6 @@ SRCS			=	main.c \
 					builtins/ft_cd.c \
 					builtins/ft_exit.c \
 					builtins/utils.c \
-					builtins/ft_cd.c \
-					builtins/ft_unset.c \
-					builtins/ft_exit.c \
 
 UNAME= $(shell uname -s)
 ifeq ($(UNAME), Darwin)

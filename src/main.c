@@ -25,6 +25,7 @@ static int	launch_minishell(char *line, char **envp)
 	while (tokens[++i])
 		expand(&tokens[i]);//, envp);
 	print_tab(tokens, "EXPANDER");
+	builtin(tokens,&envp); // insert builtins*
 	cmds = parse(tokens); //Create a list of cmds w/ corresponding i/o
 	ft_free_tab(tokens);
 	i = -1;
@@ -71,7 +72,7 @@ int	main(int ac, char **av, char **envp)
 	}
 	welcome();
 	line_counter = 0;
-	while (line_counter < 3)
+	while (line_counter > -1)
 	{
 		line = rl_gets();
 		if (!line || !*line) //rm !*line do stop exiting
@@ -81,7 +82,7 @@ int	main(int ac, char **av, char **envp)
 		}
 		g_errno = launch_minishell(line, envp);
 		ft_free(line);
-		line_counter++;
+		//line_counter++;
 	}
 	//rl_clear_history();
 	printf("Goodbye!\n");

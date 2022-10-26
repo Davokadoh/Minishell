@@ -67,14 +67,11 @@ static int	run(t_cmd cmd, char **argv, char **ft_env)
 	if (pid == 0)
 	{
 		set_io(cmd.input_fd, cmd.output_fd);
-		if (execve(get_path(argv[0], ft_env), argv, ft_env) == -1)
-		{
-			perror("execve fail\n");
-			return (127);
-		}
-		return (0);
+		execve(get_path(argv[0], ft_env), argv, ft_env);
+		perror("execve fail\n");
+		return (127);
 	}
-	waitpid(pid, &status, 0);
+	wait(0);
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	return (0);

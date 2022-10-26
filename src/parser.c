@@ -128,7 +128,10 @@ t_cmd	*parse(char **tokens)
 		else
 			add_argv(&cmds[a], tokens[i]);
 	}
-	if (cmds[1].argv[0] != NULL)
+	i = -1;
+	while (cmds[++i].argv[0])
+		;
+	if (cmds[i].argv[0] != NULL)
 		cmds[++a] = new_cmd();
 	return (cmds);
 }

@@ -2,9 +2,9 @@
 
 static void	unset_io(int input_fd, int output_fd)
 {
-	if (input_fd != -1)// && input_fd != 0)
+	if (input_fd != -1)
 		close(input_fd);
-	if (output_fd != -1)// && output_fd != 1)
+	if (output_fd != -1)
 		close(output_fd);
 }
 
@@ -16,7 +16,7 @@ static void	set_io(int input_fd, int output_fd)
 		dup2(output_fd, 1);
 }
 
-int	path_error(char **paths, int i)
+static int	path_error(char **paths, int i)
 {
 	if (!paths[i])
 	{
@@ -27,7 +27,7 @@ int	path_error(char **paths, int i)
 	return (0);
 }
 
-char	*get_path(char *program_name, char **envp)
+static char	*get_path(char *program_name, char **envp)
 {
 	int		i;
 	char	*path;
@@ -57,7 +57,7 @@ char	*get_path(char *program_name, char **envp)
 	return (path);
 }
 
-int	run(t_cmd cmd, char **argv, char **ft_env)
+static int	run(t_cmd cmd, char **argv, char **ft_env)
 {
 	pid_t	pid;
 	int		status;

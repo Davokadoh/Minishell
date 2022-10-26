@@ -38,9 +38,10 @@ static void	add_pipe(t_cmd **cmds, int *a)
 	}
 	else
 		cmds[0][++*a] = new_cmd();
+	cmds[0][*a + 1] = new_cmd();
 }
 
-//Close fd[0] once cmd has run
+//Close fd[0] once cmd has run ?
 static void	heredoc(t_cmd *cmd, char *token)
 {
 	char	*line;
@@ -84,7 +85,7 @@ static void	out(t_cmd *cmd, char *token)
 {
 	if (cmd->output_fd != -1)
 		close(cmd->output_fd);
-	cmd->output_fd = open(token, O_TRUNC | O_CREAT | O_RDWR, 0666);
+	cmd->output_fd = open(token, O_TRUNC | O_CREAT | O_WRONLY, 0666);
 }
 
 static void	add_argv(t_cmd *cmd, char *token)
@@ -95,9 +96,6 @@ static void	add_argv(t_cmd *cmd, char *token)
 	while(cmd->argv[++i])
 		;
 	cmd->argv = realloc(cmd->argv, (i + 2) * sizeof(char **));
-	i = -1;
-	while(cmd->argv[++i])
-		;
 	cmd->argv[i] = ft_strdup(token);
 	cmd->argv[++i] = NULL;
 }

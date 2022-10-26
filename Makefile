@@ -28,6 +28,7 @@ SRCS		:=	$(SRC_DIR)/main.c \
 				$(SRC_DIR)/ft_exit.c \
 				$(SRC_DIR)/ft_pwd.c \
 				$(SRC_DIR)/ft_export.c \
+				$(SRC_DIR)/ft_unset.c \
 				$(SRC_DIR)/utils.c \
 
 BUILD_DIR   :=	.build

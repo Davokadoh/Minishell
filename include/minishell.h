@@ -21,7 +21,7 @@
 # include <sys/ioctl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include "../lib/libft/include/libft.h"
+# include "../lib/libft/libft.h"
 
 
 typedef struct	s_envp  t_envp;

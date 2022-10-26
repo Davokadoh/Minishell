@@ -11,8 +11,8 @@
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-/*
-void	ft_cd()//char **args, char **env)
+
+void	ft_cd(char **args, char **env)
 {
     char	*path;
     char	*oldpwd;
@@ -40,4 +40,3 @@ void	ft_cd()//char **args, char **env)
     free(oldpwd);
     free(pwd);
 }
-*/

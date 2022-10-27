@@ -3,7 +3,7 @@
 int	g_errno = 0;
 
 #define test 0
-void	print_tab(char **tokens, char *part_name)
+static void	print_tab(char **tokens, char *part_name)
 {
 	if (test)
 	{
@@ -14,7 +14,7 @@ void	print_tab(char **tokens, char *part_name)
 	}
 }
 
-static int	launch_minishell(char *line, char **envp)
+static int	launch_minishell(char *line, char ***ft_env)
 {
 	char	**tokens;
 	t_cmd	*cmds;
@@ -23,7 +23,7 @@ static int	launch_minishell(char *line, char **envp)
 	tokens = lex(line); //Warning: Check some syntax errors beforehand
 	print_tab(tokens, "LEXER");
 	while (tokens[++i])
-		expand(&tokens[i]);//, envp);
+		expand(&tokens[i]);//, ft_env);
 	print_tab(tokens, "EXPANDER");
 	cmds = parse(tokens); //Create a list of cmds w/ corresponding i/o
 	ft_free_tab(tokens);
@@ -42,7 +42,7 @@ static int	launch_minishell(char *line, char **envp)
 	else
 		while (cmds[++i].argv[0])
 			;
-	execute(cmds, envp);
+	execute(cmds, ft_env);
 	i = -1;
 	while (cmds[++i].argv[0])
 		ft_free_tab(cmds[i].argv);
@@ -56,14 +56,16 @@ static int	launch_minishell(char *line, char **envp)
 int	main(int ac, char **av, char **envp)
 {
 	char	*line;
+	char	**ft_env;
 	int		line_counter;
 
+	ft_env = init_envp(envp);
 	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
-		return (launch_minishell(av[2], envp));
+		return (launch_minishell(av[2], &ft_env));
 	if (!isatty(0))
 	{
 		line = readline(NULL);
-		g_errno = launch_minishell(line, envp);
+		g_errno = launch_minishell(line, &ft_env);
 		ft_free(line);
 		printf("\033[A\33[2K\r");
 		fflush(0);
@@ -79,7 +81,7 @@ int	main(int ac, char **av, char **envp)
 			ft_free(line);
 			break ;
 		}
-		g_errno = launch_minishell(line, envp);
+		g_errno = launch_minishell(line, &ft_env);
 		ft_free(line);
 		line_counter++;
 	}

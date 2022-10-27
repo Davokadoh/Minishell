@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 15:42:26 by Blaze             #+#    #+#             */
-/*   Updated: 2022/10/25 14:38:07 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/10/27 16:17:13 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	**init_envp(char **envp)
 	i = -1;
 	while (envp[++i])
 		;
-	env = malloc(sizeof(char **) * i + 1);
+	env = malloc(sizeof(char **) * (i + 1));
 	if (!env)
 		return (NULL);
 	i = -1;

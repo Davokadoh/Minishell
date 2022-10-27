@@ -1,13 +1,5 @@
 #include "../include/minishell.h"
 
-static void	unset_io(int input_fd, int output_fd)
-{
-	if (input_fd != -1)// && input_fd != 0)
-		close(input_fd);
-	if (output_fd != -1)// && output_fd != 1)
-		close(output_fd);
-}
-
 static void	set_io(int input_fd, int output_fd)
 {
 	if (input_fd != -1)
@@ -16,7 +8,7 @@ static void	set_io(int input_fd, int output_fd)
 		dup2(output_fd, 1);
 }
 
-int	path_error(char **paths, int i)
+static int	path_error(char **paths, int i)
 {
 	if (!paths[i])
 	{
@@ -27,7 +19,7 @@ int	path_error(char **paths, int i)
 	return (0);
 }
 
-char	*get_path(char *program_name, char **envp)
+static char	*get_path(char *program_name, char **envp)
 {
 	int		i;
 	char	*path;
@@ -57,26 +49,23 @@ char	*get_path(char *program_name, char **envp)
 	return (path);
 }
 
-int	run(t_cmd cmd, char **argv, char **ft_env)
+static int	run(t_cmd cmd, char **argv, char ***ft_env)
 {
 	pid_t	pid;
-	int		status;
 
-	status = 0;
 	pid = fork();
-	if (pid == 0)
+	if (pid == -1)
+	{
+		perror("Failed to fork\n");
+		return (66);
+	}
+	else if (pid == 0)
 	{
 		set_io(cmd.input_fd, cmd.output_fd);
-		if (execve(get_path(argv[0], ft_env), argv, ft_env) == -1)
-		{
-			perror("execve fail\n");
-			return (127);
-		}
-		return (0);
+		execve(get_path(argv[0], *ft_env), argv, *ft_env);
+		perror("Failed to execve\n");
+		return (127);
 	}
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
 	return (0);
 }
 int is_builtin(char *cmd)
@@ -88,18 +77,20 @@ int is_builtin(char *cmd)
     return (0);
 }
 
-int	execute(t_cmd *cmds, char **ft_env)
+int	execute(t_cmd *cmds, char ***ft_env)
 {
 	int	i;
+	int	status;
 
 	i = -1;
+	status = 0;
 	while (cmds[++i].argv[0])
 	{
-		if (is_builtin(cmds[++i].argv[0]))
-			builtin(cmds[i].argv, &ft_env);
+		if (is_builtin(cmds[i].argv[0]))
+			g_errno = run_builtin(cmds[i].argv, ft_env);
 		else
-		g_errno = run(cmds[i], cmds[i].argv, ft_env);
-		unset_io(cmds[i].input_fd, cmds[i].output_fd);
+			g_errno = run(cmds[i], cmds[i].argv, ft_env);
 	}
+	wait(&status);
 	return (0);
 }

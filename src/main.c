@@ -61,7 +61,11 @@ int	main(int ac, char **av, char **envp)
 
 	ft_env = init_envp(envp);
 	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
-		return (launch_minishell(av[2], &ft_env));
+	{
+		g_errno = launch_minishell(av[2], &ft_env);
+		ft_free_tab(ft_env);
+		return (g_errno);
+	}
 	if (!isatty(0))
 	{
 		line = readline(NULL);
@@ -69,6 +73,7 @@ int	main(int ac, char **av, char **envp)
 		ft_free(line);
 		printf("\033[A\33[2K\r");
 		fflush(0);
+		ft_free_tab(ft_env);
 		return (g_errno);
 	}
 	welcome();
@@ -85,6 +90,7 @@ int	main(int ac, char **av, char **envp)
 		ft_free(line);
 		line_counter++;
 	}
+	ft_free_tab(ft_env);
 	//rl_clear_history();
 	printf("Goodbye!\n");
 	return (g_errno);

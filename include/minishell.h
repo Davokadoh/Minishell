@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 17:01:25 by Blaze             #+#    #+#             */
-/*   Updated: 2022/10/27 12:11:37 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/10/27 15:56:19 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,7 @@ char	**lex(const char *str);
 char	*expand(char **str);//, char **envp);
 char	**split_metachar(char **tokens);
 t_cmd	*parse(char **tokens);
-int		execute(t_cmd *cmds, char **ft_env);
-
-
+int		execute(t_cmd *cmds, char ***ft_env);
 
 
 void    ft_pwd(void);
@@ -63,7 +61,8 @@ void    ft_env(char **env);
 void    ft_pwd(void);
 int     ft_echo(char **args);
 void	ft_cd(char **args, char **env);
-int     builtin(char **tokens, char ***env);
+int     is_builtin(char *cmd);
+int     run_builtin(char **argv, char ***env);
 char    **ft_export(char **args, char **env);
 char	**ft_unset(char **args, char **env);
 void	ft_exit(void);

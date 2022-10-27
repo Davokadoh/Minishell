@@ -6,29 +6,46 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/16 14:57:03 by Blaze             #+#    #+#             */
-/*   Updated: 2022/10/24 15:02:31 by btchiman         ###   ########.fr       */
+/*   Updated: 2022/10/27 14:01:32 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int	builtin(char **tokens, char ***env)
+int	is_builtin(char *cmd)
 {
-	if (ft_strncmp(tokens[0],"env",3) == 0)
-		ft_env(*env);
-	if (ft_strncmp(tokens[0],"pwd",3) == 0)
-		ft_pwd();
-	if (ft_strncmp(tokens[0],"echo",4) == 0)
-		ft_echo(tokens);
-	if (ft_strncmp(tokens[0],"export",6) == 0)
-		*env = ft_export(tokens,*env);
-	if (ft_strncmp(tokens[0],"unset",5) == 0)
-		*env = ft_unset(tokens,*env);
-	if (ft_strncmp(tokens[0],"cd",2) == 0)
-		ft_cd(tokens, *env);
-	if (ft_strncmp(tokens[0],"exit",4) == 0)
-		ft_exit();
+	if (ft_strncmp(cmd, "env", 3) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "pwd", 3) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "echo", 4) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "export", 6) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "unset", 5) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "cd", 2) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "exit", 4) == 0)
+		return (1);
 	return (0);
 }
 
-
+int	run_builtin(char **argv, char ***env)
+{
+	if (ft_strncmp(argv[0], "env", 3) == 0)
+		ft_env(*env);
+	if (ft_strncmp(argv[0], "pwd", 3) == 0)
+		ft_pwd();
+	if (ft_strncmp(argv[0], "echo", 4) == 0)
+		ft_echo(argv);
+	if (ft_strncmp(argv[0], "export", 6) == 0)
+		*env = ft_export(argv, *env);
+	if (ft_strncmp(argv[0], "unset", 5) == 0)
+		*env = ft_unset(argv, *env);
+	if (ft_strncmp(argv[0], "cd", 2) == 0)
+		ft_cd(argv, *env);
+	if (ft_strncmp(argv[0], "exit", 4) == 0)
+		ft_exit();
+	return (0);
+}

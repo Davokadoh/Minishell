@@ -1,15 +1,5 @@
 #include "../include/minishell.h"
 
-/*
-static void	unset_io(int input_fd, int output_fd)
-{
-	if (input_fd != -1)
-		close(input_fd);
-	if (output_fd != -1)
-		close(output_fd);
-}
-*/
-
 static void	set_io(int input_fd, int output_fd)
 {
 	if (input_fd != -1)
@@ -59,34 +49,38 @@ static char	*get_path(char *program_name, char **envp)
 	return (path);
 }
 
-static int	run(t_cmd cmd, char **argv, char **ft_env)
+static int	run(t_cmd cmd, char **argv, char ***ft_env)
 {
 	pid_t	pid;
 
 	pid = fork();
-	if (pid == 0)
+	if (pid == -1)
+	{
+		perror("Failed to fork\n");
+		return (66);
+	}
+	else if (pid == 0)
 	{
 		set_io(cmd.input_fd, cmd.output_fd);
-		execve(get_path(argv[0], ft_env), argv, ft_env);
-		perror("execve fail\n");
-		return (0);
+		execve(get_path(argv[0], *ft_env), argv, *ft_env);
+		perror("Failed to execve\n");
+		return (127);
 	}
-	//unset_io(cmd.input_fd, cmd.output_fd);
-	return (127);
+	return (0);
 }
 
-int	execute(t_cmd *cmds, char **ft_env)
+int	execute(t_cmd *cmds, char ***ft_env)
 {
 	int	i;
 	int	status;
 
 	i = -1;
+	status = 0;
 	while (cmds[++i].argv[0])
 	{
-		//if (is_builtin())
-		//	run_builtin();
-		//else
-		status = 0;
+		if (is_builtin(cmds[i].argv[0]))
+			g_errno = run_builtin(cmds[i].argv, ft_env);
+		else
 			g_errno = run(cmds[i], cmds[i].argv, ft_env);
 	}
 	wait(&status);

@@ -29,7 +29,7 @@ static int	get_var_end(char *str)
     return (i);
 }
 
-char	*expand(char **tokens)//, char **envp)
+char	*expand(char **tokens, char **ft_env)
 {
 	int		i;
 	char	*key;
@@ -42,7 +42,7 @@ char	*expand(char **tokens)//, char **envp)
 		if (tokens[0][i] == '$' && tokens[0][i + 1] != '?')
 		{
 			key = ft_substr(*tokens, i + 1, get_var_end(&tokens[0][i + 1]));
-			tmp = getenv(key);
+			tmp = ft_getenv(key, ft_env);
 			if (!tmp)
 			{
 				ft_free(key);

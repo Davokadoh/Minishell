@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 17:01:25 by Blaze             #+#    #+#             */
-/*   Updated: 2022/10/27 15:56:19 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/10/27 16:37:35 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ extern int	g_errno;
 void	welcome(void);
 char	*rl_gets(void);
 char	**lex(const char *str);
-char	*expand(char **str);//, char **envp);
+char	*expand(char **str, char **envp);
 char	**split_metachar(char **tokens);
 t_cmd	*parse(char **tokens);
 int		execute(t_cmd *cmds, char ***ft_env);

@@ -1,14 +1,18 @@
 #include "../include/minishell.h"
 
-int	g_errno = 0;
+int	g_errno;
 
-#define test 0
+#define TEST 0
+
 static void	print_tab(char **tokens, char *part_name)
 {
-	if (test)
+	int	i;
+
+	if (TEST)
 	{
 		printf("%s:\n", part_name);
-		for (int i = 0; tokens[i]; i++)
+		i = -1;
+		while (tokens[++i])
 			printf("%s\n", tokens[i]);
 		printf("\n");
 	}
@@ -18,17 +22,18 @@ static int	launch_minishell(char *line, char ***ft_env)
 {
 	char	**tokens;
 	t_cmd	*cmds;
-	int i = -1;
+	int		i;
 
 	tokens = lex(line); //Warning: Check some syntax errors beforehand
 	print_tab(tokens, "LEXER");
+	i = -1;
 	while (tokens[++i])
-		expand(&tokens[i]);//, ft_env);
+		expand(&tokens[i], *ft_env);
 	print_tab(tokens, "EXPANDER");
 	cmds = parse(tokens); //Create a list of cmds w/ corresponding i/o
 	ft_free_tab(tokens);
 	i = -1;
-	if (test)
+	if (TEST)
 	{
 		printf("PARSER:\n");
 		while (cmds[++i].argv[0])

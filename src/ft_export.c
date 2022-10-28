@@ -22,7 +22,7 @@ char **init_exp(char **env)
     j = 0;
     while (env[i])
         i++;
-    exp = malloc(sizeof(char **) * i);
+    exp = malloc(sizeof(char **) * i +1);
     while (env[j])
     {
         if(ft_strnstr(env[j],"PATH",4))
@@ -31,7 +31,7 @@ char **init_exp(char **env)
             exp[j] = ft_strdup(env[j]);
         j++;
     }
-    exp[i] = NULL;
+    //exp[i] = NULL;
     return (exp);
 }
 
@@ -55,26 +55,30 @@ char **ft_export(char **args, char **env)
 	static char	**exp_lst;
     int     	i;
 
-    i = -1;
+    i = 0;
 	if (!exp_lst)
     	exp_lst = init_exp(env);
 	if (args[1] == NULL)
 	{
-			while (exp_lst[++i])
-            printf("%s\n", exp_lst[i]);
+			while (exp_lst && exp_lst[i])
+			{
+				printf("%s\n", exp_lst[i]);
+				i++;
+			}
+		return (env);
 	}
-	if (args[1])
+	i = 0;
+	while (args[++i])
 	{
-        if (!ft_strchr(args[1],'='))
+        if (!ft_strchr(args[i],'='))
 		{
-			exp_lst = add_env_var(args[1],"",exp_lst);
+			exp_lst = add_env_var(args[i],"",exp_lst);
 			return (env);
-		}         
-    	l_value = get_variable_name(args[1]);
-    	r_value = get_env_variable_value(args[1]);
+		}
+    	l_value = get_variable_name(args[i]);
+    	r_value = get_env_variable_value(args[i]);
     	new_env = add_env_var(l_value,r_value,env);
 		exp_lst = add_env_var(l_value,r_value,exp_lst);
-		return (new_env);
 	}
-    return (env);
+    return (new_env);
 }

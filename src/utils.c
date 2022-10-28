@@ -17,16 +17,13 @@ char **ft_increnv(char **env, char *new_entry)
     char **new_env;
     int	i;
 
-    i = 0;
-    while(env[i])
-        i++;
-    new_env = malloc(sizeof(char**)*i +2);
-    i = 0;
-    while(env[i])
-    {
+    i = -1;
+    while(env[++i])
+		;
+	new_env = malloc(sizeof(char**) * i + 2);
+    i = -1;
+    while(env[++i])
         new_env[i] = ft_strdup(env[i]);
-        i++;
-    }
     new_env[i] = ft_strdup(new_entry);
     new_env[i+1] = NULL;
     return (new_env);

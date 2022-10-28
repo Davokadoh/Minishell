@@ -1,11 +1,23 @@
 #include "../include/minishell.h"
 
-static void	set_io(int input_fd, int output_fd)
+static void	set_io(int input_fd, int output_fd, int true_stdin, int true_stdout)
 {
-	if (input_fd != -1)
+	if (input_fd != 0)
 		dup2(input_fd, 0);
-	if (output_fd != -1)
+	else
+		dup2(true_stdin, 0);
+	if (output_fd != 1)
 		dup2(output_fd, 1);
+	else
+		dup2(true_stdout, 1);
+}
+
+static void	unset_io(int input_fd, int output_fd)
+{
+	if (input_fd != 0)
+		close(input_fd);
+	if (output_fd != 1)
+		close(output_fd);
 }
 
 static int	path_error(char **paths, int i)
@@ -13,7 +25,7 @@ static int	path_error(char **paths, int i)
 	if (!paths[i])
 	{
 		ft_free_tab(paths);
-		perror("command not found\n");
+		perror("Command not found");
 		return (1);
 	}
 	return (0);
@@ -40,37 +52,39 @@ static char	*get_path(char *program_name, char **envp)
 			break ;
 	}
 	if (path_error(paths, i))
-	{
-		ft_free_tab(paths);
 		return (NULL);
-	}
 	path = ft_strdup(paths[i]);
 	ft_free_tab(paths);
 	return (path);
 }
 
-static int	run(t_cmd cmd, char **argv, char ***ft_env)
+static int	run(char **argv, char ***ft_env)
 {
 	pid_t	pid;
+	char	*path;
 
-	(void) cmd;
 	pid = fork();
 	if (pid == -1)
 	{
-		perror("Failed to fork\n");
+		perror("Failed to fork");
 		return (66);
 	}
 	else if (pid == 0)
 	{
-		//set_io(cmd.input_fd, cmd.output_fd);
-		execve(get_path(argv[0], *ft_env), argv, *ft_env);
-		perror("Failed to execve\n");
+		path = get_path(argv[0], *ft_env);
+		if (!path)
+		{
+			return (67);
+		}
+		execve(path, argv, *ft_env);
+		perror("Failed to execve");
 		return (127);
 	}
 	return (0);
 }
 
-void	expand_errno(char **token)
+/*
+static void	expand_errno(char **token)
 {
 	int				i;
 	unsigned int	s_quotes;
@@ -81,29 +95,49 @@ void	expand_errno(char **token)
 	{
 		if (token[0][i] == '\'')
 			s_quotes = (s_quotes + 1) % 2;
-		if (token[0][i] == '\'' && !s_quotes)
-			*token = ft_strinsert(*token, ft_itoa(g_errno), i, i + 1);
+		if (token[0][i] == '$' && token[0][i + 1] == '?' && !s_quotes)
+			*token = ft_strinsert(token[0], ft_itoa(g_errno), i, i + 2);
 	}
 }
+
+static void	strip_quotes(char **token)
+{
+	char	*tmp;
+
+	tmp = *token;
+	printf("tmp:%s\n", tmp);
+	if (token[0][0]  == '\'')
+		*token = ft_substr(*token, 1, ft_strlen(*token) - 2);
+	else if (token[0][0]  == '"')
+		*token = ft_substr(*token, 1, ft_strlen(*token) - 2);
+}
+*/
 
 int	execute(t_cmd *cmds, char ***ft_env)
 {
 	int	i;
 	int	j;
+	int	true_stdin;
+	int	true_stdout;
 
+	true_stdin = dup(0);
+	true_stdout = dup(1);
 	i = -1;
 	while (cmds[++i].argv[0])
 	{
 		j = -1;
 		while (cmds[i].argv[++j])
-			expand_errno(&cmds[i].argv[j]);
-		//strip_quotes();
-		set_io(cmds[i].input_fd, cmds[i].output_fd);
+		{
+			//expand_errno(&cmds[i].argv[j]);
+			//strip_quotes(&cmds[i].argv[j]);
+		}
+		set_io(cmds[i].input_fd, cmds[i].output_fd, true_stdin, true_stdout);
 		if (is_builtin(cmds[i].argv[0]))
 			g_errno = run_builtin(cmds[i].argv, ft_env);
 		else
-			g_errno = run(cmds[i], cmds[i].argv, ft_env);
+			g_errno = run(cmds[i].argv, ft_env);
+		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}
-	//wait(NULL);
+	wait(NULL);
 	return (0);
 }

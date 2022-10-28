@@ -6,18 +6,22 @@ char	*ft_strinsert(char *s1, char *s2, int start, int end)
 	int		l1;
 	int		l2;
 
-	if (!s1 || !s2)
-		return (NULL);
-	str = (char *) malloc((ft_strlen(s1) + ft_strlen(s2)) * sizeof(*s1) + 1);
-	if (!str)
+	if (!s1)
 		return (NULL);
 	l1 = ft_strlen(s1);
-	l2 = ft_strlen(s2);
-	ft_strlcpy(str, s1, l1 + 1);
-	ft_strlcpy(&str[start], s2, l2 + 1);
-	ft_strlcpy(&str[ft_strlen(str)], &s1[end], ft_strlen(&s1[end]) + l2 + 1);
-	free(s1);
-	free(s2);
+	if (!s2)
+		l2 = 0;
+	else
+		l2 = ft_strlen(s2);
+	str = (char *) malloc((l1 + l2  - (end - start) + 1) * sizeof(*s1));
+	if (!str)
+		return (NULL);
+	ft_strlcpy(str, s1, start + 1);
+	if (l2)
+		ft_strlcat(str, s2, l2);
+	ft_strlcat(str, &s1[end], ft_strlen(&s1[end]));
+	ft_free(s1);
+	ft_free(s2);
 	return (str);
 }
 
@@ -31,24 +35,33 @@ static int	get_var_end(char *str)
     return (i);
 }
 
-char	*expand(char **tokens, char **ft_env)
+char	*expand(char *line, char **ft_env)
 {
 	int		i;
+	int		s_quotes;
+	int		d_quotes;
 	char	*key;
 	char	*val;
 
 	i = -1;
-	while (tokens[0][++i])
+	s_quotes = 0;
+	d_quotes = 0;
+	while (line[++i])
 	{
-		if (tokens[0][i] == '$' && tokens[0][i + 1] != '?')
+		if (line[i] == '\'' && !d_quotes)
+			s_quotes = (s_quotes + 1) % 2;
+		if (line[i] == '"' && !s_quotes)
+			d_quotes = (d_quotes + 1) % 2;
+		printf("c:%c	single:%d	double:%d\n", line[i], s_quotes, d_quotes);
+		if (line[i] == '$' && line[i + 1] != '?' && !s_quotes && !d_quotes)
 		{
-			key = ft_substr(*tokens, i + 1, get_var_end(&tokens[0][i + 1]));
+			key = ft_substr(&line[i], 1, get_var_end(&line[i + 1]));
 			val = ft_getenv(key, ft_env);
 			if (!val)
-				val = ft_strdup("");
-			*tokens = ft_strinsert(*tokens, val, i, i + ft_strlen(key) + 1);
+				val = NULL;
+			line = ft_strinsert(line, val, i, i + ft_strlen(key) + 1);
 			ft_free(key);
 		}
 	}
-	return (*tokens);
+	return (line);
 }

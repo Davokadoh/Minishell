@@ -10,10 +10,10 @@ static void	print_tab(char **tokens, char *part_name)
 
 	if (TEST)
 	{
-		printf("%s:\n", part_name);
+		printf("%s", part_name);
 		i = -1;
 		while (tokens[++i])
-			printf("%s\n", tokens[i]);
+			printf("'%s'\n", tokens[i]);
 		printf("\n");
 	}
 }
@@ -24,12 +24,14 @@ static int	launch_minishell(char *line, char ***ft_env)
 	t_cmd	*cmds;
 	int		i;
 
-	tokens = lex(line); //Warning: Check some syntax errors beforehand
-	print_tab(tokens, "LEXER");
+	printf("LINE:\n%s\n\n", line);
+	line = expand(ft_strdup(line), *ft_env);
+	if (TEST)
+		printf("EXPANDER:\n%s\n\n", line);
+	tokens = lex(line); //Warning: Check some syntax errors beforehanda
+	ft_free(line);
+	print_tab(tokens, "LEXER:\n");
 	i = -1;
-	while (tokens[++i])
-		expand(&tokens[i], *ft_env);
-	print_tab(tokens, "EXPANDER");
 	cmds = parse(tokens); //Create a list of cmds w/ corresponding i/o
 	ft_free_tab(tokens);
 	i = -1;
@@ -38,9 +40,7 @@ static int	launch_minishell(char *line, char ***ft_env)
 		printf("PARSER:\n");
 		while (cmds[++i].argv[0])
 		{
-			int j = -1;
-			while (cmds[i].argv[++j])
-				printf("cmd[%i] argv[%i] %s\n", i, j, cmds[i].argv[j]);
+			print_tab(cmds[i].argv, "");
 		}
 		printf("\n");
 	}
@@ -62,7 +62,6 @@ int	main(int ac, char **av, char **envp)
 {
 	char	*line;
 	char	**ft_env;
-	int		line_counter;
 
 	ft_env = init_envp(envp);
 	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
@@ -82,8 +81,7 @@ int	main(int ac, char **av, char **envp)
 		return (g_errno);
 	}
 	welcome();
-	line_counter = 0;
-	while (line_counter < 3)
+	while (1)
 	{
 		line = rl_gets();
 		if (!line || !*line) //rm !*line do stop exiting
@@ -93,7 +91,6 @@ int	main(int ac, char **av, char **envp)
 		}
 		g_errno = launch_minishell(line, &ft_env);
 		ft_free(line);
-		line_counter++;
 	}
 	ft_free_tab(ft_env);
 	//rl_clear_history();

@@ -2,7 +2,7 @@
 
 int	g_errno;
 
-#define TEST 0
+#define TEST 1
 
 static void	print_tab(char **tokens, char *part_name)
 {

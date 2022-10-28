@@ -70,25 +70,39 @@ static int	run(t_cmd cmd, char **argv, char ***ft_env)
 	return (0);
 }
 
-static void	unset_io(int input_fd, int output_fd)
+void	expand_errno(char **token)
 {
-	close(input_fd);
-	close(output_fd);
+	int				i;
+	unsigned int	s_quotes;
+
+	s_quotes = 0;
+	i = -1;
+	while (token[0][++i])
+	{
+		if (token[0][i] == '\'')
+			s_quotes = (s_quotes + 1) % 2;
+		if (token[0][i] == '\'' && !s_quotes)
+			*token = ft_strinsert(*token, ft_itoa(g_errno), i, i + 1);
+	}
 }
 
 int	execute(t_cmd *cmds, char ***ft_env)
 {
 	int	i;
+	int	j;
 
 	i = -1;
 	while (cmds[++i].argv[0])
 	{
+		j = -1;
+		while (cmds[i].argv[++j])
+			expand_errno(&cmds[i].argv[j]);
+		//strip_quotes();
 		set_io(cmds[i].input_fd, cmds[i].output_fd);
 		if (is_builtin(cmds[i].argv[0]))
 			g_errno = run_builtin(cmds[i].argv, ft_env);
 		else
 			g_errno = run(cmds[i], cmds[i].argv, ft_env);
-		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}
 	//wait(NULL);
 	return (0);

@@ -10,8 +10,8 @@ UNAME= $(shell uname -s)
 ifeq ($(UNAME), Darwin)
 #INCS		+=	/usr/local/Cellar/readline/8.2.1/include
 #LDFLAGS		+=	-L/usr/local/Cellar/readline/8.2.1/lib
-INCS		+=	~/.brew/Cellar/readline/8.2.1/include
-LDFLAGS		+=	-L ~/.brew/Cellar/readline/8.2.1/lib
+#INCS		+=	~/.brew/Cellar/readline/8.2.1/include
+#LDFLAGS		+=	-L ~/.brew/Cellar/readline/8.2.1/lib
 #else ifeq ($(UNAME), Linux)
 endif
 

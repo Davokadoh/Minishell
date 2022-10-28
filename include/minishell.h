@@ -52,6 +52,7 @@ void    ft_pwd(void);
 
 
 void	ft_free_tab(char **str);
+char	*ft_strinsert(char *s1, char *s2, int start, int end);
 
 char	**lex(const char *str);
 char	*ft_getenv(char *var, char **env);

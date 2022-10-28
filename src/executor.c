@@ -68,14 +68,14 @@ static int	run(t_cmd cmd, char **argv, char ***ft_env)
 	}
 	return (0);
 }
-int is_builtin(char *cmd)
+/*int is_builtin(char *cmd)
 {
     if (!ft_strncmp(cmd, "echo", 4) || !ft_strncmp(cmd, "cd", 2) || !ft_strncmp(cmd, "pwd", 3)
     || !ft_strncmp(cmd, "export", 6) || !ft_strncmp(cmd, "unset", 5) || !ft_strncmp(cmd, "env", 3)
     || !ft_strncmp(cmd, "exit", 4))
         return (1);
     return (0);
-}
+}*/
 
 int	execute(t_cmd *cmds, char ***ft_env)
 {

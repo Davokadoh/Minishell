@@ -25,13 +25,10 @@ char **init_exp(char **env)
     exp = malloc(sizeof(char **) * i +1);
     while (env[j])
     {
-        if(ft_strnstr(env[j],"PATH",4))
-            exp[j] = ft_strdup(env[j]);
-        if(ft_strncmp(env[j],"_=",2) != 0)
-            exp[j] = ft_strdup(env[j]);
+        exp[j] = ft_strdup(env[j]);
         j++;
     }
-    //exp[i] = NULL;
+    exp[j] = NULL;
     return (exp);
 }
 
@@ -62,7 +59,7 @@ char **ft_export(char **args, char **env)
 	{
 			while (exp_lst && exp_lst[i])
 			{
-				printf("%s\n", exp_lst[i]);
+				printf("declare -x %s\n", exp_lst[i]);
 				i++;
 			}
 		return (env);

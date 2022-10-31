@@ -101,18 +101,22 @@ static void	expand_errno(char **token)
 
 static char	*strip_quotes(char *token)
 {
-	char	*res;
+	int		i;
+	int		j;
+	char	*ptr;
 
-	if (!token[0] || (token[0] != '\'' && token[0] != '"'))
-		return (token);
-	if (ft_strlen(token) == 2)
+	i = -1;
+	while (token[++i])
 	{
-		ft_free(token);
-		return ("");
+		while (token[i] && token [i] != '"')
+			i++;
+		j = i + 1;
+		while (token[j] && token [j] != '"')
+			j++;
+		ptr = ft_substr(token, i + 1, j - 1);
+		token = ft_strinsert(token, ptr, i, j + 1);
 	}
-	res = ft_substr(token, 1, ft_strlen(token) - 2);
-	ft_free(token);
-	return (res);
+	return (token);
 }
 
 int	execute(t_cmd *cmds, char ***ft_env)
@@ -133,6 +137,9 @@ int	execute(t_cmd *cmds, char ***ft_env)
 			expand_errno(&cmds[i].argv[j]);
 			cmds[i].argv[j] = strip_quotes(cmds[i].argv[j]);
 		}
+		j = -1;
+		while (cmds[i].argv[++j])
+			printf("cmds[%i].argv[%i]:%s\n", i, j, cmds[i].argv[j]);
 		set_io(cmds[i].input_fd, cmds[i].output_fd, true_stdin, true_stdout);
 		if (is_builtin(cmds[i].argv[0]))
 			g_errno = run_builtin(cmds[i].argv, ft_env);

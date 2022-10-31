@@ -6,7 +6,7 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 14:06:23 by btchiman          #+#    #+#             */
-/*   Updated: 2022/10/25 14:09:46 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/10/31 13:07:38 by btchiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int ft_echo (char **args)
 	if(ft_strncmp(*args,"echo",4) != 0)
 		return (0);
 	args++;
-	if (ft_strncmp(*args,"-n", 2) == 0)
+	if (*args && ft_strncmp(*args,"-n", 2) == 0)
 	{
 		newLine = 0;
 		args++;

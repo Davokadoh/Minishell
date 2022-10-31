@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 15:41:37 by Blaze             #+#    #+#             */
-/*   Updated: 2022/10/25 14:10:34 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/10/31 15:13:39 by btchiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ char **ft_increnv(char **env, char *new_entry)
 
     i = 0;
     while(env[i])
-        i++;
-    new_env = malloc(sizeof(char**)*i +2);
+		i++;
+	new_env = malloc(sizeof(char**) * i + 2);
     i = 0;
     while(env[i])
-    {
+	{
         new_env[i] = ft_strdup(env[i]);
-        i++;
-    }
+		i++;
+	}
     new_env[i] = ft_strdup(new_entry);
     new_env[i+1] = NULL;
     return (new_env);

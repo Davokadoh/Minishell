@@ -6,7 +6,7 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 17:41:12 by btchiman          #+#    #+#             */
-/*   Updated: 2022/10/26 15:30:30 by btchiman         ###   ########.fr       */
+/*   Updated: 2022/10/31 14:09:58 by btchiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,16 @@ char **init_exp(char **env)
     j = 0;
     while (env[i])
         i++;
-    exp = malloc(sizeof(char **) * i);
+    exp = malloc(sizeof(char **) * i + 1);
+	if(!exp)
+		exit(0);
     while (env[j])
     {
-        if(ft_strnstr(env[j],"PATH",4))
-            exp[j] = ft_strdup(env[j]);
-        if(ft_strncmp(env[j],"_=",2) != 0)
-            exp[j] = ft_strdup(env[j]);
+		if(ft_strncmp(env[j],"_=",2) != 0)
+        	exp[j] = ft_strdup(env[j]);
         j++;
     }
-    exp[i] = NULL;
+    exp[j] = NULL;
     return (exp);
 }
 
@@ -55,26 +55,30 @@ char **ft_export(char **args, char **env)
 	static char	**exp_lst;
     int     	i;
 
-    i = -1;
+    i = 0;
 	if (!exp_lst)
     	exp_lst = init_exp(env);
 	if (args[1] == NULL)
 	{
-			while (exp_lst[++i])
-            printf("%s\n", exp_lst[i]);
+			while (exp_lst && exp_lst[i])
+			{
+				printf("declare -x %s\n", exp_lst[i]);
+				i++;
+			}
+		return (env);
 	}
-	if (args[1])
+	i = 0;
+	while (args[++i])
 	{
-        if (!ft_strchr(args[1],'='))
+        if (!ft_strchr(args[i],'='))
 		{
-			exp_lst = add_env_var(args[1],"",exp_lst);
+			exp_lst = add_env_var(args[i],"",exp_lst);
 			return (env);
-		}         
-    	l_value = get_variable_name(args[1]);
-    	r_value = get_env_variable_value(args[1]);
+		}
+    	l_value = get_variable_name(args[i]);
+    	r_value = get_env_variable_value(args[i]);
     	new_env = add_env_var(l_value,r_value,env);
 		exp_lst = add_env_var(l_value,r_value,exp_lst);
-		return (new_env);
 	}
-    return (env);
+    return (new_env);
 }

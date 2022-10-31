@@ -6,7 +6,7 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 17:41:12 by btchiman          #+#    #+#             */
-/*   Updated: 2022/10/26 15:30:30 by btchiman         ###   ########.fr       */
+/*   Updated: 2022/10/31 14:09:58 by btchiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,13 @@ char **init_exp(char **env)
     j = 0;
     while (env[i])
         i++;
-    exp = malloc(sizeof(char **) * i +1);
+    exp = malloc(sizeof(char **) * i + 1);
+	if(!exp)
+		exit(0);
     while (env[j])
     {
-        exp[j] = ft_strdup(env[j]);
+		if(ft_strncmp(env[j],"_=",2) != 0)
+        	exp[j] = ft_strdup(env[j]);
         j++;
     }
     exp[j] = NULL;

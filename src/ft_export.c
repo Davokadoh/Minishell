@@ -12,6 +12,13 @@
 
 #include "../include/minishell.h"
 
+/*
+export trie une liste de variable a l'initialisation
+puis ajoute a la fin de cette liste une nouvelle liste triee
+d'elements exporte si une variable se trouve deja dans cette seconde liste
+elle est remplace si elle est suivie par =
+*/
+
 char **init_exp(char **env)
 {
     char **exp;

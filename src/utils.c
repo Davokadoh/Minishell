@@ -6,12 +6,14 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 15:41:37 by Blaze             #+#    #+#             */
-/*   Updated: 2022/10/31 15:13:39 by btchiman         ###   ########.fr       */
+/*   Updated: 2022/10/31 16:30:06 by btchiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+//TODO bug increnv new_env[0] vide quand export pour env a la premiere incr
+// pour export a la seconde incr
 char **ft_increnv(char **env, char *new_entry)
 {
     char **new_env;
@@ -20,7 +22,7 @@ char **ft_increnv(char **env, char *new_entry)
     i = 0;
     while(env[i])
 		i++;
-	new_env = malloc(sizeof(char**) * i + 2);
+	new_env = malloc(sizeof(char**) * i + 3);
     i = 0;
     while(env[i])
 	{
@@ -29,6 +31,7 @@ char **ft_increnv(char **env, char *new_entry)
 	}
     new_env[i] = ft_strdup(new_entry);
     new_env[i+1] = NULL;
+	printf("incr: %s \n",new_env[0]);
     return (new_env);
 }
 

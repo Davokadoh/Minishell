@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 17:01:25 by Blaze             #+#    #+#             */
-/*   Updated: 2022/10/28 17:49:15 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/10/31 13:44:01 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ char	*expand(char *str, char **envp);
 char	**split_metachar(char **tokens);
 t_cmd	*parse(char **tokens);
 int		execute(t_cmd *cmds, char ***ft_env);
+int		is_meta(const char ch);
 
 
 void    ft_pwd(void);

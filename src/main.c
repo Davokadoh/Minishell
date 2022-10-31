@@ -2,7 +2,7 @@
 
 int	g_errno;
 
-#define TEST 1
+#define TEST 0
 
 static void	print_tab(char **tokens, char *part_name)
 {
@@ -23,31 +23,34 @@ static int	launch_minishell(char *line, char ***ft_env)
 	char	**tokens;
 	t_cmd	*cmds;
 	int		i;
-
-	printf("LINE:\n%s\n\n", line);
+	
+	//Warning: Check some syntax errors beforehand
+	if (TEST)
+		printf("LINE:\n%s\n\n", line);
 	line = expand(ft_strdup(line), *ft_env);
 	if (TEST)
 		printf("EXPANDER:\n%s\n\n", line);
-	tokens = lex(line); //Warning: Check some syntax errors beforehanda
+	tokens = lex(line);
 	ft_free(line);
 	print_tab(tokens, "LEXER:\n");
 	i = -1;
-	cmds = parse(tokens); //Create a list of cmds w/ corresponding i/o
+	cmds = parse(tokens);
 	ft_free_tab(tokens);
-	i = -1;
 	if (TEST)
 	{
+		i = -1;
 		printf("PARSER:\n");
 		while (cmds[++i].argv[0])
-		{
-			print_tab(cmds[i].argv, "");
-		}
-		printf("\n");
+			print_tab(cmds[i].argv, "PARSER cmd:\n");
 	}
-	else
-		while (cmds[++i].argv[0])
-			;
 	execute(cmds, ft_env);
+	if (TEST)
+	{
+		i = -1;
+		printf("EXEC:\n");
+		while (cmds[++i].argv[0])
+			print_tab(cmds[i].argv, "EXEC cmd:\n");
+	}
 	i = -1;
 	while (cmds[++i].argv[0])
 		ft_free_tab(cmds[i].argv);

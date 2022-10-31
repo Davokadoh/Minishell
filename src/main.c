@@ -1,15 +1,19 @@
 #include "../include/minishell.h"
 
-int	g_errno = 0;
+int	g_errno;
 
-#define test 0
+#define TEST 0
+
 static void	print_tab(char **tokens, char *part_name)
 {
-	if (test)
+	int	i;
+
+	if (TEST)
 	{
-		printf("%s:\n", part_name);
-		for (int i = 0; tokens[i]; i++)
-			printf("%s\n", tokens[i]);
+		printf("%s", part_name);
+		i = -1;
+		while (tokens[++i])
+			printf("'%s'\n", tokens[i]);
 		printf("\n");
 	}
 }
@@ -18,32 +22,35 @@ static int	launch_minishell(char *line, char ***ft_env)
 {
 	char	**tokens;
 	t_cmd	*cmds;
-	int i = -1;
-
-	tokens = lex(line); //Warning: Check some syntax errors beforehand
-	print_tab(tokens, "LEXER");
-	while (tokens[++i])
-		expand(&tokens[i]);//, ft_env);
-	print_tab(tokens, "EXPANDER");
-	//builtin(tokens,&envp); // insert builtins*
-	cmds = parse(tokens); //Create a list of cmds w/ corresponding i/o
-	ft_free_tab(tokens);
+	int		i;
+	
+	//Warning: Check some syntax errors beforehand
+	if (TEST)
+		printf("LINE:\n%s\n\n", line);
+	line = expand(ft_strdup(line), *ft_env);
+	if (TEST)
+		printf("EXPANDER:\n%s\n\n", line);
+	tokens = lex(line);
+	ft_free(line);
+	print_tab(tokens, "LEXER:\n");
 	i = -1;
-	if (test)
+	cmds = parse(tokens);
+	ft_free_tab(tokens);
+	if (TEST)
 	{
+		i = -1;
 		printf("PARSER:\n");
 		while (cmds[++i].argv[0])
-		{
-			int j = -1;
-			while (cmds[i].argv[++j])
-				printf("cmd[%i] argv[%i] %s\n", i, j, cmds[i].argv[j]);
-		}
-		printf("\n");
+			print_tab(cmds[i].argv, "PARSER cmd:\n");
 	}
-	else
-		while (cmds[++i].argv[0])
-			;
 	execute(cmds, ft_env);
+	if (TEST)
+	{
+		i = -1;
+		printf("EXEC:\n");
+		while (cmds[++i].argv[0])
+			print_tab(cmds[i].argv, "EXEC cmd:\n");
+	}
 	i = -1;
 	while (cmds[++i].argv[0])
 		ft_free_tab(cmds[i].argv);
@@ -58,7 +65,6 @@ int	main(int ac, char **av, char **envp)
 {
 	char	*line;
 	char	**ft_env;
-	int		line_counter;
 
 	ft_env = init_envp(envp);
 	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
@@ -78,8 +84,7 @@ int	main(int ac, char **av, char **envp)
 		return (g_errno);
 	}
 	welcome();
-	line_counter = 0;
-	while (line_counter > -1)
+	while (1)
 	{
 		line = rl_gets();
 		if (!line || !*line) //rm !*line do stop exiting
@@ -89,7 +94,6 @@ int	main(int ac, char **av, char **envp)
 		}
 		g_errno = launch_minishell(line, &ft_env);
 		ft_free(line);
-		//line_counter++;
 	}
 	ft_free_tab(ft_env);
 	//rl_clear_history();

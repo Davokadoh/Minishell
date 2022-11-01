@@ -62,7 +62,9 @@ static int	run(char **argv, char ***ft_env)
 {
 	pid_t	pid;
 	char	*path;
+	int		status;
 
+	status = 0;
 	pid = fork();
 	if (pid == -1)
 	{
@@ -73,23 +75,26 @@ static int	run(char **argv, char ***ft_env)
 	{
 		path = get_path(argv[0], *ft_env);
 		if (!path)
-		{
 			return (67);
-		}
 		execve(path, argv, *ft_env);
 		perror("Failed to execve");
 		return (127);
 	}
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
 	return (0);
 }
-/*int is_builtin(char *cmd)
+
+/*
+int is_builtin(char *cmd)
 {
     if (!ft_strncmp(cmd, "echo", 4) || !ft_strncmp(cmd, "cd", 2) || !ft_strncmp(cmd, "pwd", 3)
     || !ft_strncmp(cmd, "export", 6) || !ft_strncmp(cmd, "unset", 5) || !ft_strncmp(cmd, "env", 3)
     || !ft_strncmp(cmd, "exit", 4))
         return (1);
     return (0);
-}*/
+}
+*/
 
 static void	expand_errno(char **token)
 {
@@ -109,18 +114,34 @@ static void	expand_errno(char **token)
 
 static char	*strip_quotes(char *token)
 {
-	char	*res;
+	int		i;
+	int		j;
+	char	*tmp;
 
-	if (!token[0] || (token[0] != '\'' && token[0] != '"'))
-		return (token);
-	if (ft_strlen(token) == 2)
+	i = -1;
+	while (token[++i])
 	{
-		ft_free(token);
-		return ("");
+		while (token[i] && token [i] != '"' && token [i] != '\'')
+			i++;
+		j = i + 1;
+		if (token[i] == '"')
+			while (token[j] && token [j] != '"')
+				j++;
+		else if (token[i] == '\'')
+			while (token[j] && token [j] != '\'')
+				j++;
+		else
+			continue ;
+		tmp = malloc(sizeof(char *) * (ft_strlen(token) - 2));
+		ft_strlcpy(tmp, token, i + 1);
+		ft_strlcpy(&tmp[i], &token[i + 1], j - i);
+		ft_strlcpy(&tmp[j - 1], &token[j + 1], ft_strlen(token) - j);
+		token = realloc(token, sizeof(char *) * (ft_strlen(token) - 2));
+		ft_strlcpy(token, tmp, ft_strlen(tmp) + 1);
+		token[ft_strlen(tmp)] = '\0';
+		i = j - 2;
 	}
-	res = ft_substr(token, 1, ft_strlen(token) - 2);
-	ft_free(token);
-	return (res);
+	return (token);
 }
 
 int	execute(t_cmd *cmds, char ***ft_env)
@@ -149,5 +170,5 @@ int	execute(t_cmd *cmds, char ***ft_env)
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}
 	wait(NULL);
-	return (0);
+	return (g_errno);
 }

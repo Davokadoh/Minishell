@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/16 14:57:03 by Blaze             #+#    #+#             */
-/*   Updated: 2022/10/31 12:10:30 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/01 15:22:35 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ int	is_builtin(char *cmd)
 		return (1);
 	if (ft_strncmp(cmd, "pwd", 3) == 0)
 		return (1);
-	//if (ft_strncmp(cmd, "echo", 4) == 0)
-	//	return (1);
+	if (ft_strncmp(cmd, "echo", 4) == 0)
+		return (1);
 	if (ft_strncmp(cmd, "export", 6) == 0)
 		return (1);
 	if (ft_strncmp(cmd, "unset", 5) == 0)

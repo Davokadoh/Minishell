@@ -108,5 +108,8 @@ asan: CFLAGS += -g3 -fsanitize=address -fno-omit-frame-pointer
 asan: LDFLAGS += -fsanitize=address
 asan: all
 
-debug: CFLAGS += -g3
+debug: CFLAGS += -g3 -D DEBUG=1
 debug: all
+
+test: CFLAGS += -D TEST=1
+test: debug

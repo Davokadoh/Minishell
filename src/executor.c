@@ -114,8 +114,9 @@ static char	*strip_quotes(char *token)
 		j = i + 1;
 		while (token[j] && token [j] != '"' && token [j] != '\'')
 			j++;
-		if (!token[j - 1])
+		if (!token[j])
 			break ;
+		token[j] = '\0';
 		ptr = ft_strdup(token);
 		tmp = ft_substr(token, i + 1, j - 1);
 		token = ft_strinsert(token, tmp, i, j + ft_strlen(tmp));

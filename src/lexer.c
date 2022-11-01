@@ -57,6 +57,7 @@ char	**lex(char const *s)
 	unsigned int	d_quote;
 	unsigned int	nb;
 	char			**list;
+	int	i;
 
 	if (!s)
 		return (NULL);
@@ -64,7 +65,8 @@ char	**lex(char const *s)
 	nb = 0;
 	s_quote = 0;
 	d_quote = 0;
-	list = malloc(1024);//(1 + nb_words(s, c)) * sizeof(char *));
+	list = malloc(sizeof(char **));//(1 + nb_words(s, c)) * sizeof(char *));
+	list[0] = NULL;
 	if (!list)
 		return (NULL);
 	while (s[start])
@@ -81,11 +83,25 @@ char	**lex(char const *s)
 			end++;
 		}
 		if (end - start)
+		{
+
+			i = -1;
+			while(list[++i])
+				;
+			list = realloc(list, (i + 2) * sizeof(char **));
 			list[nb++] = ft_substr(s, start, end - start);
+			list[nb] = NULL;
+		}
 		if (is_meta(s[end]))
+		{
+			i = -1;
+			while(list[++i])
+				;
+			list = realloc(list, (i + 2) * sizeof(char **));
 			list[nb++] = copy_meta(&s[end], &end);
+			list[nb] = NULL;
+		}
 		start = end;
 	}
-	list[nb] = NULL;
 	return (list);
 }

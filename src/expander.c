@@ -29,11 +29,13 @@ static int	get_var_end(char *str)
 {
 	int	i;
 
-	i = 0;
+	i = 1;
+	if (ft_isdigit(str[i]))
+		return (i);
 	while (str[i] && str[i] != ' ' && str[i] != '$' && str[i] != '"'\
-			&& !is_meta(str[i]) && str[i] != '=')
+			&& str[i] != '\'' && !is_meta(str[i]) && str[i] != '=' && str[i] != '/')
 		i++;
-	return (i);
+	return (i - 1);
 }
 
 char	*expand(char *line, char **ft_env)
@@ -55,7 +57,7 @@ char	*expand(char *line, char **ft_env)
 			d_quotes = (d_quotes + 1) % 2;
 		if (line[i] == '$' && line[i + 1] != '?' && !s_quotes)
 		{
-			key = ft_substr(&line[i], 1, get_var_end(&line[i + 1]));
+			key = ft_substr(&line[i], 1, get_var_end(&line[i]));
 			val = ft_getenv(key, ft_env);
 			if (!val)
 				val = NULL;

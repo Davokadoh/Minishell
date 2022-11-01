@@ -7,13 +7,11 @@ static void	print_tab(char **tokens, char *part_name)
 {
 	int	i;
 
-	{
-		printf("%s", part_name);
-		i = -1;
-		while (tokens[++i])
-			printf("'%s'\n", tokens[i]);
-		printf("\n");
-	}
+	printf("%s", part_name);
+	i = -1;
+	while (tokens[++i])
+		printf("'%s'\n", tokens[i]);
+	printf("\n");
 }
 #endif
 
@@ -22,14 +20,14 @@ static int	launch_minishell(char *line, char ***ft_env)
 	char	**tokens;
 	t_cmd	*cmds;
 	int		i;
-	
+
 	//Warning: Check some syntax errors beforehand
 #ifdef TEST
-		printf("LINE:\n%s\n\n", line);
+	printf("LINE:\n%s\n\n", line);
 #endif
 	line = expand(ft_strdup(line), *ft_env);
 #ifdef TEST
-		printf("EXPANDER:\n%s\n\n", line);
+	printf("EXPANDER:\n%s\n\n", line);
 #endif
 	tokens = lex(line);
 	ft_free(line);
@@ -40,29 +38,25 @@ static int	launch_minishell(char *line, char ***ft_env)
 	cmds = parse(tokens);
 	ft_free_tab(tokens);
 #ifdef TEST
-	{
-		i = -1;
-		printf("PARSER:\n");
-		while (cmds[++i].argv[0])
-			print_tab(cmds[i].argv, "PARSER cmd:\n");
-	}
+	i = -1;
+	printf("PARSER:\n");
+	while (cmds[++i].argv[0])
+		print_tab(cmds[i].argv, "PARSER cmd:\n");
 #endif
-	execute(cmds, ft_env);
+	g_errno = execute(cmds, ft_env);
 #ifdef TEST
-	{
-		printf("\n\n");
-		i = -1;
-		printf("EXEC:\n");
-		while (cmds[++i].argv[0])
-			print_tab(cmds[i].argv, "EXEC cmd:\n");
-	}
+	printf("\n\n");
+	i = -1;
+	printf("EXEC:\n");
+	while (cmds[++i].argv[0])
+		print_tab(cmds[i].argv, "EXEC cmd:\n");
 #endif
 	i = -1;
 	while (cmds[++i].argv[0])
 		ft_free_tab(cmds[i].argv);
 	ft_free_tab(cmds[i].argv);
 	ft_free(cmds);
-	return (0);
+	return (g_errno);
 }
 
 //Warnings!

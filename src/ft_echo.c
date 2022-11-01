@@ -6,7 +6,7 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 14:06:23 by btchiman          #+#    #+#             */
-/*   Updated: 2022/11/01 10:57:02 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/01 15:00:00 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,20 +32,24 @@ int ft_echo (char **args)
 			n = 1;
 			newLine = 0;
 		}
-		if (args[i][j] != '\0' && args[i][j] != ' ')
+		if (args[i][j] != '\0')
+		{
+			n = 0;
 			newLine = 1;
+			break ;
+		}
 		i++;
 	}
 	if (newLine && n)
-		i--;
+		i = 0;
 	while (args[i])
 	{
-		printf("%s", args[i]);
+		ft_putstr_fd(args[i], 1);
 		if (args[i + 1])
-			printf("\x20");
+			ft_putstr_fd(" ", 1);
 		i++;
 	}
 	if(newLine)
-		printf("\n");
+		ft_putstr_fd("\n", 1);
 	return (1);
 }

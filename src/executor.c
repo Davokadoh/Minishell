@@ -109,18 +109,30 @@ static void	expand_errno(char **token)
 
 static char	*strip_quotes(char *token)
 {
-	char	*res;
+	int		i;
+	int		j;
+	char	*tmp;
+	char	*ptr;
 
-	if (!token[0] || (token[0] != '\'' && token[0] != '"'))
-		return (token);
-	if (ft_strlen(token) == 2)
+	i = -1;
+	while (token[++i])
 	{
-		ft_free(token);
-		return ("");
+		while (token[i] && token [i] != '"' && token [i] != '\'')
+			i++;
+		j = i + 1;
+		while (token[j] && token [j] != '"' && token [j] != '\'')
+			j++;
+		if (!token[j])
+			break ;
+		token[j] = '\0';
+		ptr = ft_strdup(token);
+		tmp = ft_substr(token, i + 1, j - 1);
+		token = ft_strinsert(token, tmp, i, j + ft_strlen(tmp));
+		ft_strlcat(token, &ptr[j], ft_strlen(token) + ft_strlen(ptr));
+		
 	}
-	res = ft_substr(token, 1, ft_strlen(token) - 2);
-	ft_free(token);
-	return (res);
+	token[j] = '\0';
+	return (token);
 }
 
 int	execute(t_cmd *cmds, char ***ft_env)

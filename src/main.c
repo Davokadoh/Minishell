@@ -2,13 +2,11 @@
 
 int	g_errno;
 
-#define TEST 0
-
+#ifdef TEST
 static void	print_tab(char **tokens, char *part_name)
 {
 	int	i;
 
-	if (TEST)
 	{
 		printf("%s", part_name);
 		i = -1;
@@ -17,6 +15,7 @@ static void	print_tab(char **tokens, char *part_name)
 		printf("\n");
 	}
 }
+#endif
 
 static int	launch_minishell(char *line, char ***ft_env)
 {
@@ -25,32 +24,39 @@ static int	launch_minishell(char *line, char ***ft_env)
 	int		i;
 	
 	//Warning: Check some syntax errors beforehand
-	if (TEST)
+#ifdef TEST
 		printf("LINE:\n%s\n\n", line);
+#endif
 	line = expand(ft_strdup(line), *ft_env);
-	if (TEST)
+#ifdef TEST
 		printf("EXPANDER:\n%s\n\n", line);
+#endif
 	tokens = lex(line);
 	ft_free(line);
+#ifdef TEST
 	print_tab(tokens, "LEXER:\n");
+#endif
 	i = -1;
 	cmds = parse(tokens);
 	ft_free_tab(tokens);
-	if (TEST)
+#ifdef TEST
 	{
 		i = -1;
 		printf("PARSER:\n");
 		while (cmds[++i].argv[0])
 			print_tab(cmds[i].argv, "PARSER cmd:\n");
 	}
+#endif
 	execute(cmds, ft_env);
-	if (TEST)
+#ifdef TEST
 	{
+		printf("\n\n");
 		i = -1;
 		printf("EXEC:\n");
 		while (cmds[++i].argv[0])
 			print_tab(cmds[i].argv, "EXEC cmd:\n");
 	}
+#endif
 	i = -1;
 	while (cmds[++i].argv[0])
 		ft_free_tab(cmds[i].argv);
@@ -76,10 +82,10 @@ int	main(int ac, char **av, char **envp)
 	if (!isatty(0))
 	{
 		line = readline(NULL);
-		g_errno = launch_minishell(line, &ft_env);
-		ft_free(line);
 		printf("\033[A\33[2K\r");
 		fflush(0);
+		g_errno = launch_minishell(line, &ft_env);
+		ft_free(line);
 		ft_free_tab(ft_env);
 		return (g_errno);
 	}

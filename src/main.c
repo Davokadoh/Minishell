@@ -76,10 +76,10 @@ int	main(int ac, char **av, char **envp)
 	if (!isatty(0))
 	{
 		line = readline(NULL);
-		g_errno = launch_minishell(line, &ft_env);
-		ft_free(line);
 		printf("\033[A\33[2K\r");
 		fflush(0);
+		g_errno = launch_minishell(line, &ft_env);
+		ft_free(line);
 		ft_free_tab(ft_env);
 		return (g_errno);
 	}

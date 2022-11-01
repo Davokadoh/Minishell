@@ -6,8 +6,8 @@ static t_cmd	new_cmd()
 
 	cmd.argv = malloc(sizeof(char **));
 	cmd.argv[0] = NULL;
-	cmd.input_fd = -1;
-	cmd.output_fd = -1;
+	cmd.input_fd = 0;
+	cmd.output_fd = 1;
 	cmd.do_run = 1;
 	return (cmd);
 }
@@ -30,7 +30,7 @@ static void	add_pipe(t_cmd **cmds, int *a)
 	if (cmds[0][i].argv[0] == NULL)
 		ft_free_tab(cmds[0][i].argv);
 	*cmds = realloc(*cmds, (i + 2) * sizeof(t_cmd));
-	if (cmds[0][*a].output_fd == -1)
+	if (cmds[0][*a].output_fd == 1)
 	{
 		cmds[0][*a].output_fd = pipefd[1];
 		cmds[0][++*a] = new_cmd();
@@ -59,7 +59,7 @@ static void	heredoc(t_cmd *cmd, char *token)
 		ft_free(line);
 	}
 	close(pipefd[1]);
-	if (cmd->input_fd != -1)
+	if (cmd->input_fd != 0)
 		close(cmd->input_fd);
 	cmd->input_fd = pipefd[0];
 	ft_free(line);
@@ -67,7 +67,7 @@ static void	heredoc(t_cmd *cmd, char *token)
 
 static void	in(t_cmd *cmd, char *token)
 {
-	if (cmd->input_fd != -1)
+	if (cmd->input_fd != 0)
 		close(cmd->input_fd);
 	if (!access(token, R_OK))
 		cmd->input_fd = open(token, O_RDONLY);
@@ -75,7 +75,7 @@ static void	in(t_cmd *cmd, char *token)
 
 static void	append(t_cmd *cmd, char *token)
 {
-	if (cmd->output_fd != -1)
+	if (cmd->output_fd != 1)
 		close(cmd->output_fd);
 	if (!access(token, W_OK))
 		cmd->output_fd = open(token, O_APPEND);
@@ -83,7 +83,7 @@ static void	append(t_cmd *cmd, char *token)
 
 static void	out(t_cmd *cmd, char *token)
 {
-	if (cmd->output_fd != -1)
+	if (cmd->output_fd != 1)
 		close(cmd->output_fd);
 	cmd->output_fd = open(token, O_TRUNC | O_CREAT | O_WRONLY, 0666);
 }

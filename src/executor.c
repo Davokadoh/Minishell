@@ -114,14 +114,15 @@ static char	*strip_quotes(char *token)
 		j = i + 1;
 		while (token[j] && token [j] != '"' && token [j] != '\'')
 			j++;
+		if (!token[j - 1])
+			break ;
 		ptr = ft_strdup(token);
 		tmp = ft_substr(token, i + 1, j - 1);
 		token = ft_strinsert(token, tmp, i, j + ft_strlen(tmp));
-		token[j] = '\0';
-		ft_strlcat(token, &ptr[j], ft_strlen(token) + ft_strlen(ptr) + 1);
-		i++;
+		ft_strlcat(token, &ptr[j], ft_strlen(token) + ft_strlen(ptr));
 		
 	}
+	token[j] = '\0';
 	return (token);
 }
 

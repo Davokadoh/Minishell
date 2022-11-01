@@ -103,18 +103,24 @@ static char	*strip_quotes(char *token)
 {
 	int		i;
 	int		j;
+	char	*tmp;
 	char	*ptr;
 
 	i = -1;
 	while (token[++i])
 	{
-		while (token[i] && token [i] != '"')
+		while (token[i] && token [i] != '"' && token [i] != '\'')
 			i++;
 		j = i + 1;
-		while (token[j] && token [j] != '"')
+		while (token[j] && token [j] != '"' && token [j] != '\'')
 			j++;
-		ptr = ft_substr(token, i + 1, j - 1);
-		token = ft_strinsert(token, ptr, i, j + 1);
+		ptr = ft_strdup(token);
+		tmp = ft_substr(token, i + 1, j - 1);
+		token = ft_strinsert(token, tmp, i, j + ft_strlen(tmp));
+		token[j] = '\0';
+		ft_strlcat(token, &ptr[j], ft_strlen(token) + ft_strlen(ptr) + 1);
+		i++;
+		
 	}
 	return (token);
 }
@@ -137,9 +143,6 @@ int	execute(t_cmd *cmds, char ***ft_env)
 			expand_errno(&cmds[i].argv[j]);
 			cmds[i].argv[j] = strip_quotes(cmds[i].argv[j]);
 		}
-		j = -1;
-		while (cmds[i].argv[++j])
-			printf("cmds[%i].argv[%i]:%s\n", i, j, cmds[i].argv[j]);
 		set_io(cmds[i].input_fd, cmds[i].output_fd, true_stdin, true_stdout);
 		if (is_builtin(cmds[i].argv[0]))
 			g_errno = run_builtin(cmds[i].argv, ft_env);

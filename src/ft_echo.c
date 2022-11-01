@@ -14,22 +14,36 @@
 
 int ft_echo (char **args)
 {
+	int	i;
+	int	j;
+	int	n;
 	int newLine;
 
+	n = 0;
 	newLine = 1;
-	if(ft_strncmp(*args,"echo",4) != 0)
-		return (0);
-	args++;
-	if (ft_strncmp(*args,"-n", 2) == 0)
+	if (!args[0])
+		return (127);
+	i = 1;
+	while (args[i] && args[i][0] == '-')
 	{
-		newLine = 0;
-		args++;
+		j = 0;
+		while (args[i][++j] == 'n')
+		{
+			n = 1;
+			newLine = 0;
+		}
+		if (args[i][j] != '\0' && args[i][j] != ' ')
+			newLine = 1;
+		i++;
 	}
-	while (*args)
+	if (newLine && n)
+		i--;
+	while (args[i])
 	{
-		printf("%s", *args);
-		printf("\x20");
-		args++;
+		printf("%s", args[i]);
+		if (args[i + 1])
+			printf("\x20");
+		i++;
 	}
 	if(newLine)
 		printf("\n");

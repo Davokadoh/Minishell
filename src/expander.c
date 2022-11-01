@@ -31,7 +31,7 @@ static int	get_var_end(char *str)
 
 	i = 0;
 	while (str[i] && str[i] != ' ' && str[i] != '$' && str[i] != '"'\
-			&& !is_meta(str[i]))
+			&& !is_meta(str[i]) && str[i] != '=')
 		i++;
 	return (i);
 }

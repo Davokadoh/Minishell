@@ -39,7 +39,6 @@ char **init_exp(char **env)
         j++;
     }
     exp[j] = NULL;
-	//printf("init:\n env[0]: %s \n exp[0]: %s \n", env[0], exp[0]);
     return (exp);
 }
 
@@ -48,7 +47,7 @@ char **add_env_var(char *l_value, char *r_value, char **env)
     char *new_entry;
 	char **new_env;
 
-    new_entry = ft_strjoin(l_value,"=");
+    new_entry = ft_strjoin(l_value," ");
     new_entry = ft_strjoin(new_entry,r_value);
     new_env = ft_increnv(env,new_entry);
     ft_free(new_entry);

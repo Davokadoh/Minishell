@@ -71,7 +71,7 @@ char	*get_variable_name(char *variable)
 	{
 		if (variable[index] == '=')
 		{
-			end = index - 1;
+			end = index;
 			name = malloc_substrcpy(variable, start, end);
 			return (name);
 		}

@@ -169,6 +169,7 @@ int	execute(t_cmd *cmds, char ***ft_env)
 			g_errno = run(cmds[i].argv, ft_env);
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}
+	set_io(true_stdin, true_stdout, true_stdin, true_stdout);
 	wait(NULL);
 	return (g_errno);
 }

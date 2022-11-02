@@ -38,6 +38,7 @@ char **init_exp(char **env)
         	exp[j] = ft_strdup(env[j]);
         j++;
     }
+	//TODO trier par ordre alpha
     exp[j] = NULL;
     return (exp);
 }
@@ -69,6 +70,7 @@ char **ft_export(char **args, char **env)
 	{
 			while (exp_lst && exp_lst[i])
 			{
+				
 				printf("declare -x %s\n", exp_lst[i]);
 				i++;
 			}

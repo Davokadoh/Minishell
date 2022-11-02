@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-//TODO bug avec new_env[i+1] = NULL vide efface le 1er element du tableau mais sans NULL segfault !
+//TODO trier par ordre alpha et fusionner a la fin du precedent tableau !
 char	**ft_increnv(char **env, char *new_entry)
 {
 	char	**new_env;

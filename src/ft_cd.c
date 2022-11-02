@@ -19,17 +19,18 @@ int	ft_cd(char **args, char **env)
     char	*pwd;
 	int		errno;
 
+	errno = 0;
     if (args[1] == NULL)
     {
         path = ft_getenv("HOME", env);
         if (path == NULL)
-            return ;
+            return (errno);
     }
     else if (ft_strncmp(args[1], "-",1) == 0)
     {
         path = ft_getenv("OLDPWD", env);
         if (path == NULL)
-            return ;
+            return (errno);
     }
     else
         path = args[1];

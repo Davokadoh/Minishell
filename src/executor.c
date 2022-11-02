@@ -131,7 +131,7 @@ static char	*strip_quotes(char *token)
 			while (token[j] && token [j] != '\'')
 				j++;
 		else
-			continue ;
+			break ;
 		tmp = malloc(sizeof(char *) * (ft_strlen(token) - 2));
 		ft_strlcpy(tmp, token, i + 1);
 		ft_strlcpy(&tmp[i], &token[i + 1], j - i);

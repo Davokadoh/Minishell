@@ -35,6 +35,8 @@ static int	get_var_end(char *str)
 	while (str[i] && str[i] != ' ' && str[i] != '$' && str[i] != '"'\
 			&& str[i] != '\'' && !is_meta(str[i]) && str[i] != '=' && str[i] != '/')
 		i++;
+	if (ft_isdigit(str[i]))
+		i++;
 	return (i - 1);
 }
 

@@ -111,15 +111,15 @@ static void	expand_errno(char **token)
 			*token = ft_strinsert(token[0], ft_itoa(g_errno), i, i + 2);
 	}
 }
-
+/*
 static char	*strip_quotes(char *token)
 {
 	int		i;
 	int		j;
 	char	*tmp;
 
-	i = -1;
-	while (token[++i])
+	i = -1; 
+	while (token[++i]) // -> heap-buffer-overflow
 	{
 		while (token[i] && token [i] != '"' && token [i] != '\'')
 			i++;
@@ -142,7 +142,7 @@ static char	*strip_quotes(char *token)
 		i = j - 2;
 	}
 	return (token);
-}
+}*/
 
 int	execute(t_cmd *cmds, char ***ft_env)
 {
@@ -160,7 +160,7 @@ int	execute(t_cmd *cmds, char ***ft_env)
 		while (cmds[i].argv[++j])
 		{
 			expand_errno(&cmds[i].argv[j]);
-			cmds[i].argv[j] = strip_quotes(cmds[i].argv[j]);
+			//cmds[i].argv[j] = strip_quotes(cmds[i].argv[j]);
 		}
 		set_io(cmds[i].input_fd, cmds[i].output_fd, true_stdin, true_stdout);
 		if (is_builtin(cmds[i].argv[0]))

@@ -29,7 +29,7 @@ char **init_exp(char **env)
     j = 0;
     while (env[i])
         i++;
-    exp = malloc(sizeof(char **) * i + 2);
+    exp = malloc(sizeof(char **) * (i + 2));
 	if(!exp)
 		exit(0);
     while (env[j])
@@ -38,7 +38,7 @@ char **init_exp(char **env)
         	exp[j] = ft_strdup(env[j]);
         j++;
     }
-    exp[j-1] = NULL;
+    exp[j] = NULL;
 	//printf("init:\n env[0]: %s \n exp[0]: %s \n", env[0], exp[0]);
     return (exp);
 }

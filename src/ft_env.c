@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 15:42:26 by Blaze             #+#    #+#             */
-/*   Updated: 2022/11/01 16:29:58 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/02 14:48:12 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,25 @@ void	ft_setenv(char *var, char *var2, char **env)
 }
 
 // fonction ft_getenv qui doit chercher dans notre copie de envp
-char	*ft_getenv(char *var, char **env)
+char	*ft_getenv(char *key, char **env)
 {
 	int	i;
-	int	n2;
+	int	j;
+	int	key_len;
 
 	i = -1;
-	n2 = ft_strlen(var);
+	key_len = ft_strlen(key);
 	while (env[++i])
 	{
-		if(ft_strnstr(env[i], var, n2))
-			return (ft_substr(env[i], n2 + 1, ft_strlen(env[i])));
+		j = 0;
+		while (env[i][j] && env[i][j] != '=')
+			j++;
+		if (j == 0)
+			continue ;
+		if(ft_strncmp(key, env[i], key_len) == 0)
+		{
+			return (ft_substr(env[i], key_len + 1, ft_strlen(env[i])));
+		}
 	}
 	return (NULL);
 }

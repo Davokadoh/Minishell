@@ -14,8 +14,7 @@ static void	set_io(int input_fd, int output_fd, int true_stdin, int true_stdout)
 
 static void	unset_io(int input_fd, int output_fd)
 {
-	if (input_fd != 0)
-		close(input_fd);
+	(void) input_fd;
 	if (output_fd != 1)
 		close(output_fd);
 }
@@ -25,7 +24,6 @@ static int	path_error(char **paths, int i)
 	if (!paths[i])
 	{
 		ft_free_tab(paths);
-		perror("Command not found");
 		return (1);
 	}
 	return (0);
@@ -75,14 +73,19 @@ static int	run(char **argv, char ***ft_env)
 	{
 		path = get_path(argv[0], *ft_env);
 		if (!path)
-			return (67);
+		{
+			path = argv[0];
+			printf("%s: command not found\n", argv[0]);
+			exit(127);
+		}
 		execve(path, argv, *ft_env);
 		perror("Failed to execve");
-		return (127);
+		exit(127);
 	}
 	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	return (0);
+		return (status);
+	else
+		return (1);
 }
 
 /*
@@ -150,6 +153,7 @@ int	execute(t_cmd *cmds, char ***ft_env)
 	int	j;
 	int	true_stdin;
 	int	true_stdout;
+	int	errno;
 
 	true_stdin = dup(0);
 	true_stdout = dup(1);
@@ -164,12 +168,12 @@ int	execute(t_cmd *cmds, char ***ft_env)
 		}
 		set_io(cmds[i].input_fd, cmds[i].output_fd, true_stdin, true_stdout);
 		if (is_builtin(cmds[i].argv[0]))
-			g_errno = run_builtin(cmds[i].argv, ft_env);
+			errno = run_builtin(cmds[i].argv, ft_env);
 		else
-			g_errno = run(cmds[i].argv, ft_env);
+			errno = run(cmds[i].argv, ft_env);
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}
-	set_io(true_stdin, true_stdout, true_stdin, true_stdout);
 	wait(NULL);
+	set_io(true_stdin, true_stdout, true_stdin, true_stdout);
 	return (g_errno);
 }

@@ -21,6 +21,7 @@ static int	launch_minishell(char *line, char ***ft_env)
 	t_cmd	*cmds;
 	int		i;
 
+	g_errno = 0;
 	//Warning: Check some syntax errors beforehand
 #ifdef TEST
 	printf("LINE:\n%s\n\n", line);
@@ -37,6 +38,8 @@ static int	launch_minishell(char *line, char ***ft_env)
 	i = -1;
 	cmds = parse(tokens);
 	ft_free_tab(tokens);
+	if (g_errno)
+		return (g_errno);
 #ifdef TEST
 	i = -1;
 	printf("PARSER:\n");

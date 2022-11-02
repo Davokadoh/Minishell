@@ -49,6 +49,12 @@ static void	heredoc(t_cmd *cmd, char *token)
 	
 	if (pipe(pipefd) != 0)
 		perror("Pipe creation failed!");
+	if (!ft_isalnum(token[0]))
+	{
+		printf("Syntax error\n");
+		g_errno = 258;
+		return ;
+	}
 	while (1)
 	{
 		line = readline("> ");

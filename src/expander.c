@@ -37,6 +37,8 @@ static int	get_var_end(char *str)
 		i++;
 	if (ft_isdigit(str[i]))
 		i++;
+	if (i - 1 < 0)
+		return (0);
 	return (i - 1);
 }
 
@@ -60,11 +62,15 @@ char	*expand(char *line, char **ft_env)
 		if (line[i] == '$' && line[i + 1] != '?' && !s_quotes)
 		{
 			key = ft_substr(&line[i], 1, get_var_end(&line[i]));
+			if (!*key)
+				continue ;
 			val = ft_getenv(key, ft_env);
 			if (!val)
 				val = NULL;
 			line = ft_strinsert(line, val, i, i + ft_strlen(key) + 1);
 			ft_free(key);
+			if (!line[i])
+				break ;
 		}
 	}
 	return (line);

@@ -6,7 +6,7 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 17:41:12 by btchiman          #+#    #+#             */
-/*   Updated: 2022/10/31 14:09:58 by btchiman         ###   ########.fr       */
+/*   Updated: 2022/11/02 18:27:17 by btchiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char **init_exp(char **env)
     j = 0;
     while (env[i])
         i++;
-    exp = malloc(sizeof(char **) * i + 1);
+    exp = malloc(sizeof(char **) * i + 2);
 	if(!exp)
 		exit(0);
     while (env[j])
@@ -38,7 +38,8 @@ char **init_exp(char **env)
         	exp[j] = ft_strdup(env[j]);
         j++;
     }
-    exp[j] = NULL;
+    exp[j-1] = NULL;
+	//printf("init:\n env[0]: %s \n exp[0]: %s \n", env[0], exp[0]);
     return (exp);
 }
 

@@ -6,17 +6,18 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 14:41:59 by btchiman          #+#    #+#             */
-/*   Updated: 2022/10/25 12:49:51 by btchiman         ###   ########.fr       */
+/*   Updated: 2022/11/02 18:30:02 by btchiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	ft_cd(char **args, char **env)
+int	ft_cd(char **args, char **env)
 {
     char	*path;
     char	*oldpwd;
     char	*pwd;
+	int		errno;
 
     if (args[1] == NULL)
     {
@@ -36,7 +37,8 @@ void	ft_cd(char **args, char **env)
     pwd = getcwd(NULL, 0);
     ft_setenv("OLDPWD", oldpwd, env);
     ft_setenv("PWD", pwd, env);
-    chdir(path);
+    errno = chdir(path);
     free(oldpwd);
     free(pwd);
+	return (errno);
 }

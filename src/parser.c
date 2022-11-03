@@ -22,6 +22,11 @@ static void	add_pipe(t_cmd **cmds, int *a)
 	int	pipefd[2];
 	int i;
 
+	if (!cmds[0][*a + 1].argv[0])
+	{
+		g_errno = 2;
+		return ;
+	}
 	if (pipe(pipefd) != 0)
 		perror("Pipe creation failed!");
 	i = -1;
@@ -47,14 +52,19 @@ static void	heredoc(t_cmd *cmd, char *token)
 	char	*line;
 	int		pipefd[2];
 	
-	if (pipe(pipefd) != 0)
-		perror("Pipe creation failed!");
+	if (!token)
+	{
+		g_errno = 2;
+		return ;
+	}
 	if (!ft_isalnum(token[0]))
 	{
-		printf("Syntax error\n");
+		perror("Syntax error\n");
 		g_errno = 258;
 		return ;
 	}
+	if (pipe(pipefd) != 0)
+		perror("Pipe creation failed!");
 	while (1)
 	{
 		line = readline("> ");
@@ -117,7 +127,7 @@ t_cmd	*parse(char **tokens)
 	cmds[0] = new_cmd();
 	cmds[1] = new_cmd();
 	i = -1;
-	while (tokens[++i])
+	while (tokens[++i] && !g_errno)
 	{
 		if (tokens[i][0] == '|' && tokens[i][1] == '|')
 			or(&cmds[a]);

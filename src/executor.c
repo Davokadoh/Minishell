@@ -14,7 +14,8 @@ static void	set_io(int input_fd, int output_fd, int true_stdin, int true_stdout)
 
 static void	unset_io(int input_fd, int output_fd)
 {
-	(void) input_fd;
+	if (input_fd != 1)
+		close(input_fd);
 	if (output_fd != 1)
 		close(output_fd);
 }
@@ -46,7 +47,7 @@ static char	*get_path(char *program_name, char **envp)
 	{
 		paths[i] = ft_append(paths[i], "/");
 		paths[i] = ft_append(paths[i], program_name);
-		if (access(paths[i], F_OK | X_OK) == 0)
+		if (access(paths[i], F_OK) == 0)
 			break ;
 	}
 	if (path_error(paths, i))
@@ -75,17 +76,16 @@ static int	run(char **argv, char ***ft_env)
 		if (!path)
 		{
 			path = argv[0];
-			printf("%s: command not found\n", argv[0]);
+			write(2, argv[0], ft_strlen(argv[0]));
+			write(2, ": command not found\n", ft_strlen(": command not found\n"));
 			exit(127);
 		}
 		execve(path, argv, *ft_env);
 		perror("Failed to execve");
 		exit(127);
 	}
-	if (WIFEXITED(status))
-		return (status);
-	else
-		return (1);
+	waitpid(pid, &status, 0);
+	return (WEXITSTATUS(status));
 }
 
 /*
@@ -114,7 +114,7 @@ static void	expand_errno(char **token)
 			*token = ft_strinsert(token[0], ft_itoa(g_errno), i, i + 2);
 	}
 }
-/*
+
 static char	*strip_quotes(char *token)
 {
 	int		i;
@@ -145,7 +145,7 @@ static char	*strip_quotes(char *token)
 		i = j - 2;
 	}
 	return (token);
-}*/
+}
 
 int	execute(t_cmd *cmds, char ***ft_env)
 {
@@ -157,6 +157,7 @@ int	execute(t_cmd *cmds, char ***ft_env)
 
 	true_stdin = dup(0);
 	true_stdout = dup(1);
+	errno = 0;
 	i = -1;
 	while (cmds[++i].argv[0])
 	{
@@ -164,7 +165,7 @@ int	execute(t_cmd *cmds, char ***ft_env)
 		while (cmds[i].argv[++j])
 		{
 			expand_errno(&cmds[i].argv[j]);
-			//cmds[i].argv[j] = strip_quotes(cmds[i].argv[j]);
+			cmds[i].argv[j] = strip_quotes(cmds[i].argv[j]);
 		}
 		set_io(cmds[i].input_fd, cmds[i].output_fd, true_stdin, true_stdout);
 		if (is_builtin(cmds[i].argv[0]))
@@ -173,7 +174,6 @@ int	execute(t_cmd *cmds, char ***ft_env)
 			errno = run(cmds[i].argv, ft_env);
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}
-	wait(NULL);
 	set_io(true_stdin, true_stdout, true_stdin, true_stdout);
-	return (g_errno);
+	return (errno);
 }

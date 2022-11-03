@@ -45,8 +45,8 @@ static char	*get_path(char *program_name, char **envp)
 	i = -1;
 	while (paths[++i])
 	{
-		paths[i] = ft_append(paths[i], "/");
-		paths[i] = ft_append(paths[i], program_name);
+		paths[i] = ft_append(paths[i], "/"); //diff w/ ft_strjoin ?
+		paths[i] = ft_append(paths[i], program_name); //diff w/ ft_strjoin ?
 		if (access(paths[i], F_OK) == 0)
 			break ;
 	}
@@ -57,11 +57,33 @@ static char	*get_path(char *program_name, char **envp)
 	return (path);
 }
 
+static int cmd_error(char *path)
+{
+	int		err_code;
+	int		dir;
+	int		fd;
+
+	fd = open(path, O_WRONLY);
+	dir = is_dir(path);
+	if (ft_strchr(path, '/') == NULL)
+		err_code = ft_putendl_fd(": command not found", 2);
+	else if (fd == -1 && !dir)
+		perror(": No such file or directory");
+	else if (fd == -1 && dir)
+		err_code = perror(": is a directory");
+	else if (fd != -1 && dir)
+		err_code = ft_putendl_fd(": Permission denied", 2);
+	if (fd)
+		close(fd);
+	return (err_code);
+}
+
 static int	run(char **argv, char ***ft_env)
 {
 	pid_t	pid;
 	char	*path;
 	int		status;
+	int		error;
 
 	status = 0;
 	pid = fork();
@@ -73,31 +95,18 @@ static int	run(char **argv, char ***ft_env)
 	else if (pid == 0)
 	{
 		path = get_path(argv[0], *ft_env);
-		if (!path)
+		error = cmd_error(path);
+		if (error)
 		{
-			path = argv[0];
-			write(2, argv[0], ft_strlen(argv[0]));
-			write(2, ": command not found\n", ft_strlen(": command not found\n"));
-			exit(127);
+			ft_free(path);
+			exit(error);
 		}
 		execve(path, argv, *ft_env);
-		perror("Failed to execve");
 		exit(127);
 	}
 	waitpid(pid, &status, 0);
 	return (WEXITSTATUS(status));
 }
-
-/*
-int is_builtin(char *cmd)
-{
-    if (!ft_strncmp(cmd, "echo", 4) || !ft_strncmp(cmd, "cd", 2) || !ft_strncmp(cmd, "pwd", 3)
-    || !ft_strncmp(cmd, "export", 6) || !ft_strncmp(cmd, "unset", 5) || !ft_strncmp(cmd, "env", 3)
-    || !ft_strncmp(cmd, "exit", 4))
-        return (1);
-    return (0);
-}
-*/
 
 static void	expand_errno(char **token)
 {
@@ -122,7 +131,7 @@ static char	*strip_quotes(char *token)
 	char	*tmp;
 
 	i = -1; 
-	while (token[++i]) // -> heap-buffer-overflow
+	while (token[++i])
 	{
 		while (token[i] && token [i] != '"' && token [i] != '\'')
 			i++;

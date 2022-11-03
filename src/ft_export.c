@@ -25,10 +25,10 @@ char **init_exp(char **env)
     int i;
     int j;
     
-    i = 0;
+    i = -1;
     j = 0;
-    while (env[i])
-        i++;
+    while (env[++i])
+        ;
     exp = malloc(sizeof(char **) * (i + 2));
 	if(!exp)
 		exit(0);
@@ -75,7 +75,7 @@ char **ft_fusion(char **exp, char **exp_tab)
 	k = -1;
 	while(exp_tab[++k])
 	{
-		new[j] = exp_tab[k];
+		new[j] = ft_strdup(exp_tab[k]);
 		j++;
 	}
 	new[j] = NULL;

@@ -6,11 +6,18 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 17:41:12 by btchiman          #+#    #+#             */
-/*   Updated: 2022/10/31 14:09:58 by btchiman         ###   ########.fr       */
+/*   Updated: 2022/11/02 18:27:17 by btchiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+/*
+export trie une liste de variable a l'initialisation
+puis ajoute a la fin de cette liste une nouvelle liste triee
+d'elements exporte si une variable se trouve deja dans cette seconde liste
+elle est remplace si elle est suivie par =
+*/
 
 char **init_exp(char **env)
 {
@@ -22,7 +29,7 @@ char **init_exp(char **env)
     j = 0;
     while (env[i])
         i++;
-    exp = malloc(sizeof(char **) * i + 1);
+    exp = malloc(sizeof(char **) * (i + 2));
 	if(!exp)
 		exit(0);
     while (env[j])
@@ -32,6 +39,7 @@ char **init_exp(char **env)
         j++;
     }
     exp[j] = NULL;
+	//printf("init:\n env[0]: %s \n exp[0]: %s \n", env[0], exp[0]);
     return (exp);
 }
 

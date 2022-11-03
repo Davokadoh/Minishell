@@ -35,11 +35,11 @@ char **init_exp(char **env)
     while (env[j])
     {
 		if(ft_strncmp(env[j],"_=",2) != 0)
-        	exp[j] = ft_strdup(env[j]);
+			exp[j] = ft_strdup(env[j]);
         j++;
     }
-	//TODO trier par ordre alpha
-    exp[j] = NULL;
+	exp[j] = NULL;
+	exp = ft_triAlpha(exp);
     return (exp);
 }
 
@@ -48,11 +48,59 @@ char **add_env_var(char *l_value, char *r_value, char **env)
     char *new_entry;
 	char **new_env;
 
-    new_entry = ft_strjoin(l_value," ");
-    new_entry = ft_strjoin(new_entry,r_value);
+   // new_entry = ft_strjoin(l_value," ");
+    //new_entry = ft_strjoin(new_entry,r_value);
+	new_entry = ft_strjoin(l_value,r_value);
     new_env = ft_increnv(env,new_entry);
     ft_free(new_entry);
     return (new_env);
+}
+
+char **ft_fusion(char **exp, char **exp_tab)
+{
+	int j;
+	int k;
+	char **new;
+
+	j = -1;
+	k = -1;
+	while(exp[++j])
+		;
+	while(exp_tab[++k])
+		;
+	new = malloc(sizeof(char **) *(j+k)+1);
+	j = -1;
+	while(exp[++j])
+		new[j] = ft_strdup(exp[j]);
+	k = -1;
+	while(exp_tab[++k])
+	{
+		new[j] = exp_tab[k];
+		j++;
+	}
+	new[j] = NULL;
+	return(new);
+}
+
+char **add_exp_var(char *l_value, char *r_value, char **exp)
+{
+	unsigned int i;
+	char *new_entry;
+	static char **exp_tab;
+
+	i = -1;
+    new_entry = ft_strjoin(l_value,r_value);
+	while(exp_tab[++i])
+		;
+	exp_tab = malloc(sizeof(char **) *(i+1));
+	if(!exp_tab)
+		exit(1);
+	exp_tab[i-1] = ft_strdup(new_entry);
+	exp_tab[i] = NULL;
+	exp_tab = ft_triAlpha(exp_tab);
+    exp_tab = ft_fusion(exp,exp_tab);
+    ft_free(new_entry);
+    return (exp_tab);
 }
 // ajoute un element au tableau de variable d'environnement et au tableau d'export
 char **ft_export(char **args, char **env)
@@ -61,6 +109,7 @@ char **ft_export(char **args, char **env)
     char    	*r_value;
 	char		**new_env;
 	static char	**exp_lst;
+
     int     	i;
 
     i = 0;
@@ -70,7 +119,6 @@ char **ft_export(char **args, char **env)
 	{
 			while (exp_lst && exp_lst[i])
 			{
-				
 				printf("declare -x %s\n", exp_lst[i]);
 				i++;
 			}
@@ -81,13 +129,13 @@ char **ft_export(char **args, char **env)
 	{
         if (!ft_strchr(args[i],'='))
 		{
-			exp_lst = add_env_var(args[i],"",exp_lst);
+			exp_lst = add_exp_var(args[i],"",exp_lst);
 			return (env);
 		}
     	l_value = get_variable_name(args[i]);
     	r_value = get_env_variable_value(args[i]);
     	new_env = add_env_var(l_value,r_value,env);
-		exp_lst = add_env_var(l_value,r_value,exp_lst);
+		exp_lst = add_exp_var(l_value,r_value,exp_lst);
 	}
     return (new_env);
 }

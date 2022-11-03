@@ -32,6 +32,7 @@ char	**ft_increnv(char **env, char *new_entry)
 	i = -1;
 	while (env[++i])
 		ft_free(env[i]);
+	new_env = ft_triAlpha(new_env);
 	return (new_env);
 }
 
@@ -104,4 +105,31 @@ char	*get_env_variable_value(char *variable)
 		i++;
 	}
 	return (NULL);
+}
+
+char **ft_triAlpha(char **s)
+{
+	int j;
+	int k;
+	char *temp;
+
+	j = 0;
+	k = 1;
+	while (s[j])
+	{
+		while(s[k])
+		{
+			if (s[k] != NULL && ft_strncmp(s[j],s[k], 5) > 0)
+			{
+				temp = ft_strdup(s[j]);
+				s[j] = ft_strdup(s[k]);
+				s[k] = ft_strdup(temp);
+			}
+			k++;
+		}
+		k = j +1;
+		j++;
+	}
+	s[j] = NULL;
+	return (s);
 }

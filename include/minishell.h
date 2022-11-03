@@ -74,5 +74,6 @@ char **ft_increnv(char **env, char *new_entry);
 char *malloc_substrcpy(char *variable, int start, int end);
 char *get_variable_name(char *variable);
 char *get_env_variable_value(char *variable);
+char **ft_triAlpha(char **s);
 
 #endif

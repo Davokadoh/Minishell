@@ -4,29 +4,25 @@ static t_cmd	new_cmd()
 {
 	t_cmd	cmd;
 
-	cmd.argv = malloc(sizeof(char **));
-	cmd.argv[0] = NULL;
+	cmd.argv = ft_calloc(1, sizeof(char **));
 	cmd.input_fd = 0;
 	cmd.output_fd = 1;
 	cmd.do_run = 1;
 	return (cmd);
 }
 
-static void	or(t_cmd *cmd)
+static void	or(int errno, t_cmd *cmd)
 {
-	cmd->do_run = g_errno;
+	cmd->do_run = errno;
 }
 
-static void	add_pipe(t_cmd **cmds, int *a)
+static int	add_pipe(t_cmd **cmds, int *cmd_index)
 {
 	int	pipefd[2];
 	int i;
 
-	if (!cmds[0][*a + 1].argv[0])
-	{
-		g_errno = 2;
-		return ;
-	}
+	if (!cmds[0][*cmd_index + 1].argv[0])
+		return (2); //Change magic number to macro definition
 	if (pipe(pipefd) != 0)
 		perror("Pipe creation failed!");
 	i = -1;
@@ -35,36 +31,36 @@ static void	add_pipe(t_cmd **cmds, int *a)
 	if (cmds[0][i].argv[0] == NULL)
 		ft_free_tab(cmds[0][i].argv);
 	*cmds = realloc(*cmds, (i + 2) * sizeof(t_cmd));
-	if (cmds[0][*a].output_fd == 1)
+	if (cmds[0][*cmd_index].output_fd == 1)
 	{
-		cmds[0][*a].output_fd = pipefd[1];
-		cmds[0][++*a] = new_cmd();
-		cmds[0][*a].input_fd = pipefd[0];
+		cmds[0][*cmd_index].output_fd = pipefd[1];
+		cmds[0][++*cmd_index] = new_cmd();
+		cmds[0][*cmd_index].input_fd = pipefd[0];
 	}
 	else
-		cmds[0][++*a] = new_cmd();
-	cmds[0][*a + 1] = new_cmd();
+		cmds[0][++*cmd_index] = new_cmd();
+	cmds[0][*cmd_index + 1] = new_cmd();
+	return (0);
 }
 
 //Close fd[0] once cmd has run ?
-static void	heredoc(t_cmd *cmd, char *token)
+static int	heredoc(t_cmd *cmd, char *token)
 {
 	char	*line;
 	int		pipefd[2];
-	
+
 	if (!token)
-	{
-		g_errno = 2;
-		return ;
-	}
+		return (2); //Change magic number to macro definition
 	if (!ft_isalnum(token[0]))
 	{
 		perror("Syntax error\n");
-		g_errno = 258;
-		return ;
+		return (2); //Change magic number to macro definition
 	}
-	if (pipe(pipefd) != 0)
+	if (!pipe(pipefd))
+	{
 		perror("Pipe creation failed!");
+		return (2); //Change magic number to macro definition
+	}
 	while (1)
 	{
 		line = readline("> ");
@@ -79,6 +75,7 @@ static void	heredoc(t_cmd *cmd, char *token)
 		close(cmd->input_fd);
 	cmd->input_fd = pipefd[0];
 	ft_free(line);
+	return (0); //Change magic number to macro definition
 }
 
 static void	in(t_cmd *cmd, char *token)
@@ -116,38 +113,51 @@ static void	add_argv(t_cmd *cmd, char *token)
 	cmd->argv[++i] = NULL;
 }
 
-t_cmd	*parse(char **tokens)
+#ifndef MALLOC_ERROR
+# define MALLOC_ERROR 4
+#endif
+
+int		parse(int errno, char **ft_envp, char **tokens)
 {
+	int		new_errno;
 	int		i;
-	int		a;
+	int		cmd_index;
 	t_cmd	*cmds;
 
-	a = 0;
-	cmds = malloc(2 * sizeof(t_cmd));
-	cmds[0] = new_cmd();
-	cmds[1] = new_cmd();
+	cmds = ft_calloc(2, sizeof(t_cmd));
+	if (!cmds)
+		return (ft_error(MALLOC_ERROR)); //Should move macro definition to header file
 	i = -1;
-	while (tokens[++i] && !g_errno)
+	new_errno = 0;
+	cmd_index = 0;
+	while (tokens[++i] && !new_errno)
 	{
 		if (tokens[i][0] == '|' && tokens[i][1] == '|')
-			or(&cmds[a]);
+			or(errno, &cmds[cmd_index]); //Add error handling
 		else if (tokens[i][0] == '|')
-			add_pipe(&cmds, &a);
+			new_error = add_pipe(&cmds, &cmd_index); //Add error handling
 		else if (tokens[i][0] == '<' && tokens[i][1] == '<')
-			heredoc(&cmds[a], tokens[++i]);
+			new_error = heredoc(&cmds[cmd_index], tokens[++i]); //Add error handling
 		else if (tokens[i][0] == '<')
-			in(&cmds[a], tokens[++i]);
+			in(&cmds[cmd_index], tokens[++i]); //Add error handling
 		else if (tokens[i][0] == '>' && tokens[i][1] == '>')
-			append(&cmds[a], tokens[++i]);
+			append(&cmds[cmd_index], tokens[++i]); //Add error handling
 		else if (tokens[i][0] == '>')
-			out(&cmds[a], tokens[++i]);
+			out(&cmds[cmd_index], tokens[++i]); //Add error handling
 		else
-			add_argv(&cmds[a], tokens[i]);
+			add_argv(&cmds[cmd_index], tokens[i]); //Add error handling
 	}
 	i = -1;
 	while (cmds[++i].argv[0])
 		;
 	if (cmds[i].argv[0] != NULL)
-		cmds[++a] = new_cmd();
-	return (cmds);
+		cmds[++cmd_index] = new_cmd();
+	if (new_errno)
+	{
+		ft_free_cmds(cmds);
+		return (new_errno);
+	}
+	errno = execute(errno, ft_env, cmds);
+	ft_free_cmds(cmds);
+	return (errno);
 }

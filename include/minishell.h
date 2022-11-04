@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 17:01:25 by Blaze             #+#    #+#             */
-/*   Updated: 2022/11/02 18:33:11 by btchiman         ###   ########.fr       */
+/*   Updated: 2022/11/04 16:00:59 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <string.h>
 # include <sys/wait.h>
 # include <sys/ioctl.h>
 # include <readline/readline.h>
@@ -37,17 +38,16 @@ struct	s_cmd
 	int		do_run;
 };
 
-extern int	g_errno;
+int		syntax(int errno, char **ft_envp, char *str);
+int		expand(int errno, char **ft_envp, char *str);
+int		lexer(int errno, char **ft_envp, char *str);
+int		parse(int errno, char **ft_envp, char **tokens);
+int		execute(int errno, char **ft_envp, t_cmd *cmds);
 
+int		is_meta(const char ch);
+char	**split_metachar(char **tokens);
 void	welcome(void);
 char	*rl_gets(void);
-char	**lex(const char *str);
-char	*expand(char *str, char **envp);
-char	**split_metachar(char **tokens);
-t_cmd	*parse(char **tokens);
-int		execute(t_cmd *cmds, char ***ft_env);
-int		is_meta(const char ch);
-
 
 void    ft_pwd(void);
 

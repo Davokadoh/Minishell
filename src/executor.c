@@ -108,7 +108,7 @@ static int	run(char **argv, char ***ft_env)
 	return (WEXITSTATUS(status));
 }
 
-static void	expand_errno(char **token)
+static void	expand_errno(int errno, char **token)
 {
 	int				i;
 	unsigned int	s_quotes;
@@ -120,7 +120,7 @@ static void	expand_errno(char **token)
 		if (token[0][i] == '\'')
 			s_quotes = (s_quotes + 1) % 2;
 		if (token[0][i] == '$' && token[0][i + 1] == '?' && !s_quotes)
-			*token = ft_strinsert(token[0], ft_itoa(g_errno), i, i + 2);
+			*token = ft_strinsert(token[0], ft_itoa(errno), i, i + 2);
 	}
 }
 
@@ -156,24 +156,22 @@ static char	*strip_quotes(char *token)
 	return (token);
 }
 
-int	execute(t_cmd *cmds, char ***ft_env)
+int	execute(int errno, char **ft_env, t_cmd *cmds)
 {
 	int	i;
 	int	j;
 	int	true_stdin;
 	int	true_stdout;
-	int	errno;
 
 	true_stdin = dup(0);
 	true_stdout = dup(1);
-	errno = 0;
 	i = -1;
 	while (cmds[++i].argv[0])
 	{
 		j = -1;
 		while (cmds[i].argv[++j])
 		{
-			expand_errno(&cmds[i].argv[j]);
+			expand_errno(errno, &cmds[i].argv[j]);
 			cmds[i].argv[j] = strip_quotes(cmds[i].argv[j]);
 		}
 		set_io(cmds[i].input_fd, cmds[i].output_fd, true_stdin, true_stdout);

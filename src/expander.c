@@ -42,13 +42,26 @@ static int	get_var_end(char *str)
 	return (i - 1);
 }
 
-char	*expand(char *line, char **ft_env)
+static void	replace_env_var(char *line, char ** ft_env, int i)
+{
+	char	*key;
+	char	*val;
+
+	key = ft_substr(&line[i], 1, get_var_end(&line[i]));
+	if (!*key)
+		return ;
+	val = ft_getenv(key, ft_env);
+	if (!val)
+		val = NULL;
+	line = ft_strinsert(line, val, i, i + ft_strlen(key) + 1);
+	ft_free(key);
+}
+
+int	expand(int errno, char **ft_env, char *line)
 {
 	int		i;
 	int		s_quotes;
 	int		d_quotes;
-	char	*key;
-	char	*val;
 
 	i = -1;
 	s_quotes = 0;
@@ -60,18 +73,9 @@ char	*expand(char *line, char **ft_env)
 		if (line[i] == '"' && !s_quotes)
 			d_quotes = (d_quotes + 1) % 2;
 		if (line[i] == '$' && line[i + 1] != '?' && !s_quotes)
-		{
-			key = ft_substr(&line[i], 1, get_var_end(&line[i]));
-			if (!*key)
-				continue ;
-			val = ft_getenv(key, ft_env);
-			if (!val)
-				val = NULL;
-			line = ft_strinsert(line, val, i, i + ft_strlen(key) + 1);
-			ft_free(key);
-			if (!line[i])
-				break ;
-		}
+			replace_env_var(line, ft_env, i);
+		if (!line[i])
+			break ;
 	}
-	return (line);
+	return (lexer(errno, ft_env, line));
 }

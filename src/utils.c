@@ -117,9 +117,9 @@ char **ft_triAlpha(char **s)
 	k = 1;
 	while (s[j])
 	{
-		while(s[k])
+		while(s[k]) // entre dans la boucle meme si s[k] = NULL
 		{
-			if (s[k] != NULL && ft_strncmp(s[j],s[k], 5) > 0)
+			if (ft_strncmp(s[j],s[k], 5) > 0)
 			{
 				temp = ft_strdup(s[j]);
 				s[j] = ft_strdup(s[k]);

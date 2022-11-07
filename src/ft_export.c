@@ -65,7 +65,7 @@ char **ft_fusion(char **exp, char **exp_tab)
 	while(exp[++j])
 		;
 	while(exp_tab[++k])
-        ;//printf("exp_tab[%d] = %s\n",k,exp_tab[k]);
+        ;
 	new = malloc(sizeof(char **) *(j+k)+1);
 	j = -1;
 	while(exp[++j])
@@ -86,7 +86,6 @@ char **add_exp_var(char *l_value, char *r_value, char **exp)
     int i;
 	char *new_entry;
 	static char **exp_tab;
-    static char **new_exp;
 
     i = -1;
     new_entry = ft_strjoin(l_value,r_value);
@@ -94,17 +93,16 @@ char **add_exp_var(char *l_value, char *r_value, char **exp)
         k = 0;
     while(exp[++i])
        ;
-    new_exp = malloc(sizeof (char**) *(i+1));
-
-    exp_tab = malloc(sizeof (char**) *(k+1));
-    //TODO: incrementer exp_tab
+    if(!exp_tab)
+    {
+        exp_tab = malloc(sizeof(char **) * (i + 32));
+        exp_tab[k] = ft_strdup(new_entry);
+    }
     exp_tab[k] = ft_strdup(new_entry);
-    printf("exp_tab[%d] = %s\n",k,exp_tab[k]);
-    k++;
-	exp_tab = ft_triAlpha(exp_tab); //trier la liste
-    new_exp = ft_fusion(exp,exp_tab);
+    exp_tab = ft_triAlpha(exp_tab);
     ft_free(new_entry);
-    return (new_exp);
+    k++;
+    return (exp_tab);
 }
 // ajoute un element au tableau de variable d'environnement et au tableau d'export
 char **ft_export(char **args, char **env)
@@ -112,6 +110,7 @@ char **ft_export(char **args, char **env)
     char    	*l_value;
     char    	*r_value;
 	char		**new_env;
+    char        **new_exp;
 	static char	**exp_lst;
     int     	i;
 
@@ -128,17 +127,16 @@ char **ft_export(char **args, char **env)
 	while (args[++i])
 	{
         if (!ft_strchr(args[i],'='))
-		{
-			exp_lst = add_exp_var(args[i],"",exp_lst);
-			//return (env);
-		}
+			new_exp = add_exp_var(args[i],"",exp_lst);
         else
         {
+            //bug
             l_value = get_variable_name(args[i]);
             r_value = get_env_variable_value(args[i]);
             new_env = add_env_var(l_value, r_value, env);
-            exp_lst = add_exp_var(l_value, r_value, exp_lst);
+            new_exp = add_exp_var(l_value, r_value, exp_lst);
         }
 	}
+    exp_lst = ft_fusion(exp_lst,new_exp);
     return (new_env);
 }

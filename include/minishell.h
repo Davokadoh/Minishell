@@ -75,5 +75,5 @@ char *malloc_substrcpy(char *variable, int start, int end);
 char *get_variable_name(char *variable);
 char *get_env_variable_value(char *variable);
 char **ft_triAlpha(char **s);
-
+char **ft_fusion(char **exp, char **exp_tab);
 #endif

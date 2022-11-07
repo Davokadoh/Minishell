@@ -57,28 +57,37 @@ static char	*get_path(char *program_name, char **envp)
 	return (path);
 }
 
+static int	is_dir(const char *path) //should be in libft
+{
+   struct stat statbuf;
+   if (stat(path, &statbuf) != 0)
+       return 0;
+   return S_ISDIR(statbuf.st_mode);
+}
+
 static int cmd_error(char *path)
 {
 	int		err_code;
 	int		dir;
 	int		fd;
 
+	err_code = 0,
 	fd = open(path, O_WRONLY);
 	dir = is_dir(path);
 	if (ft_strchr(path, '/') == NULL)
-		err_code = ft_putendl_fd(": command not found", 2);
+		err_code = ft_error(127); // 127 SEEMS to be the errono for command not found
 	else if (fd == -1 && !dir)
-		perror(": No such file or directory");
+		err_code = ft_error(129);
 	else if (fd == -1 && dir)
-		err_code = perror(": is a directory");
+		err_code = ft_error(123);
 	else if (fd != -1 && dir)
-		err_code = ft_putendl_fd(": Permission denied", 2);
+		err_code = ft_error(111);
 	if (fd)
 		close(fd);
 	return (err_code);
 }
 
-static int	run(char **argv, char ***ft_env)
+static int	run(char **argv, char **ft_env)
 {
 	pid_t	pid;
 	char	*path;
@@ -94,14 +103,14 @@ static int	run(char **argv, char ***ft_env)
 	}
 	else if (pid == 0)
 	{
-		path = get_path(argv[0], *ft_env);
+		path = get_path(argv[0], ft_env);
 		error = cmd_error(path);
 		if (error)
 		{
 			ft_free(path);
 			exit(error);
 		}
-		execve(path, argv, *ft_env);
+		execve(path, argv, ft_env);
 		exit(127);
 	}
 	waitpid(pid, &status, 0);
@@ -133,14 +142,14 @@ static char	*strip_quotes(char *token)
 	i = -1; 
 	while (token[++i])
 	{
-		while (token[i] && token [i] != '"' && token [i] != '\'')
+		while (token[i] && token[i] != '"' && token[i] != '\'')
 			i++;
 		j = i + 1;
 		if (token[i] == '"')
-			while (token[j] && token [j] != '"')
+			while (token[j] && token[j] != '"')
 				j++;
 		else if (token[i] == '\'')
-			while (token[j] && token [j] != '\'')
+			while (token[j] && token[j] != '\'')
 				j++;
 		else
 			break ;
@@ -150,7 +159,7 @@ static char	*strip_quotes(char *token)
 		ft_strlcpy(&tmp[j - 1], &token[j + 1], ft_strlen(token) - j);
 		token = realloc(token, sizeof(char *) * (ft_strlen(token) - 2));
 		ft_strlcpy(token, tmp, ft_strlen(tmp) + 1);
-		token[ft_strlen(tmp)] = '\0';
+		token[ft_strlen(tmp)] = '\0'; //Maybe useless because we use strLcpy
 		i = j - 2;
 	}
 	return (token);
@@ -176,7 +185,7 @@ int	execute(int errno, char **ft_env, t_cmd *cmds)
 		}
 		set_io(cmds[i].input_fd, cmds[i].output_fd, true_stdin, true_stdout);
 		if (is_builtin(cmds[i].argv[0]))
-			errno = run_builtin(cmds[i].argv, ft_env);
+			errno = run_builtin(cmds[i].argv, &ft_env);
 		else
 			errno = run(cmds[i].argv, ft_env);
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);

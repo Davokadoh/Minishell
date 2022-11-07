@@ -21,18 +21,6 @@ int	unclosed_quote(const char *str)
 	return (0);
 }
 
-#ifndef STDOUT
-# define STDOUT 2
-#endif
-
-size_t	ft_error(int errno)
-{
-	//this function belong in libft!!!
-	//including the preprocessor instructions
-	ft_putendl_fd(strerror(errno), STDOUT);
-	return (errno);
-}
-
 int	syntax(int errno, char **ft_env, char *line)
 {
 	if (unclosed_quote(line))

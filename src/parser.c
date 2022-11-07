@@ -117,7 +117,7 @@ static void	add_argv(t_cmd *cmd, char *token)
 # define MALLOC_ERROR 4
 #endif
 
-int		parse(int errno, char **ft_envp, char **tokens)
+int		parse(int errno, char **ft_env, char **tokens)
 {
 	int		new_errno;
 	int		i;
@@ -135,9 +135,9 @@ int		parse(int errno, char **ft_envp, char **tokens)
 		if (tokens[i][0] == '|' && tokens[i][1] == '|')
 			or(errno, &cmds[cmd_index]); //Add error handling
 		else if (tokens[i][0] == '|')
-			new_error = add_pipe(&cmds, &cmd_index); //Add error handling
+			new_errno = add_pipe(&cmds, &cmd_index); //Add error handling
 		else if (tokens[i][0] == '<' && tokens[i][1] == '<')
-			new_error = heredoc(&cmds[cmd_index], tokens[++i]); //Add error handling
+			new_errno = heredoc(&cmds[cmd_index], tokens[++i]); //Add error handling
 		else if (tokens[i][0] == '<')
 			in(&cmds[cmd_index], tokens[++i]); //Add error handling
 		else if (tokens[i][0] == '>' && tokens[i][1] == '>')
@@ -154,10 +154,10 @@ int		parse(int errno, char **ft_envp, char **tokens)
 		cmds[++cmd_index] = new_cmd();
 	if (new_errno)
 	{
-		ft_free_cmds(cmds);
+		//ft_free_cmds(cmds);
 		return (new_errno);
 	}
 	errno = execute(errno, ft_env, cmds);
-	ft_free_cmds(cmds);
+	//ft_free_cmds(cmds);
 	return (errno);
 }

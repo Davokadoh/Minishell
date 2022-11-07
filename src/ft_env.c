@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 15:42:26 by Blaze             #+#    #+#             */
-/*   Updated: 2022/11/02 14:48:12 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/07 15:10:09 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ void	ft_env(char **env)
 
 	i = -1;
 	while (env[++i])
-		printf("%s\n", env[i]);
+	{
+		ft_putstr_fd(env[i], 1);
+		ft_putstr_fd("\n", 1);
+	}
 }
 
 void	ft_setenv(char *var, char *var2, char **env)
@@ -59,9 +62,7 @@ char	*ft_getenv(char *key, char **env)
 		if (j == 0)
 			continue ;
 		if(ft_strncmp(key, env[i], key_len) == 0)
-		{
 			return (ft_substr(env[i], key_len + 1, ft_strlen(env[i])));
-		}
 	}
 	return (NULL);
 }

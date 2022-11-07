@@ -31,71 +31,67 @@ static char	*copy_meta(const char *token, size_t *end)
 	}
 }
 
-//Returns 1 if str added, 0 if nothing added
-static int	ft_push_str(char **array, char *str)
+//Returns 1 if str added, 0 if realloc failed
+static int	ft_push_str(char ***array, char *str) //Move to libft ?
 {
 	size_t	i;
 
 	i = 0;
-	while(array[i])
+	while((*array)[i])
 		i++;
-	array = realloc(array, (i + 2) * sizeof(char **)); //Illegal function!!! create ft_realloc
-	if (!array)
+	*array = realloc(*array, (i + 2) * sizeof(char **)); //Illegal function!!! create ft_realloc
+	if (!(*array))
 		return (0);
-	array[i++] = str;
-	array[i] = NULL;
+	(*array)[i] = str;
+	(*array)[i + 1] = NULL;
 	return (1);
 }
 
-static int	get_token_end(char *str)
+static int	get_token_end(char *str, size_t start) //Move to libft with add ?
 {
-	size_t	i;
-	bool	s_quotes;
-	bool	d_quotes;
+	size_t	s_quotes;
+	size_t	d_quotes;
 
-	i = 0;
 	s_quotes = 0;
 	d_quotes = 0;
-	while (str[i] && ((str[i] != ' ' && !is_meta(str[i])) || s_quotes || d_quotes))
+	while (str[start] && ((str[start] != ' ' && !is_meta(str[start])) || s_quotes || d_quotes))
 	{
-		if (str[i] == '"' && !s_quotes)
-			d_quotes = !d_quotes;
-		else if (str[i] == '\'' && !d_quotes)
-			s_quotes = !s_quotes;
-		i++;
+		if (str[start] == '"' && !s_quotes)
+			d_quotes = (d_quotes + 1) % 2;
+		else if (str[start] == '\'' && !d_quotes)
+			s_quotes = (s_quotes + 1) % 2;
+		start++;
 	}
-	return (i);
+	return (start);
 }
 
-int	add_next_token(char **tokens, char *str, size_t start, size_t *nb)
+int	add_next_token(char ***tokens, char *str, size_t start) //Move to libft ?
 {
 	size_t	end;
 
-	while (str[start] == ' ')
+	while (str[start] == ' ') //while (is_whitespace() ?)
 		start++;
-	end = get_token_end(&str[start]);
+	end = get_token_end(str, start);
 	if (end - start)
-		*nb += ft_push_str(tokens, ft_substr(str, start, end - start));
+		ft_push_str(tokens, ft_substr(str, start, end - start));
 	if (is_meta(str[end]))
-		*nb += ft_push_str(tokens, copy_meta(&str[end], &end));
+		ft_push_str(tokens, copy_meta(&str[end], &end));
 	return (end);
 }
 
 int	lexer(int errno, char **ft_env, char *str)
 {
 	size_t	i;
-	size_t	nb;
 	char	**tokens;
 
 	if (!str)
-		return (4);
-	tokens = ft_calloc(1, sizeof(char **));
+		return (4); //Find correct errno
+	tokens = ft_calloc(1, sizeof(char **)); //Not sure about the 0 here
 	if (!tokens)
-		return (4);
+		return (4); //Find correct errno
 	i = 0;
-	nb = 0;
 	while (str[i])
-		i = add_next_token(tokens, str, i, &nb);
+		i = add_next_token(&tokens, str, i);
 	errno = parse(errno, ft_env, tokens);
 	ft_free_tab(tokens);
 	return (errno);

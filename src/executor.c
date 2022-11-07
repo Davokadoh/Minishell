@@ -72,16 +72,16 @@ static int cmd_error(char *path)
 	int		fd;
 
 	err_code = 0,
-	fd = open(path, O_WRONLY);
+	fd = open(path, O_RDONLY);
 	dir = is_dir(path);
 	if (ft_strchr(path, '/') == NULL)
-		err_code = ft_error(127); // 127 SEEMS to be the errono for command not found
+		err_code = ft_error(127); // 127 SEEMS to be the errno for command not found
 	else if (fd == -1 && !dir)
-		err_code = ft_error(129);
+		err_code = ft_error(129); // Define a macro in .h ?
 	else if (fd == -1 && dir)
-		err_code = ft_error(123);
+		err_code = ft_error(123); // Define a macro in .h ?
 	else if (fd != -1 && dir)
-		err_code = ft_error(111);
+		err_code = ft_error(111); // Define a macro in .h ?
 	if (fd)
 		close(fd);
 	return (err_code);
@@ -99,7 +99,7 @@ static int	run(char **argv, char **ft_env)
 	if (pid == -1)
 	{
 		perror("Failed to fork");
-		return (66);
+		return (66); // Define a macro in .h ?
 	}
 	else if (pid == 0)
 	{
@@ -111,7 +111,7 @@ static int	run(char **argv, char **ft_env)
 			exit(error);
 		}
 		execve(path, argv, ft_env);
-		exit(127);
+		exit(127); // Define a macro in .h ?
 	}
 	waitpid(pid, &status, 0);
 	return (WEXITSTATUS(status));
@@ -165,6 +165,18 @@ static char	*strip_quotes(char *token)
 	return (token);
 }
 
+static void	print_cmd(t_cmd cmd) //Just 4 testing, rm before eval
+{
+	int	i = -1;
+
+	while (cmd.argv[++i])
+		fprintf(stderr, "cmd.argv[%i]:%s\n", i, cmd.argv[i]);
+	fprintf(stderr, "in:%d\n", cmd.input_fd);
+	fprintf(stderr, "out:%d\n", cmd.output_fd);
+	fprintf(stderr, "do_run:%d\n", cmd.do_run);
+	fprintf(stderr, "\n");
+}
+
 int	execute(int errno, char **ft_env, t_cmd *cmds)
 {
 	int	i;
@@ -177,6 +189,7 @@ int	execute(int errno, char **ft_env, t_cmd *cmds)
 	i = -1;
 	while (cmds[++i].argv[0])
 	{
+		print_cmd(cmds[i]);
 		j = -1;
 		while (cmds[i].argv[++j])
 		{
@@ -185,7 +198,7 @@ int	execute(int errno, char **ft_env, t_cmd *cmds)
 		}
 		set_io(cmds[i].input_fd, cmds[i].output_fd, true_stdin, true_stdout);
 		if (is_builtin(cmds[i].argv[0]))
-			errno = run_builtin(cmds[i].argv, &ft_env);
+			errno = run_builtin(cmds[i].argv, ft_env);
 		else
 			errno = run(cmds[i].argv, ft_env);
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);

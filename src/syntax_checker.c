@@ -26,6 +26,5 @@ int	syntax(int errno, char **ft_env, char *line)
 	if (unclosed_quote(line))
 		return (ft_error(3));
 	errno = expand(errno, ft_env, line);
-	ft_free(line);
 	return (errno);
 }

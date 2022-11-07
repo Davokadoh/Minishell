@@ -1,14 +1,25 @@
 #include "../include/minishell.h"
 
+
+/*The following is a nice test
+ *
+ *
+ * echo "echo slt
+ * echo bjr" | bash
+ */
 static int	from_stdin(int errno, char **ft_env)
 {
 	char	*line;
 
 	line = readline(NULL);
-	printf("\033[A\33[2K\r");
-	fflush(0); // Illegal function!! Replace printf by ft_put_str_fd
-	errno = syntax(errno, ft_env, line);
-	ft_free(line);
+	while (line)
+	{
+		printf("\033[A\33[2K\r"); //Should use rl_newline
+		fflush(0); // Illegal function!! Replace printf by ft_put_str_fd
+		errno = syntax(errno, ft_env, line);
+		ft_free(line);
+		line = readline(NULL);
+	}
 	return (errno);
 }
 
@@ -20,7 +31,7 @@ static int	interactive(int errno, char **ft_env)
 	while (1)
 	{
 		line = rl_gets();
-		if (!line || !*line) //rm !*line do stop exiting
+		if (!line || !*line) //rm !*line do stop exiting when empty line
 		{
 			ft_free(line);
 			break ;

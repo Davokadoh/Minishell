@@ -13,7 +13,7 @@ static t_cmd	new_cmd()
 
 static void	or(int errno, t_cmd *cmd)
 {
-	cmd->do_run = errno;
+	cmd->do_run = errno; //needs more work srsly
 }
 
 static int	add_pipe(t_cmd **cmds, int *cmd_index)
@@ -21,8 +21,7 @@ static int	add_pipe(t_cmd **cmds, int *cmd_index)
 	int	pipefd[2];
 	int i;
 
-	if (!cmds[0][*cmd_index + 1].argv[0])
-		return (2); //Change magic number to macro definition
+	//Need to find a way to check whether next token is compatible
 	if (pipe(pipefd) != 0)
 		perror("Pipe creation failed!");
 	i = -1;
@@ -117,6 +116,17 @@ static void	add_argv(t_cmd *cmd, char *token)
 # define MALLOC_ERROR 4
 #endif
 
+static void	ft_free_cmds(t_cmd **cmds)
+{
+	size_t	i;
+
+	i = -1;
+	while ((*cmds)[++i].argv[0] != NULL)
+		ft_free_tab((*cmds)[i].argv);
+	ft_free_tab((*cmds)[i].argv);
+	free((*cmds));
+}
+
 int		parse(int errno, char **ft_env, char **tokens)
 {
 	int		new_errno;
@@ -125,6 +135,8 @@ int		parse(int errno, char **ft_env, char **tokens)
 	t_cmd	*cmds;
 
 	cmds = ft_calloc(2, sizeof(t_cmd));
+	cmds[0] = new_cmd();
+	cmds[1] = new_cmd();
 	if (!cmds)
 		return (ft_error(MALLOC_ERROR)); //Should move macro definition to header file
 	i = -1;
@@ -154,10 +166,10 @@ int		parse(int errno, char **ft_env, char **tokens)
 		cmds[++cmd_index] = new_cmd();
 	if (new_errno)
 	{
-		//ft_free_cmds(cmds);
+		ft_free_cmds(&cmds);
 		return (new_errno);
 	}
 	errno = execute(errno, ft_env, cmds);
-	//ft_free_cmds(cmds);
+	ft_free_cmds(&cmds);
 	return (errno);
 }

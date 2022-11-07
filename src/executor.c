@@ -59,23 +59,24 @@ static char	*get_path(char *program_name, char **envp)
 
 static int	is_dir(const char *path) //should be in libft
 {
-   struct stat statbuf;
-   if (stat(path, &statbuf) != 0)
-       return 0;
-   return S_ISDIR(statbuf.st_mode);
+	struct stat	statbuf;
+
+	if (stat(path, &statbuf) != 0)
+		return (0);
+	return (S_ISDIR(statbuf.st_mode));
 }
 
-static int cmd_error(char *path)
+static int	cmd_error(char *path)
 {
 	int		err_code;
 	int		dir;
 	int		fd;
 
-	err_code = 0,
+	err_code = 0;
 	fd = open(path, O_RDONLY);
 	dir = is_dir(path);
 	if (ft_strchr(path, '/') == NULL)
-		err_code = ft_error(127); // 127 SEEMS to be the errno for command not found
+		err_code = ft_error(127); // Check correct errno
 	else if (fd == -1 && !dir)
 		err_code = ft_error(129); // Define a macro in .h ?
 	else if (fd == -1 && dir)
@@ -139,7 +140,7 @@ static char	*strip_quotes(char *token)
 	int		j;
 	char	*tmp;
 
-	i = -1; 
+	i = -1;
 	while (token[++i])
 	{
 		while (token[i] && token[i] != '"' && token[i] != '\'')
@@ -165,19 +166,7 @@ static char	*strip_quotes(char *token)
 	return (token);
 }
 
-static void	print_cmd(t_cmd cmd) //Just 4 testing, rm before eval
-{
-	int	i = -1;
-
-	while (cmd.argv[++i])
-		fprintf(stderr, "cmd.argv[%i]:%s\n", i, cmd.argv[i]);
-	fprintf(stderr, "in:%d\n", cmd.input_fd);
-	fprintf(stderr, "out:%d\n", cmd.output_fd);
-	fprintf(stderr, "do_run:%d\n", cmd.do_run);
-	fprintf(stderr, "\n");
-}
-
-int	execute(int errno, char **ft_env, t_cmd *cmds)
+int	execute(int errno, char ***ft_env, t_cmd *cmds)
 {
 	int	i;
 	int	j;
@@ -189,7 +178,6 @@ int	execute(int errno, char **ft_env, t_cmd *cmds)
 	i = -1;
 	while (cmds[++i].argv[0])
 	{
-		print_cmd(cmds[i]);
 		j = -1;
 		while (cmds[i].argv[++j])
 		{
@@ -200,7 +188,7 @@ int	execute(int errno, char **ft_env, t_cmd *cmds)
 		if (is_builtin(cmds[i].argv[0]))
 			errno = run_builtin(cmds[i].argv, ft_env);
 		else
-			errno = run(cmds[i].argv, ft_env);
+			errno = run(cmds[i].argv, *ft_env);
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}
 	set_io(true_stdin, true_stdout, true_stdin, true_stdout);

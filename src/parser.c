@@ -1,6 +1,6 @@
 #include "../include/minishell.h"
 
-static t_cmd	new_cmd()
+static t_cmd	new_cmd(void)
 {
 	t_cmd	cmd;
 
@@ -19,13 +19,13 @@ static void	or(int errno, t_cmd *cmd)
 static int	add_pipe(t_cmd **cmds, int *cmd_index)
 {
 	int	pipefd[2];
-	int i;
+	int	i;
 
 	//Need to find a way to check whether next token is compatible
 	if (pipe(pipefd) != 0)
 		perror("Pipe creation failed!");
 	i = -1;
-	while(cmds[0][++i].argv[0])
+	while (cmds[0][++i].argv[0])
 		;
 	if (cmds[0][i].argv[0] == NULL)
 		ft_free_tab(cmds[0][i].argv);
@@ -105,7 +105,7 @@ static void	add_argv(t_cmd *cmd, char *token)
 	int	i;
 
 	i = -1;
-	while(cmd->argv[++i])
+	while (cmd->argv[++i])
 		;
 	cmd->argv = realloc(cmd->argv, (i + 2) * sizeof(char **));
 	cmd->argv[i] = ft_strdup(token);
@@ -127,7 +127,7 @@ static void	ft_free_cmds(t_cmd **cmds)
 	free((*cmds));
 }
 
-int		parse(int errno, char **ft_env, char **tokens)
+int		parse(int errno, char ***ft_env, char **tokens)
 {
 	int		new_errno;
 	int		i;

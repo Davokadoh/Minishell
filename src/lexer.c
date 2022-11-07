@@ -37,7 +37,7 @@ static int	ft_push_str(char ***array, char *str) //Move to libft ?
 	size_t	i;
 
 	i = 0;
-	while((*array)[i])
+	while ((*array)[i])
 		i++;
 	*array = realloc(*array, (i + 2) * sizeof(char **)); //Illegal function!!! create ft_realloc
 	if (!(*array))
@@ -79,7 +79,7 @@ int	add_next_token(char ***tokens, char *str, size_t start) //Move to libft ?
 	return (end);
 }
 
-int	lexer(int errno, char **ft_env, char *str)
+int	lexer(int errno, char ***ft_env, char *str)
 {
 	size_t	i;
 	char	**tokens;

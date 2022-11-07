@@ -6,10 +6,10 @@ int	unclosed_quote(const char *str)
 	int	s_quotes;
 	int	d_quotes;
 
-	i = 0;
+	i = -1;
 	s_quotes = 0;
 	d_quotes = 0;
-	while (str[++i] && !s_quotes && !d_quotes)
+	while (str[++i])
 	{
 		if (str[i] == '\'' && !d_quotes)
 			s_quotes = (s_quotes + 1) % 2; // replace with bool add ?
@@ -21,7 +21,7 @@ int	unclosed_quote(const char *str)
 	return (0);
 }
 
-int	syntax(int errno, char **ft_env, char *line)
+int	syntax(int errno, char ***ft_env, char *line)
 {
 	if (unclosed_quote(line))
 		return (ft_error(3));

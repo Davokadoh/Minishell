@@ -13,7 +13,7 @@ char	*ft_strinsert(char *s1, char *s2, int start, int end)
 		l2 = 0;
 	else
 		l2 = ft_strlen(s2);
-	str = (char *) malloc((l1 + l2  - (end - start) + 1) * sizeof(char *));
+	str = malloc((l1 + l2 - (end - start) + 1) * sizeof(char *));
 	if (!str)
 		return (NULL);
 	ft_strlcpy(str, s1, start + 1);
@@ -33,7 +33,8 @@ static int	get_var_end(char *str)
 	if (ft_isdigit(str[i]))
 		return (i);
 	while (str[i] && str[i] != ' ' && str[i] != '$' && str[i] != '"'\
-			&& str[i] != '\'' && !is_meta(str[i]) && str[i] != '=' && str[i] != '/')
+			&& str[i] != '\'' && !is_meta(str[i]) && str[i] != '='\
+			&& str[i] != '/')
 		i++;
 	if (ft_isdigit(str[i]))
 		i++;
@@ -42,30 +43,32 @@ static int	get_var_end(char *str)
 	return (i - 1);
 }
 
-static void	replace_env_var(char *line, char ** ft_env, int i)
+static void	replace_env_var(char **line, char **ft_env, int i)
 {
 	char	*key;
 	char	*val;
 
-	key = ft_substr(&line[i], 1, get_var_end(&line[i]));
+	key = ft_substr(&(*line)[i], 1, get_var_end(&(*line)[i]));
 	if (!*key)
 		return ;
 	val = ft_getenv(key, ft_env);
 	if (!val)
 		val = NULL;
-	line = ft_strinsert(line, val, i, i + ft_strlen(key) + 1);
+	*line = ft_strinsert(*line, val, i, i + ft_strlen(key) + 1);
 	ft_free(key);
 }
 
-int	expand(int errno, char **ft_env, char *line)
+int	expand(int errno, char ***ft_env, char *original_line)
 {
 	int		i;
 	int		s_quotes;
 	int		d_quotes;
+	char	*line;
 
 	i = -1;
 	s_quotes = 0;
 	d_quotes = 0;
+	line = strdup(original_line);
 	while (line[++i])
 	{
 		if (line[i] == '\'' && !d_quotes)
@@ -73,9 +76,11 @@ int	expand(int errno, char **ft_env, char *line)
 		if (line[i] == '"' && !s_quotes)
 			d_quotes = (d_quotes + 1) % 2;
 		if (line[i] == '$' && line[i + 1] != '?' && !s_quotes)
-			replace_env_var(line, ft_env, i);
+			replace_env_var(&line, *ft_env, i);
 		if (!line[i])
 			break ;
 	}
-	return (lexer(errno, ft_env, line));
+	errno = lexer(errno, ft_env, line);
+	ft_free(line);
+	return (errno);
 }

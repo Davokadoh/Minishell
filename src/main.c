@@ -1,6 +1,5 @@
 #include "../include/minishell.h"
 
-
 /*The following is a nice test
  *
  *
@@ -16,7 +15,7 @@ static int	from_stdin(int errno, char **ft_env)
 	{
 		printf("\033[A\33[2K\r"); //Should use rl_newline
 		fflush(0); // Illegal function!! Replace printf by ft_put_str_fd
-		errno = syntax(errno, ft_env, line);
+		errno = syntax(errno, &ft_env, line);
 		ft_free(line);
 		line = readline(NULL);
 	}
@@ -36,7 +35,7 @@ static int	interactive(int errno, char **ft_env)
 			ft_free(line);
 			break ;
 		}
-		errno = syntax(errno, ft_env, line);
+		errno = syntax(errno, &ft_env, line);
 		ft_free(line);
 	}
 	//rl_clear_history();
@@ -52,7 +51,7 @@ int	main(int ac, char **av, char **envp)
 	errno = 0;
 	ft_env = init_envp(envp);
 	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
-		errno = syntax(errno, ft_env, av[2]);
+		errno = syntax(errno, &ft_env, av[2]);
 	else if (!isatty(0))
 		errno = from_stdin(errno, ft_env);
 	else

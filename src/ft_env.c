@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 15:42:26 by Blaze             #+#    #+#             */
-/*   Updated: 2022/11/07 17:32:55 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/07 17:51:08 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	ft_env(char **env)
 	}
 }
 
-void	ft_setenv(char *var, char *var2, char ***env)
+void	ft_setenv(char *var, char *var2, char **env)
 {
 	int		i;
 	int		n;

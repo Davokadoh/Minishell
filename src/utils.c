@@ -18,6 +18,7 @@ char	**ft_increnv(char **env, char *new_entry)
 	char	**new_env;
 	int		i;
 
+			
 	i = -1;
 	while (env[++i])
 		;
@@ -25,10 +26,14 @@ char	**ft_increnv(char **env, char *new_entry)
 	if (!new_env)
 		return (NULL);
 	i = -1;
+	printf("fdadsasdfdsa\n");
 	while (env[++i])
+	{
+		printf("incr\n");
 		new_env[i] = ft_strdup(env[i]);
+	}
 	new_env[i] = ft_strdup(new_entry);
-	new_env[i + 1] = NULL;
+	new_env[i + 1] = ft_strdup(NULL);
 	i = -1;
 	while (env[++i])
 		ft_free(env[i]);

@@ -12,13 +12,12 @@
 
 #include "../include/minishell.h"
 
-//TODO trier par ordre alpha et fusionner a la fin du precedent tableau !
+//TODO si la valuer de gauche existe deja , remplacez !
 char	**ft_increnv(char **env, char *new_entry)
 {
 	char	**new_env;
 	int		i;
-
-			
+	printf("incr \n");
 	i = -1;
 	while (env[++i])
 		;
@@ -26,14 +25,10 @@ char	**ft_increnv(char **env, char *new_entry)
 	if (!new_env)
 		return (NULL);
 	i = -1;
-	printf("fdadsasdfdsa\n");
 	while (env[++i])
-	{
-		printf("incr\n");
 		new_env[i] = ft_strdup(env[i]);
-	}
 	new_env[i] = ft_strdup(new_entry);
-	new_env[i + 1] = ft_strdup(NULL);
+	new_env[i + 1] = NULL;
 	i = -1;
 	while (env[++i])
 		ft_free(env[i]);

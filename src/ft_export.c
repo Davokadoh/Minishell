@@ -49,7 +49,6 @@ char **add_env_var(char *l_value, char *r_value, char **env)
 	char **new_env;
 
 	new_entry = ft_strjoin(l_value,r_value);
-	printf("ici\n");
     new_env = ft_increnv(env,new_entry);
     ft_free(new_entry);
     return (new_env);
@@ -91,9 +90,7 @@ char **add_exp_var(char *l_value, char *r_value)
 	if is not alpha: export: `l_value': not a valid identifier
 	*/
 	i = - 1;
-	printf("avant\n");
     new_entry = ft_strjoin(l_value,r_value);
-	printf("apres\n");
     if (!k && !exp_tab)
 	{
 		k = 0;
@@ -103,7 +100,6 @@ char **add_exp_var(char *l_value, char *r_value)
 	}
     else
 	{
-		printf("LLLL\n");
 		while(exp_tab[++k])
        		;
 		exp_tab = realloc(exp_tab, (k + 2) * sizeof(char **));

@@ -6,7 +6,7 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 15:07:50 by btchiman          #+#    #+#             */
-/*   Updated: 2022/11/08 20:23:52 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/08 20:28:50 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	ft_exit(char **argv)
 
 	errno = 0;
 	if (!argv[1])
-		return (0);
+		exit(0);
 	if ((argv[1][0] == '+' || argv[1][0] == '-') && ft_isdigit(argv[1][1]) \
 			&& !argv[2])
 		errno = ft_atol(argv[1]);
@@ -43,5 +43,5 @@ int	ft_exit(char **argv)
 				&& (argv[1][1] == '\0' || argv[1][1] != '0')))
 		errno = num_req(argv);
 	printf("TEST\n");
-	return (errno);
+	exit(errno);
 }

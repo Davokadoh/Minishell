@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/16 14:57:03 by Blaze             #+#    #+#             */
-/*   Updated: 2022/11/07 17:50:39 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/08 18:44:46 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,10 @@ int	run_builtin(char **argv, char ***env)
 	if (ft_strncmp(argv[0], "export", 7) == 0)
 		ft_export(argv, *env);
 	if (ft_strncmp(argv[0], "unset", 6) == 0)
-		ft_unset(argv, *env);
+		ft_unset(argv, env);
 	if (ft_strncmp(argv[0], "cd", 3) == 0)
 		return (ft_cd(argv, *env));
 	if (ft_strncmp(argv[0], "exit", 5) == 0)
-		ft_exit();
+		return (ft_exit(argv));
 	return (0);
 }

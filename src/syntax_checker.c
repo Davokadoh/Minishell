@@ -24,7 +24,10 @@ int	unclosed_quote(const char *str)
 int	syntax(int errno, char ***ft_env, char *line)
 {
 	if (unclosed_quote(line))
-		return (ft_error(3));
+	{
+		ft_putstr_fd("Closing quote not found\n", 2);
+		return (1);
+	}
 	errno = expand(errno, ft_env, line);
 	return (errno);
 }

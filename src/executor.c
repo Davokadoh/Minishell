@@ -47,7 +47,7 @@ static char	*get_path(char *program_name, char **envp)
 	{
 		paths[i] = ft_append(paths[i], "/"); //diff w/ ft_strjoin ?
 		paths[i] = ft_append(paths[i], program_name); //diff w/ ft_strjoin ?
-		if (access(paths[i], F_OK) == 0)
+		if (access(paths[i], F_OK & X_OK) == 0)
 			break ;
 	}
 	if (path_error(paths, i))
@@ -57,6 +57,7 @@ static char	*get_path(char *program_name, char **envp)
 	return (path);
 }
 
+/*
 static int	is_dir(const char *path) //should be in libft
 {
 	struct stat	statbuf;
@@ -75,17 +76,53 @@ static int	cmd_error(char *path)
 	err_code = 0;
 	fd = open(path, O_RDONLY);
 	dir = is_dir(path);
-	if (ft_strchr(path, '/') == NULL)
-		err_code = ft_error(127); // Check correct errno
+	if (path)
+	{
+		if (ft_strchr(path, '/') == NULL)
+			err_code = 127; // Check correct errno
+	}
 	else if (fd == -1 && !dir)
-		err_code = ft_error(129); // Define a macro in .h ?
+	{
+		err_code = 127; // Define a macro in .h ?
+		perror("command not found");
+	}
 	else if (fd == -1 && dir)
-		err_code = ft_error(123); // Define a macro in .h ?
+	{
+		printf("PING\n");
+		err_code = 123; // Define a macro in .h ?
+	}
 	else if (fd != -1 && dir)
-		err_code = ft_error(111); // Define a macro in .h ?
+	{
+		err_code = 111; // Define a macro in .h ?
+		ft_putstr_fd("TEST\n", 2);
+	}
 	if (fd)
 		close(fd);
 	return (err_code);
+}
+*/
+
+static int	cmd_error(char *path)
+{
+	DIR	*dir;
+
+	if (ft_strchr(path, '/') == NULL)
+	{
+		ft_putstr_fd("mish: ", 2);
+		ft_putstr_fd(path, 2);
+		ft_putstr_fd(": command not found\n", 2);
+		return (127); //Change magic number to macro
+	}
+	dir = opendir(path);
+	if (dir)
+	{
+		closedir(dir);
+		ft_putstr_fd("mish: ", 2);
+		ft_putstr_fd(path, 2);
+		ft_putstr_fd(": is a directory\n", 2);
+		return (126); //Change magic number to macro
+	}
+	return (0); //Change magic number to macro
 }
 
 static int	run(char **argv, char **ft_env)
@@ -104,14 +141,21 @@ static int	run(char **argv, char **ft_env)
 	}
 	else if (pid == 0)
 	{
-		path = get_path(argv[0], ft_env);
-		error = cmd_error(path);
+		if (argv[0] != NULL && argv[0][0] != '/')
+			path = get_path(argv[0], ft_env);
+		else
+			path = argv[0];
+		if (path == NULL)
+			error = 127;
+		else
+			error = cmd_error(path);
 		if (error)
 		{
 			ft_free(path);
 			exit(error);
 		}
 		execve(path, argv, ft_env);
+		perror(NULL);
 		exit(127); // Define a macro in .h ?
 	}
 	waitpid(pid, &status, 0);

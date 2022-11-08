@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 17:01:25 by Blaze             #+#    #+#             */
-/*   Updated: 2022/11/07 17:57:02 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/08 18:40:02 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <string.h>
+# include <dirent.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <sys/ioctl.h>
@@ -62,12 +63,12 @@ char	*ft_getenv(char *var, char **env);
 char    **init_envp(char **env);
 void    ft_env(char **env);
 void    ft_setenv(char *var, char *var2, char **env);
-char	**ft_unset(char **args, char **env);
+int		ft_unset(char **args, char ***env);
 char    **ft_export(char **args, char **env);
 int		ft_cd(char **args, char **env);
 int     ft_echo(char **args);
 void    ft_pwd(void);
-void	ft_exit(void);
+int		ft_exit(char **argv);
 
 // utils //Are they just that tho ?
 char **ft_increnv(char **env, char *new_entry); //This could be in category builtins, no ?

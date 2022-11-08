@@ -4,21 +4,17 @@
  *
  *
  * echo "echo slt
- * echo bjr" | bash
+ * echo bjr" | (bash || ./minishell)
  */
 static int	from_stdin(int errno, char **ft_env)
 {
 	char	*line;
 
 	line = readline(NULL);
-	while (line)
-	{
-		printf("\033[A\33[2K\r"); //Should use rl_newline
-		fflush(0); // Illegal function!! Replace printf by ft_put_str_fd
-		errno = syntax(errno, &ft_env, line);
-		ft_free(line);
-		line = readline(NULL);
-	}
+	printf("\033[A\33[2K\r"); //Should use rl_newline
+	fflush(0); // Illegal function!! Replace printf by ft_put_str_fd
+	errno = syntax(errno, &ft_env, line);
+	ft_free(line);
 	return (errno);
 }
 

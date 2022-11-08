@@ -1,5 +1,16 @@
 #include "../include/minishell.h"
 
+static int	syntax_error(char *token)
+{
+	//Maybe move to syntax_checker.c
+	if (!token)
+		token = "newline";
+	ft_putstr_fd("msh: syntax error near unexpected token '", 2);
+	ft_putstr_fd(token, 2);
+	ft_putstr_fd("'\n", 2);
+	return (2); //Change magic number to macro definition
+}
+
 static t_cmd	new_cmd(void)
 {
 	t_cmd	cmd;
@@ -11,19 +22,40 @@ static t_cmd	new_cmd(void)
 	return (cmd);
 }
 
-static void	or(int errno, t_cmd *cmd)
+static int	or(t_cmd **cmds, int *cmd_index, char *token)
 {
-	cmd->do_run = errno; //needs more work srsly
+	int	i;
+
+	if (!token || !ft_isalnum(token[0]))
+		return (syntax_error(token));
+	cmds[*cmd_index]->do_run = 1;
+	i = -1;
+	while (cmds[0][++i].argv[0])
+		;
+	if (cmds[0][i].argv[0] == NULL)
+		ft_free_tab(cmds[0][i].argv);
+	*cmds = realloc(*cmds, (i + 2) * sizeof(t_cmd));
+	cmds[0][++*cmd_index] = new_cmd();
+	cmds[0][*cmd_index + 1] = new_cmd();
+	return (0); //Change magic number to macro definition
+	//needs more work srsly
 }
 
-static int	add_pipe(t_cmd **cmds, int *cmd_index)
+static int	add_pipe(t_cmd **cmds, int *cmd_index, char *token)
 {
 	int	pipefd[2];
 	int	i;
 
 	//Need to find a way to check whether next token is compatible
+	if (*cmd_index < 0)
+		return (syntax_error(token));
+	if (!cmds[0][*cmd_index].argv[0])
+		return (syntax_error(token));
 	if (pipe(pipefd) != 0)
+	{
 		perror("Pipe creation failed!");
+		return (1); //Change magic number to macro definition
+	}
 	i = -1;
 	while (cmds[0][++i].argv[0])
 		;
@@ -48,17 +80,12 @@ static int	heredoc(t_cmd *cmd, char *token)
 	char	*line;
 	int		pipefd[2];
 
-	if (!token)
-		return (2); //Change magic number to macro definition
-	if (!ft_isalnum(token[0]))
-	{
-		perror("Syntax error\n");
-		return (2); //Change magic number to macro definition
-	}
+	if (!token || !ft_isalnum(token[0]))
+		return (syntax_error(token));
 	if (!pipe(pipefd))
 	{
 		perror("Pipe creation failed!");
-		return (2); //Change magic number to macro definition
+		return (3); //Change magic number to macro definition
 	}
 	while (1)
 	{
@@ -77,27 +104,36 @@ static int	heredoc(t_cmd *cmd, char *token)
 	return (0); //Change magic number to macro definition
 }
 
-static void	in(t_cmd *cmd, char *token)
+static int	in(t_cmd *cmd, char *token)
 {
+	if (!token || !ft_isalnum(token[0]))
+		return (syntax_error(token));
 	if (cmd->input_fd != 0)
 		close(cmd->input_fd);
 	if (!access(token, R_OK))
 		cmd->input_fd = open(token, O_RDONLY);
+	return (0);
 }
 
-static void	append(t_cmd *cmd, char *token)
+static int	append(t_cmd *cmd, char *token)
 {
+	if (!token || !ft_isalnum(token[0]))
+		return (syntax_error(token));
 	if (cmd->output_fd != 1)
 		close(cmd->output_fd);
 	if (!access(token, W_OK))
 		cmd->output_fd = open(token, O_APPEND);
+	return (0); //Change magic number to macro definition
 }
 
-static void	out(t_cmd *cmd, char *token)
+static int	out(t_cmd *cmd, char *token)
 {
+	if (!token || !ft_isalnum(token[0]))
+		return (syntax_error(token));
 	if (cmd->output_fd != 1)
 		close(cmd->output_fd);
 	cmd->output_fd = open(token, O_TRUNC | O_CREAT | O_WRONLY, 0666);
+	return (0); //Change magic number to macro definition
 }
 
 static void	add_argv(t_cmd *cmd, char *token)
@@ -111,10 +147,6 @@ static void	add_argv(t_cmd *cmd, char *token)
 	cmd->argv[i] = ft_strdup(token);
 	cmd->argv[++i] = NULL;
 }
-
-#ifndef MALLOC_ERROR
-# define MALLOC_ERROR 4
-#endif
 
 static void	ft_free_cmds(t_cmd **cmds)
 {
@@ -138,24 +170,24 @@ int		parse(int errno, char ***ft_env, char **tokens)
 	cmds[0] = new_cmd();
 	cmds[1] = new_cmd();
 	if (!cmds)
-		return (ft_error(MALLOC_ERROR)); //Should move macro definition to header file
+		return (1);
 	i = -1;
 	new_errno = 0;
 	cmd_index = 0;
 	while (tokens[++i] && !new_errno)
 	{
 		if (tokens[i][0] == '|' && tokens[i][1] == '|')
-			or(errno, &cmds[cmd_index]); //Add error handling
+			new_errno = or(&cmds, &cmd_index, tokens[i]); //Add error handling
 		else if (tokens[i][0] == '|')
-			new_errno = add_pipe(&cmds, &cmd_index); //Add error handling
+			new_errno = add_pipe(&cmds, &cmd_index, tokens[i]); //Add error handling
 		else if (tokens[i][0] == '<' && tokens[i][1] == '<')
 			new_errno = heredoc(&cmds[cmd_index], tokens[++i]); //Add error handling
 		else if (tokens[i][0] == '<')
-			in(&cmds[cmd_index], tokens[++i]); //Add error handling
+			new_errno = in(&cmds[cmd_index], tokens[++i]); //Add error handling
 		else if (tokens[i][0] == '>' && tokens[i][1] == '>')
-			append(&cmds[cmd_index], tokens[++i]); //Add error handling
+			new_errno = append(&cmds[cmd_index], tokens[++i]); //Add error handling
 		else if (tokens[i][0] == '>')
-			out(&cmds[cmd_index], tokens[++i]); //Add error handling
+			new_errno = out(&cmds[cmd_index], tokens[++i]); //Add error handling
 		else
 			add_argv(&cmds[cmd_index], tokens[i]); //Add error handling
 	}
@@ -166,6 +198,8 @@ int		parse(int errno, char ***ft_env, char **tokens)
 		cmds[++cmd_index] = new_cmd();
 	if (new_errno)
 	{
+		if (cmds[0].argv[0] == NULL)
+			ft_free_tab(cmds[1].argv);
 		ft_free_cmds(&cmds);
 		return (new_errno);
 	}

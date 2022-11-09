@@ -6,7 +6,7 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 14:41:59 by btchiman          #+#    #+#             */
-/*   Updated: 2022/11/08 14:18:01 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/09 10:57:21 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	ft_cd(char **args, char **env)
 		errno = 1;
 		perror(NULL);
 	}
-	free(oldpwd);
+	//free(oldpwd);
 	free(pwd);
 	return (errno);
 }

@@ -1,5 +1,4 @@
 #include "../include/minishell.h"
-#include <stdbool.h>
 
 int	is_meta(const char ch)
 {
@@ -39,7 +38,7 @@ static int	ft_push_str(char ***array, char *str) //Move to libft ?
 	i = 0;
 	while ((*array)[i])
 		i++;
-	*array = realloc(*array, (i + 2) * sizeof(char **)); //Illegal function!!! create ft_realloc
+	*array = ft_realloc(*array, (i + 2) * sizeof(char **));
 	if (!(*array))
 		return (0);
 	(*array)[i] = str;
@@ -47,7 +46,7 @@ static int	ft_push_str(char ***array, char *str) //Move to libft ?
 	return (1);
 }
 
-static int	get_token_end(char *str, size_t start) //Move to libft with add ?
+static int	get_token_end(char *str, size_t start)
 {
 	size_t	s_quotes;
 	size_t	d_quotes;
@@ -65,7 +64,7 @@ static int	get_token_end(char *str, size_t start) //Move to libft with add ?
 	return (start);
 }
 
-int	add_next_token(char ***tokens, char *str, size_t start) //Move to libft ?
+static int	add_next_token(char ***tokens, char *str, size_t start)
 {
 	size_t	end;
 
@@ -85,10 +84,10 @@ int	lexer(int errno, char ***ft_env, char *str)
 	char	**tokens;
 
 	if (!str)
-		return (4); //Find correct errno
-	tokens = ft_calloc(1, sizeof(char **)); //Not sure about the 0 here
+		return (4); //Find correct errno + define macro
+	tokens = ft_calloc(1, sizeof(char **));
 	if (!tokens)
-		return (4); //Find correct errno
+		return (4); //Find correct errno + define macro
 	i = 0;
 	while (str[i])
 		i = add_next_token(&tokens, str, i);

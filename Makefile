@@ -62,8 +62,6 @@ MAKEFLAGS   += --no-print-directory #--silent
 
 .PHONY: all clean fclean re asan debug
 
-# USE TPUTS INSTEAD!!!
-# COLORS
 R=$$(tput setaf 1)
 G=$$(tput setaf 2)
 Y=$$(tput setaf 3)

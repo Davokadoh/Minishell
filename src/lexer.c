@@ -88,8 +88,7 @@ int	lexer(int errno, char ***ft_env, char *str)
 	tokens = malloc(1 * sizeof(char **));
 	if (!tokens)
 		return (4); //Find correct errno + define macro
-	tokens[0] = NULL;
-	ft_push_str(&tokens, "");
+	tokens[0] = NULL; //ft_strdup("");
 	i = 0;
 	while (str[i])
 		i = add_next_token(&tokens, str, i);

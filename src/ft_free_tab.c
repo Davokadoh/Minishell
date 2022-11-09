@@ -10,7 +10,7 @@ void	ft_free_tab(char **str)
 	i = -1;
 	while (str[++i])
 	{
-		if (*str[i])
+		if (str[i][0])
 			ft_free(str[i]);
 	}
 	ft_free(str);

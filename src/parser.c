@@ -61,7 +61,7 @@ static int	add_pipe(t_cmd **cmds, int *cmd_index, char *token)
 		;
 	if (cmds[0][i].argv[0] == NULL)
 		ft_free_tab(cmds[0][i].argv);
-	*cmds = realloc(*cmds, (i + 2) * sizeof(t_cmd));
+	*cmds = realloc(*cmds, (i + 2) * sizeof(t_cmd)); //Illegal use of realloc
 	if (cmds[0][*cmd_index].output_fd == 1)
 	{
 		cmds[0][*cmd_index].output_fd = pipefd[1];
@@ -171,27 +171,25 @@ int		parse(int errno, char ***ft_env, char **tokens)
 	cmds[1] = new_cmd();
 	if (!cmds)
 		return (1);
-	i = -1;
 	new_errno = 0;
 	cmd_index = 0;
+	i = -1;
 	while (tokens[++i] && !new_errno)
 	{
 		if (tokens[i][0] == '|' && tokens[i][1] == '|')
-			new_errno = or(&cmds, &cmd_index, tokens[i]); //Add error handling
+			new_errno = or(&cmds, &cmd_index, tokens[i]);
 		else if (tokens[i][0] == '|')
-			new_errno = add_pipe(&cmds, &cmd_index, tokens[i]); //Add error handling
+			new_errno = add_pipe(&cmds, &cmd_index, tokens[i]);
 		else if (tokens[i][0] == '<' && tokens[i][1] == '<')
-			new_errno = heredoc(&cmds[cmd_index], tokens[++i]); //Add error handling
+			new_errno = heredoc(&cmds[cmd_index], tokens[++i]);
 		else if (tokens[i][0] == '<')
-			new_errno = in(&cmds[cmd_index], tokens[++i]); //Add error handling
+			new_errno = in(&cmds[cmd_index], tokens[++i]);
 		else if (tokens[i][0] == '>' && tokens[i][1] == '>')
-			new_errno = append(&cmds[cmd_index], tokens[++i]); //Add error handling
+			new_errno = append(&cmds[cmd_index], tokens[++i]);
 		else if (tokens[i][0] == '>')
-			new_errno = out(&cmds[cmd_index], tokens[++i]); //Add error handling
+			new_errno = out(&cmds[cmd_index], tokens[++i]);
 		else
 			add_argv(&cmds[cmd_index], tokens[i]); //Add error handling
-		if (!tokens[i])
-			break ;
 	}
 	i = -1;
 	while (cmds[++i].argv[0])

@@ -21,7 +21,6 @@ char	*ft_strinsert(char *s1, char *s2, int start, int end)
 		ft_strlcat(str, s2, ft_strlen(str) + l2 + 1);
 	ft_strlcat(str, &s1[end], ft_strlen(str) + ft_strlen(&s1[end]) + 1);
 	ft_free(s1);
-	ft_free(s2);
 	return (str);
 }
 
@@ -51,7 +50,7 @@ static void	replace_env_var(char **line, char **ft_env, int i)
 	key = ft_substr(&(*line)[i], 1, get_var_end(&(*line)[i]));
 	if (!*key)
 		return ;
-	val = ft_strdup(ft_getenv(key, ft_env));
+	val = ft_getenv(key, ft_env);
 	if (!val)
 		val = NULL;
 	*line = ft_strinsert(*line, val, i, i + ft_strlen(key) + 1);

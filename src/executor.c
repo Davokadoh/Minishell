@@ -202,9 +202,10 @@ static char	*strip_quotes(char *token)
 		ft_strlcpy(tmp, token, i + 1);
 		ft_strlcpy(&tmp[i], &token[i + 1], j - i);
 		ft_strlcpy(&tmp[j - 1], &token[j + 1], ft_strlen(token) - j);
-		token = realloc(token, sizeof(char *) * (ft_strlen(token) - 2));
+		token = realloc(token, sizeof(char *) * (ft_strlen(token) - 2)); //Illegal use of realloc
 		ft_strlcpy(token, tmp, ft_strlen(tmp) + 1);
 		token[ft_strlen(tmp)] = '\0'; //Maybe useless because we use strLcpy
+		ft_free(tmp);
 		i = j - 2;
 	}
 	return (token);

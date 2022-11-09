@@ -176,23 +176,22 @@ int		parse(int errno, char ***ft_env, char **tokens)
 	cmd_index = 0;
 	while (tokens[++i] && !new_errno)
 	{
-		if (tokens[i])
-		{
-			if (tokens[i][0] == '|' && tokens[i][1] == '|')
-				new_errno = or(&cmds, &cmd_index, tokens[i]); //Add error handling
-			else if (tokens[i][0] == '|')
-				new_errno = add_pipe(&cmds, &cmd_index, tokens[i]); //Add error handling
-			else if (tokens[i][0] == '<' && tokens[i][1] == '<')
-				new_errno = heredoc(&cmds[cmd_index], tokens[++i]); //Add error handling
-			else if (tokens[i][0] == '<')
-				new_errno = in(&cmds[cmd_index], tokens[++i]); //Add error handling
-			else if (tokens[i][0] == '>' && tokens[i][1] == '>')
-				new_errno = append(&cmds[cmd_index], tokens[++i]); //Add error handling
-			else if (tokens[i][0] == '>')
-				new_errno = out(&cmds[cmd_index], tokens[++i]); //Add error handling
-			else
-				add_argv(&cmds[cmd_index], tokens[i]); //Add error handling
-		}
+		if (tokens[i][0] == '|' && tokens[i][1] == '|')
+			new_errno = or(&cmds, &cmd_index, tokens[i]); //Add error handling
+		else if (tokens[i][0] == '|')
+			new_errno = add_pipe(&cmds, &cmd_index, tokens[i]); //Add error handling
+		else if (tokens[i][0] == '<' && tokens[i][1] == '<')
+			new_errno = heredoc(&cmds[cmd_index], tokens[++i]); //Add error handling
+		else if (tokens[i][0] == '<')
+			new_errno = in(&cmds[cmd_index], tokens[++i]); //Add error handling
+		else if (tokens[i][0] == '>' && tokens[i][1] == '>')
+			new_errno = append(&cmds[cmd_index], tokens[++i]); //Add error handling
+		else if (tokens[i][0] == '>')
+			new_errno = out(&cmds[cmd_index], tokens[++i]); //Add error handling
+		else
+			add_argv(&cmds[cmd_index], tokens[i]); //Add error handling
+		if (!tokens[i])
+			break ;
 	}
 	i = -1;
 	while (cmds[++i].argv[0])

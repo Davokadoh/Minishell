@@ -30,7 +30,7 @@ static char	*copy_meta(const char *token, size_t *end)
 	}
 }
 
-//Returns 1 if str added, 0 if realloc failed
+//Returns 0 if str added, 1 if realloc failed
 static int	ft_push_str(char ***array, char *str) //Move to libft ?
 {
 	size_t	i;
@@ -40,10 +40,10 @@ static int	ft_push_str(char ***array, char *str) //Move to libft ?
 		i++;
 	*array = ft_realloc(*array, (i + 2) * sizeof(char **));
 	if (!(*array))
-		return (0);
+		return (1);
 	(*array)[i] = str;
 	(*array)[i + 1] = NULL;
-	return (1);
+	return (0);
 }
 
 static int	get_token_end(char *str, size_t start)
@@ -85,9 +85,11 @@ int	lexer(int errno, char ***ft_env, char *str)
 
 	if (!str)
 		return (4); //Find correct errno + define macro
-	tokens = ft_calloc(1, sizeof(char **));
+	tokens = malloc(1 * sizeof(char **));
 	if (!tokens)
 		return (4); //Find correct errno + define macro
+	tokens[0] = NULL;
+	ft_push_str(&tokens, "");
 	i = 0;
 	while (str[i])
 		i = add_next_token(&tokens, str, i);

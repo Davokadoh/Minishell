@@ -51,7 +51,7 @@ static void	replace_env_var(char **line, char **ft_env, int i)
 	key = ft_substr(&(*line)[i], 1, get_var_end(&(*line)[i]));
 	if (!*key)
 		return ;
-	val = ft_getenv(key, ft_env);
+	val = ft_strdup(ft_getenv(key, ft_env));
 	if (!val)
 		val = NULL;
 	*line = ft_strinsert(*line, val, i, i + ft_strlen(key) + 1);

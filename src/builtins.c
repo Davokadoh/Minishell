@@ -42,7 +42,7 @@ int	run_builtin(char **argv, char ***env)
 	if (ft_strncmp(argv[0], "export", 6) == 0)
 		*env = ft_export(argv, *env);
 	if (ft_strncmp(argv[0], "unset", 5) == 0)
-		*env = ft_unset(argv, *env);
+		ft_unset(argv, *env);
 	if (ft_strncmp(argv[0], "cd", 2) == 0)
 		ft_cd(argv, *env);
 	if (ft_strncmp(argv[0], "exit", 4) == 0)

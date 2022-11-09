@@ -12,28 +12,40 @@
 
 #include "../include/minishell.h"
 
-// enleve un element de la liste d'env
-char **ft_unset(char **args,char **env)
+// enleve un element de la liste d'env et exp
+// retourne 0 en cas de succes et -1 en cas d'erreur
+int ft_unset(char **args,char **env)
 {
-	char **new_env;
 	int	i;
-	int n;
+	int j;
+	int k;
+	char *name;
 
-	i = -1;
-	if(ft_getenv(args[1],env))
+	i = 0;
+	j = -1;
+	k = -1;
+	while(env[++k])
+		;
+	while(args[++i])
 	{
-		n = ft_strlen(args[1]);
-		while(env[++i])
-			;
-		new_env = malloc(sizeof(char **) * i -1);
-		i = -1;
-		while(env[++i])
+		while(env[++j])
 		{
-			if(!ft_strnstr(env[i], args[1], n))
-				new_env[i] = ft_strdup(env[i]);
+			name = get_variable_name(args[i]);
+			if(ft_strnstr(name,get_variable_name(env[j]),ft_strlen(env[j])))
+			{
+				while(env[j])
+				{
+					env[j] = env[j+1];
+					j++;
+				}
+				env[j] = NULL;
+			}
 		}
-		new_env[i] = NULL;
-		return (new_env);
+		j = -1;
 	}
-	return (env);
+	while(env[++j])
+		;
+	if( k > j)
+		return(0);
+	return (-1);
 }

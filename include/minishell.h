@@ -66,11 +66,11 @@ int		ft_cd(char **args, char **env);
 int     is_builtin(char *cmd);
 int     run_builtin(char **argv, char ***env);
 char    **ft_export(char **args, char **env);
-char	**ft_unset(char **args, char **env);
+int		ft_unset(char **args, char **env);
 void	ft_exit(void);
 
 // utils
-char **ft_increnv(char **env, char *new_entry);
+char **ft_increnv(char **env, char *l_value, char *new_entry);
 char *malloc_substrcpy(char *variable, int start, int end);
 char *get_variable_name(char *variable);
 char *get_env_variable_value(char *variable);

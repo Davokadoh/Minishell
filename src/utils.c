@@ -13,26 +13,49 @@
 #include "../include/minishell.h"
 
 //TODO si la valuer de gauche existe deja , remplacez !
-char	**ft_increnv(char **env, char *new_entry)
+char	**ft_increnv(char **env, char *l_value, char *new_entry)
 {
-	char	**new_env;
+	static char	**new_env;
 	int		i;
-	printf("incr \n");
-	i = -1;
-	while (env[++i])
-		;
-	new_env = malloc(sizeof (char **) * (i + 2));
+	
 	if (!new_env)
-		return (NULL);
-	i = -1;
-	while (env[++i])
-		new_env[i] = ft_strdup(env[i]);
-	new_env[i] = ft_strdup(new_entry);
-	new_env[i + 1] = NULL;
-	i = -1;
-	while (env[++i])
-		ft_free(env[i]);
-	new_env = ft_triAlpha(new_env);
+	{
+		i = -1;
+		while (env[++i])
+			;
+		new_env = malloc(sizeof (char **) * (i + 2));
+		if (!new_env)
+			return (NULL);
+		i = -1;
+		while(env[++i])
+		{
+			new_env[i] = ft_strdup(env[i]);
+		}
+		new_env[i] = ft_strdup(new_entry);
+		new_env[i + 1] = NULL;
+		i = -1;
+		while (env[++i])
+			ft_free(env[i]);
+		return (new_env);
+	}
+	else
+	{
+		i = -1;
+		while (new_env[++i])
+			;
+		new_env = realloc(new_env, (i + 2) * sizeof(char **));
+		i = -1;
+		while(new_env[++i])
+		{
+			if(ft_strnstr(new_env[i],l_value,ft_strlen(l_value)))
+			{
+				new_env[i] = ft_strdup(new_entry);
+				return (new_env);
+			}	
+		}
+		new_env[i] = ft_strdup(new_entry);
+		new_env[i + 1] = NULL;
+	}
 	return (new_env);
 }
 
@@ -72,7 +95,7 @@ char	*get_variable_name(char *variable)
 	{
 		if (variable[index] == '=')
 		{
-			end = index;
+			end = index -1;
 			name = malloc_substrcpy(variable, start, end);
 			return (name);
 		}
@@ -132,4 +155,30 @@ char **ft_triAlpha(char **s)
 	}
 	s[j] = NULL;
 	return (s);
+}
+
+char **ft_fusion(char **exp, char **exp_tab)
+{
+	int j;
+	int k;
+	char **new;
+
+	j = -1;
+	k = -1;
+	while(exp[++j])
+		;
+	while(exp_tab[++k])
+        ;
+	new = malloc(sizeof(char **) *(j+k)+1);
+	j = -1;
+	while(exp[++j])
+		new[j] = ft_strdup(exp[j]);
+	k = -1;
+	while(exp_tab[++k])
+	{
+		new[j] = ft_strdup(exp_tab[k]);
+		j++;
+	}
+	new[j] = NULL;
+	return(new);
 }

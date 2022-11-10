@@ -19,6 +19,7 @@ static t_cmd	new_cmd(void)
 	cmd.input_fd = 0;
 	cmd.output_fd = 1;
 	cmd.do_run = 1;
+	cmd.piped = 0;
 	return (cmd);
 }
 
@@ -38,7 +39,7 @@ static int	or(t_cmd **cmds, int *cmd_index, char *token)
 	cmds[0][++*cmd_index] = new_cmd();
 	cmds[0][*cmd_index + 1] = new_cmd();
 	return (0); //Change magic number to macro definition
-	//needs more work srsly
+	//needs more work
 }
 
 static int	add_pipe(t_cmd **cmds, int *cmd_index, char *token)
@@ -53,7 +54,7 @@ static int	add_pipe(t_cmd **cmds, int *cmd_index, char *token)
 		return (syntax_error(token));
 	if (pipe(pipefd) != 0)
 	{
-		perror("Pipe creation failed!");
+		perror("Pipe creation failed!"); //Maybe rewrite
 		return (1); //Change magic number to macro definition
 	}
 	i = -1;
@@ -64,6 +65,7 @@ static int	add_pipe(t_cmd **cmds, int *cmd_index, char *token)
 	*cmds = realloc(*cmds, (i + 2) * sizeof(t_cmd)); //Illegal use of realloc
 	if (cmds[0][*cmd_index].output_fd == 1)
 	{
+		cmds[0][*cmd_index].piped = 1;
 		cmds[0][*cmd_index].output_fd = pipefd[1];
 		cmds[0][++*cmd_index] = new_cmd();
 		cmds[0][*cmd_index].input_fd = pipefd[0];
@@ -174,7 +176,7 @@ int		parse(int errno, char ***ft_env, char **tokens)
 	new_errno = 0;
 	cmd_index = 0;
 	i = -1;
-	while (tokens[++i] && !new_errno)
+	while (tokens && tokens[++i] && !new_errno)
 	{
 		if (tokens[i][0] == '|' && tokens[i][1] == '|')
 			new_errno = or(&cmds, &cmd_index, tokens[i]);

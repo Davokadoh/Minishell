@@ -23,7 +23,6 @@ SRCS		:=	$(SRC_DIR)/main.c \
 				$(SRC_DIR)/expander.c \
 				$(SRC_DIR)/parser.c \
 				$(SRC_DIR)/executor.c \
-				$(SRC_DIR)/ft_free_tab.c \
 				$(SRC_DIR)/builtins.c \
 				$(SRC_DIR)/ft_echo.c \
 				$(SRC_DIR)/ft_env.c \

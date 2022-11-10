@@ -63,6 +63,7 @@ int	expand(int errno, char ***ft_env, char *original_line)
 	int		s_quotes;
 	int		d_quotes;
 	char	*line;
+	char	*cwd;
 
 	i = -1;
 	s_quotes = 0;
@@ -76,6 +77,11 @@ int	expand(int errno, char ***ft_env, char *original_line)
 			d_quotes = (d_quotes + 1) % 2;
 		if (line[i] == '$' && line[i + 1] != '?' && !s_quotes)
 			replace_env_var(&line, *ft_env, i);
+		else if (line[i] == '.')
+		{
+			cwd = getcwd(NULL, 0);
+			line = ft_strinsert(line, cwd, i, i + 1);
+		}
 		if (!line[i])
 			break ;
 	}

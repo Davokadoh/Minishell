@@ -6,7 +6,7 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 14:41:59 by btchiman          #+#    #+#             */
-/*   Updated: 2022/11/09 10:57:21 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/10 13:34:49 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,17 @@ int	ft_cd(char **args, char **env)
 	}
 	else
 		path = args[1];
-	oldpwd = ft_getenv("PWD", env);
+	oldpwd = getcwd(NULL, 0);
+	errno = chdir(path);
 	pwd = getcwd(NULL, 0);
 	ft_setenv("OLDPWD", oldpwd, env);
 	ft_setenv("PWD", pwd, env);
-	errno = chdir(path);
 	if (errno == -1)
 	{
 		errno = 1;
 		perror(NULL);
 	}
-	//free(oldpwd);
+	free(oldpwd);
 	free(pwd);
 	return (errno);
 }

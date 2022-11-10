@@ -36,12 +36,14 @@ static char	*get_path(char *program_name, char **envp)
 	char	*path;
 	char	**paths;
 
+	//Use ft_getenv instead!!!!!
 	i = -1;
 	while (envp[++i])
 	{
 		if (ft_strnstr(envp[i], "PATH=", 5))
 			paths = ft_split(envp[i] + 5, ':');
 	}
+	//Use ft_getenv instead!!!!!
 	i = -1;
 	while (paths[++i])
 	{
@@ -57,56 +59,11 @@ static char	*get_path(char *program_name, char **envp)
 	return (path);
 }
 
-/*
-static int	is_dir(const char *path) //should be in libft
-{
-	struct stat	statbuf;
-
-	if (stat(path, &statbuf) != 0)
-		return (0);
-	return (S_ISDIR(statbuf.st_mode));
-}
-
-static int	cmd_error(char *path)
-{
-	int		err_code;
-	int		dir;
-	int		fd;
-
-	err_code = 0;
-	fd = open(path, O_RDONLY);
-	dir = is_dir(path);
-	if (path)
-	{
-		if (ft_strchr(path, '/') == NULL)
-			err_code = 127; // Check correct errno
-	}
-	else if (fd == -1 && !dir)
-	{
-		err_code = 127; // Define a macro in .h ?
-		perror("command not found");
-	}
-	else if (fd == -1 && dir)
-	{
-		printf("PING\n");
-		err_code = 123; // Define a macro in .h ?
-	}
-	else if (fd != -1 && dir)
-	{
-		err_code = 111; // Define a macro in .h ?
-		ft_putstr_fd("TEST\n", 2);
-	}
-	if (fd)
-		close(fd);
-	return (err_code);
-}
-*/
-
 static int	cmd_error(char *path)
 {
 	DIR	*dir;
 
-	if (ft_strchr(path, '/') == NULL)
+	if (path == NULL || ft_strchr(path, '/') == NULL)
 	{
 		ft_putstr_fd("mish: ", 2);
 		ft_putstr_fd(path, 2);
@@ -144,11 +101,8 @@ static int	run(char **argv, char **ft_env)
 		if (argv[0] != NULL && argv[0][0] != '/')
 			path = get_path(argv[0], ft_env);
 		else
-			path = argv[0];
-		if (path == NULL)
-			error = 127;
-		else
-			error = cmd_error(path);
+			path = NULL;
+		error = cmd_error(path);
 		if (error)
 		{
 			ft_free(path);
@@ -210,12 +164,32 @@ static char	*strip_quotes(char *token)
 	return (token);
 }
 
+static int	subshell(t_cmd cmd, char **env)
+{
+	int		i;
+	int		errno;
+	int		argv_size;
+	char	**argv;
+
+	argv_size = ft_str_array_size(cmd.argv) + 2;
+	argv = malloc(sizeof(char **) * argv_size + 1);
+	argv[0] = ft_strdup("/Users/jleroux/Workspace/minishell/minishell"); //Bleh
+	argv[1] = ft_strdup("-c");
+	argv[2] = NULL;
+	i = -1;
+	while (cmd.argv[++i])
+		argv = ft_push_str(&argv, (cmd.argv[i]));
+	errno = run(argv, env);
+	ft_free(argv);
+	return (errno);
+}
+
 int	execute(int errno, char ***ft_env, t_cmd *cmds)
 {
-	int	i;
-	int	j;
-	int	true_stdin;
-	int	true_stdout;
+	int		i;
+	int		j;
+	int		true_stdin;
+	int		true_stdout;
 
 	true_stdin = dup(0);
 	true_stdout = dup(1);
@@ -229,12 +203,18 @@ int	execute(int errno, char ***ft_env, t_cmd *cmds)
 			cmds[i].argv[j] = strip_quotes(cmds[i].argv[j]);
 		}
 		set_io(cmds[i].input_fd, cmds[i].output_fd, true_stdin, true_stdout);
-		if (is_builtin(cmds[i].argv[0]))
-			errno = run_builtin(cmds[i].argv, ft_env);
+		if (cmds[i].piped)
+			errno = subshell(cmds[i], *ft_env);
 		else
-			errno = run(cmds[i].argv, *ft_env);
+		{
+			if (is_builtin(cmds[i].argv[0]))
+				errno = run_builtin(cmds[i].argv, ft_env);
+			else
+				errno = run(cmds[i].argv, *ft_env);
+		}
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}
 	set_io(true_stdin, true_stdout, true_stdin, true_stdout);
+	//wait(NULL); // cat | cat | ls
 	return (errno);
 }

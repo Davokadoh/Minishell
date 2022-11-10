@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 17:01:25 by Blaze             #+#    #+#             */
-/*   Updated: 2022/11/08 18:40:02 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/10 10:14:41 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ struct	s_cmd
     int		input_fd;
     int		output_fd;
 	int		do_run; //Unused yet
+	int		piped; //Unused yet
 };
 
 //Should be moved to libft

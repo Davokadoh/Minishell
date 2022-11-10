@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 15:42:26 by Blaze             #+#    #+#             */
-/*   Updated: 2022/11/09 10:58:49 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/10 13:25:33 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,30 +70,35 @@ char	*ft_getenv(char *key, char **env)
 	return (NULL);
 }
 
+//Segfaults when launched with env -i
 char	**init_envp(char **envp)
 {
 	char	**env;
 	int		i;
 
-	i = -1;
-	while (envp[++i])
-		;
-	env = malloc(sizeof(char **) * (i + 1));
-	if (!env)
-		return (NULL);
-	i = -1;
-	if (*envp != NULL)
+	if (envp != NULL && *envp != NULL)
 	{
+		i = -1;
 		while (envp[++i])
-			env[i] = ft_strdup(envp[i]);
+			;
+		env = malloc(sizeof(char **) * (i + 1));
+		if (!env)
+			return (NULL);
+		i = -1;
+		while (envp[++i])
+			env[i] = ft_strdup(envp[i]); //Needs to increment SHLVL!!!!
 		env[i] = NULL;
 	}
 	else
 	{
+		env = malloc(sizeof(char **) * 4);
+		if (!env)
+			return (NULL);
 		getcwd(env[0], 256);
 		env[0] = ft_strjoin("PWD=", env[0]);
 		env[1] = ft_strdup("SHLVL=1");
 		env[2] = ft_strdup("_=/usr/bin/env");
+		env[3] = NULL;
 	}
 	return (env);
 }

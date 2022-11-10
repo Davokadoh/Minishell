@@ -30,39 +30,6 @@ static char	*copy_meta(const char *token, size_t *end)
 	}
 }
 
-static char	**ft_copy_array(char **dst, char **src)
-{
-	int	i;
-
-	i = -1;
-	if (src)
-		while (src[++i])
-			dst[i] = ft_strdup(src[i]);
-	return (dst);
-}
-
-//Returns 0 if str added, 1 if realloc failed
-static int	ft_push_str(char ***array, char *str) //Move to libft ?
-{
-	size_t	i;
-	char	**tmp;
-
-	i = 0;
-	if (*array)
-		while ((*array)[i])
-			i++;
-	tmp = *array;
-	*array = ft_calloc((i + 2), sizeof(char **));
-	if (!(*array))
-		return (1);
-	if (*array)
-		*array = ft_copy_array(*array, tmp);
-	(*array)[i] = str;
-	(*array)[i + 1] = NULL;
-	ft_free_tab(tmp);
-	return (0);
-}
-
 static int	get_token_end(char *str, size_t start)
 {
 	size_t	s_quotes;
@@ -84,14 +51,23 @@ static int	get_token_end(char *str, size_t start)
 static int	add_next_token(char ***tokens, char *str, size_t start)
 {
 	size_t	end;
+	char	*new_str;
 
 	while (str[start] == ' ') //while (is_whitespace() ?)
 		start++;
 	end = get_token_end(str, start);
 	if (end - start)
-		ft_push_str(tokens, ft_substr(str, start, end - start));
+	{
+		new_str = ft_substr(str, start, end - start);
+		*tokens = ft_push_str(tokens, new_str);
+		ft_free(new_str);
+	}
 	if (is_meta(str[end]))
-		ft_push_str(tokens, copy_meta(&str[end], &end));
+	{
+		new_str = copy_meta(&str[end], &end);
+		*tokens = ft_push_str(tokens, new_str);
+		ft_free(new_str);
+	}
 	return (end);
 }
 

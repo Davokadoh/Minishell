@@ -6,7 +6,7 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 14:04:58 by btchiman          #+#    #+#             */
-/*   Updated: 2022/11/07 17:38:04 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/10 12:51:02 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,6 @@ void	ft_pwd(void)
 		perror("Error PWD");
 		exit(EXIT_FAILURE);
 	}
-	printf("%s\n", cwd);
+	ft_putendl_fd(cwd, 1);
 	ft_free(cwd);
 }

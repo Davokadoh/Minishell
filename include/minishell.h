@@ -37,6 +37,14 @@ struct	s_cmd
 	int		do_run;
 };
 
+struct s_envp
+{
+	char **env;
+	char **exp_init;
+	char **exp_lst;
+};
+
+
 extern int	g_errno;
 
 void	welcome(void);
@@ -45,7 +53,7 @@ char	**lex(const char *str);
 char	*expand(char *str, char **envp);
 char	**split_metachar(char **tokens);
 t_cmd	*parse(char **tokens);
-int		execute(t_cmd *cmds, char ***ft_env);
+int		execute(t_cmd *cmds, t_envp  *envp);
 int		is_meta(const char ch);
 
 
@@ -64,9 +72,9 @@ void    ft_pwd(void);
 int     ft_echo(char **args);
 int		ft_cd(char **args, char **env);
 int     is_builtin(char *cmd);
-int     run_builtin(char **argv, char ***env);
-char    **ft_export(char **args, char **env);
-int		ft_unset(char **args, char **env);
+int     run_builtin(char **argv, t_envp  *envp);
+int		ft_export(char **args, t_envp  *envp);
+int		ft_unset(char **args, t_envp  *envp);
 void	ft_exit(void);
 
 // utils

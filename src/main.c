@@ -15,7 +15,7 @@ static void	print_tab(char **tokens, char *part_name)
 }
 #endif
 
-static int	launch_minishell(char *line, char ***ft_env)
+static int	launch_minishell(char *line, t_envp  *ft_env)
 {
 	char	**tokens;
 	t_cmd	*cmds;
@@ -25,7 +25,7 @@ static int	launch_minishell(char *line, char ***ft_env)
 #ifdef TEST
 	printf("LINE:\n%s\n\n", line);
 #endif
-	line = expand(ft_strdup(line), *ft_env);
+	line = expand(ft_strdup(line), ft_env->env);
 #ifdef TEST
 	printf("EXPANDER:\n%s\n\n", line);
 #endif
@@ -64,13 +64,16 @@ static int	launch_minishell(char *line, char ***ft_env)
 int	main(int ac, char **av, char **envp)
 {
 	char	*line;
-	char	**ft_env;
+	//char	**ft_env;
+	t_envp  *env_ex = malloc(sizeof(t_envp));
 
-	ft_env = init_envp(envp);
+	env_ex->env = init_envp(envp);
 	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
 	{
-		g_errno = launch_minishell(av[2], &ft_env);
-		ft_free_tab(ft_env);
+		g_errno = launch_minishell(av[2], env_ex);
+		ft_free_tab(env_ex->env);
+		//ft_free_tab(env_ex.exp_init);
+		//ft_free_tab(env_ex.exp_lst);
 		return (g_errno);
 	}
 	if (!isatty(0))
@@ -78,9 +81,11 @@ int	main(int ac, char **av, char **envp)
 		line = readline(NULL);
 		printf("\033[A\33[2K\r");
 		fflush(0);
-		g_errno = launch_minishell(line, &ft_env);
+		g_errno = launch_minishell(line, env_ex);
 		ft_free(line);
-		ft_free_tab(ft_env);
+		ft_free_tab(env_ex->env);
+		//ft_free_tab(env_ex.exp_init);
+		//ft_free_tab(env_ex.exp_lst);
 		return (g_errno);
 	}
 	welcome();
@@ -92,10 +97,12 @@ int	main(int ac, char **av, char **envp)
 			ft_free(line);
 			break ;
 		}
-		g_errno = launch_minishell(line, &ft_env);
+		g_errno = launch_minishell(line, env_ex);
 		ft_free(line);
 	}
-	ft_free_tab(ft_env);
+	ft_free_tab(env_ex->env);
+	//ft_free_tab(env_ex.exp_init);
+	//ft_free_tab(env_ex.exp_lst);
 	//rl_clear_history();
 	printf("Goodbye!\n");
 	return (g_errno);

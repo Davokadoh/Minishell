@@ -51,87 +51,84 @@ char **init_exp(char **env)
     return (exp);
 }
 
-char **add_env_var(char *l_value, char *r_value, char **env)
+int	add_env_var(char *l_value, char *r_value, t_envp *envp)
 {
     char *new_entry;
-	char **new_env;
 
 	new_entry = ft_strjoin(l_value,"=");
 	new_entry = ft_strjoin(new_entry, r_value);
-    new_env = ft_increnv(env, l_value, new_entry);
+    envp->env = ft_increnv(envp->env, l_value, new_entry);
     ft_free(new_entry);
-    return (new_env);
+    return (0);
 }
 
-char **add_exp_var(char *l_value, char *r_value)
+int	add_exp_var(char *l_value, char *r_value, t_envp *envp)
 {
     static int k;
 	char *new_entry;
-	static char **exp_tab;
 	int i;
 	
 	i = - 1;
 
     new_entry = ft_strjoin(l_value,"=");
 	new_entry = ft_strjoin(new_entry, r_value);
-    if (!k && !exp_tab)
+    if (!k && !envp->exp_lst)
 	{
 		k = 0;
-		exp_tab = malloc(sizeof(char **) + 2);
-		exp_tab[k] = ft_strdup(new_entry);
-		exp_tab[k+1] = NULL;
+		envp->exp_lst = malloc(sizeof(char **) + 2);
+		envp->exp_lst[k] = ft_strdup(new_entry);
+		envp->exp_lst[k+1] = NULL;
+		ft_free(new_entry);
 	}
     else
 	{
-		while(exp_tab[++k])
+		while(envp->exp_lst[++k])
        		;
-		exp_tab = realloc(exp_tab, (k + 2) * sizeof(char **));
+		envp->exp_lst = realloc(envp->exp_lst, (k + 2) * sizeof(char **));
 		//printf("l value %s \n",l_value);
-		while(exp_tab[++i])
+		while(envp->exp_lst[++i])
 		{
-			if(ft_strnstr(exp_tab[i],l_value,ft_strlen(l_value)))
+			if(ft_strnstr(envp->exp_lst[i],l_value,ft_strlen(l_value)))
 			{
-				exp_tab[i] = ft_strdup(new_entry);
-				exp_tab[k] = NULL;
-				exp_tab = ft_triAlpha(exp_tab);
+				envp->exp_lst[i] = ft_strdup(new_entry);
+				envp->exp_lst[k] = NULL;
+				envp->exp_lst = ft_triAlpha(envp->exp_lst);
     			ft_free(new_entry);
-				return (exp_tab);
+				return (0);
 			}
 		}
-		exp_tab[k] = ft_strdup(new_entry);
-		exp_tab[k+1] = NULL;
-    	exp_tab = ft_triAlpha(exp_tab);
+		envp->exp_lst[k] = ft_strdup(new_entry);
+		envp->exp_lst[k+1] = NULL;
+    	envp->exp_lst = ft_triAlpha(envp->exp_lst);
     	ft_free(new_entry);
-		return (exp_tab);
+		return (0);
 	}
-	return (exp_tab);
+	return (0);
 }
 // ajoute un element au tableau de variable d'environnement et au tableau d'export
 
-char **ft_export(char **args, char **env)
+int	ft_export(char **args, t_envp  *envp)
 {
     char    	*l_value;
     char    	*r_value;
-	static char	**new_env;
-    static char **new_exp;
-	static char	**exp_lst;
+	static int	a;
     int     	i;
 
     i = -1;
-	if(!new_env)
-		new_env = init_envp(env);
-	if(!new_exp)
-		new_exp = NULL;
-	if (!exp_lst)
-    	exp_lst = init_exp(env);
+	a = 0;
+	if(!a)
+	{
+		envp->exp_init = init_exp(envp->env);
+		a = 1;
+	}
 	if (args[1] == NULL)
 	{
-		while (exp_lst && exp_lst[++i])
-			printf("declare -x %s\n", exp_lst[i]);
+		while (envp->exp_init && envp->exp_init[++i])
+			printf("declare -x %s\n", envp->exp_init[i]);
 		i = -1;
-		while(new_exp && new_exp[++i])
-			printf("declare -x %s\n", new_exp[i]);
-		return (env);
+		while(envp->exp_lst && envp->exp_lst[++i])
+			printf("declare -x %s\n", envp->exp_lst[i]);
+		return (0);
 	}
 	i = 0;
 	while (args[++i])
@@ -139,17 +136,17 @@ char **ft_export(char **args, char **env)
 		if(!ft_isalpha(args[i][0]))
 		{
 			printf("export: %s: not a valid identifier \n",args[i]);
-			return (env);
+			return (1);
 		}
         if (!ft_strchr(args[i],'='))
-			new_exp = add_exp_var(args[i],"");
+			add_exp_var(args[i],"",envp);
         else
         {
             l_value = get_variable_name(args[i]);
             r_value = get_env_variable_value(args[i]);
-            new_env = add_env_var(l_value, r_value, env);
-            new_exp = add_exp_var(l_value, r_value);
+            add_env_var(l_value, r_value, envp);
+            add_exp_var(l_value, r_value,envp);
         }
 	}
-    return (new_env);
+    return (0);
 }

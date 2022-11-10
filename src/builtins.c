@@ -31,20 +31,20 @@ int	is_builtin(char *cmd)
 	return (0);
 }
 
-int	run_builtin(char **argv, char ***env)
+int	run_builtin(char **argv, t_envp  *envp)
 {
 	if (ft_strncmp(argv[0], "env", 3) == 0)
-		ft_env(*env);
+		ft_env(envp->env);
 	if (ft_strncmp(argv[0], "pwd", 3) == 0)
 		ft_pwd();
 	if (ft_strncmp(argv[0], "echo", 4) == 0)
 		ft_echo(argv);
 	if (ft_strncmp(argv[0], "export", 6) == 0)
-		*env = ft_export(argv, *env);
+		ft_export(argv, envp);
 	if (ft_strncmp(argv[0], "unset", 5) == 0)
-		ft_unset(argv, *env);
+		ft_unset(argv, envp);
 	if (ft_strncmp(argv[0], "cd", 2) == 0)
-		ft_cd(argv, *env);
+		ft_cd(argv, envp->env);
 	if (ft_strncmp(argv[0], "exit", 4) == 0)
 		ft_exit();
 	return (0);

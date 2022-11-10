@@ -144,7 +144,7 @@ static char	*strip_quotes(char *token)
 	return (token);
 }*/
 
-int	execute(t_cmd *cmds, char ***ft_env)
+int	execute(t_cmd *cmds, t_envp  *ft_env)
 {
 	int	i;
 	int	j;
@@ -166,7 +166,7 @@ int	execute(t_cmd *cmds, char ***ft_env)
 		if (is_builtin(cmds[i].argv[0]))
 			g_errno = run_builtin(cmds[i].argv, ft_env);
 		else
-			g_errno = run(cmds[i].argv, ft_env);
+			g_errno = run(cmds[i].argv, &ft_env->env);
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}
 	wait(NULL);

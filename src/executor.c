@@ -53,7 +53,7 @@ static char	*get_path(char *program_name, char **envp)
 			break ;
 	}
 	if (path_error(paths, i))
-		return (NULL);
+		return (program_name);
 	path = ft_strdup(paths[i]);
 	ft_free_tab(paths);
 	return (path);
@@ -101,7 +101,7 @@ static int	run(char **argv, char **ft_env)
 		if (argv[0] != NULL && argv[0][0] != '/')
 			path = get_path(argv[0], ft_env);
 		else
-			path = NULL;
+			path = argv[0];
 		error = cmd_error(path);
 		if (error)
 		{
@@ -164,26 +164,6 @@ static char	*strip_quotes(char *token)
 	return (token);
 }
 
-static int	subshell(t_cmd cmd, char **env)
-{
-	int		i;
-	int		errno;
-	int		argv_size;
-	char	**argv;
-
-	argv_size = ft_str_array_size(cmd.argv) + 2;
-	argv = malloc(sizeof(char **) * argv_size + 1);
-	argv[0] = ft_strdup("/Users/jleroux/Workspace/minishell/minishell"); //Bleh
-	argv[1] = ft_strdup("-c");
-	argv[2] = NULL;
-	i = -1;
-	while (cmd.argv[++i])
-		argv = ft_push_str(&argv, (cmd.argv[i]));
-	errno = run(argv, env);
-	ft_free(argv);
-	return (errno);
-}
-
 int	execute(int errno, char ***ft_env, t_cmd *cmds)
 {
 	int		i;
@@ -203,15 +183,10 @@ int	execute(int errno, char ***ft_env, t_cmd *cmds)
 			cmds[i].argv[j] = strip_quotes(cmds[i].argv[j]);
 		}
 		set_io(cmds[i].input_fd, cmds[i].output_fd, true_stdin, true_stdout);
-		if (cmds[i].piped)
-			errno = subshell(cmds[i], *ft_env);
+		if (cmds[i].piped || !is_builtin(cmds[i].argv[0]))
+			errno = run(cmds[i].argv, *ft_env);
 		else
-		{
-			if (is_builtin(cmds[i].argv[0]))
-				errno = run_builtin(cmds[i].argv, ft_env);
-			else
-				errno = run(cmds[i].argv, *ft_env);
-		}
+			errno = run_builtin(cmds[i].argv, ft_env);
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}
 	set_io(true_stdin, true_stdout, true_stdin, true_stdout);

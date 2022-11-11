@@ -12,38 +12,27 @@
 
 #include "../include/minishell.h"
 
-void unset_exp(char **args, t_envp *envp)
+void unset_exp(char **args, t_envp *envp, int i)
 {
-	int	i;
 	int j;
-	int k;
 	char *name;
 
-	i = 0;
 	j = -1;
-	k = -1;
-	while(envp->exp_lst[++k])
-		;
-	while(args[++i])
+	while(envp->exp_lst[++j])
 	{
-		while(envp->env[++j])
+		name = get_variable_name(args[i]);
+		if(ft_strnstr(name,get_variable_name(envp->exp_lst[j]),ft_strlen(envp->exp_lst[j])))
 		{
-			name = get_variable_name(args[i]);
-			if(ft_strnstr(name,get_variable_name(envp->exp_lst[j]),ft_strlen(envp->exp_lst[j])))
+			while(envp->exp_lst[j])
 			{
-				while(envp->exp_lst[j])
-				{
-					envp->exp_lst[j] = envp->exp_lst[j+1];
-					j++;
-				}
-				envp->exp_lst[j] = NULL;
-			}
+				envp->exp_lst[j] = envp->exp_lst[j+1];
+				j++;
+			}	
+			envp->exp_lst[j] = NULL;
+			break;
 		}
-		j = -1;
 	}
 }
-
-
 
 // enleve un element de la liste d'env et exp
 // retourne 0 en cas de succes et 1 en cas d'erreur
@@ -57,11 +46,12 @@ int ft_unset(char **args, t_envp *envp)
 	i = 0;
 	j = -1;
 	k = -1;
-	//unset_exp(args, envp);
 	while(envp->env[++k])
 		;
+	
 	while(args[++i])
 	{
+		unset_exp(args, envp, i);
 		while(envp->env[++j])
 		{
 			name = get_variable_name(args[i]);
@@ -77,7 +67,6 @@ int ft_unset(char **args, t_envp *envp)
 		}
 		j = -1;
 	}
-	
 	while(envp->env[++j])
 		;
 	if( k > j)

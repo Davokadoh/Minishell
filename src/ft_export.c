@@ -72,7 +72,7 @@ int	add_exp_var(char *l_value, char *r_value, t_envp *envp)
 
     new_entry = ft_strjoin(l_value,"=");
 	new_entry = ft_strjoin(new_entry, r_value);
-    if (!k && !envp->exp_lst)
+    if (!k && !envp->exp_lst) // bug
 	{
 		k = 0;
 		envp->exp_lst = malloc(sizeof(char **) + 2);
@@ -85,7 +85,6 @@ int	add_exp_var(char *l_value, char *r_value, t_envp *envp)
 		while(envp->exp_lst[++k])
        		;
 		envp->exp_lst = realloc(envp->exp_lst, (k + 2) * sizeof(char **));
-		//printf("l value %s \n",l_value);
 		while(envp->exp_lst[++i])
 		{
 			if(ft_strnstr(envp->exp_lst[i],l_value,ft_strlen(l_value)))

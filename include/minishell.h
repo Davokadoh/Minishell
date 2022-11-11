@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 17:01:25 by Blaze             #+#    #+#             */
-/*   Updated: 2022/11/10 10:14:41 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/11 15:39:07 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,15 @@
 # include <unistd.h>
 # include <string.h>
 # include <dirent.h>
+# include <termios.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <sys/ioctl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../lib/libft/include/libft.h"
+
+void	rl_replace_line (const char *text, int clear_undo);
 
 typedef struct s_cmd    t_cmd;
 
@@ -36,7 +39,8 @@ struct	s_cmd
     int		input_fd;
     int		output_fd;
 	int		do_run; //Unused yet
-	int		piped; //Unused yet
+	int		piped;
+	pid_t	pid; //Unused yet
 };
 
 //Should be moved to libft

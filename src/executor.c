@@ -112,7 +112,6 @@ static int	run(char **argv, char **ft_env)
 		perror(NULL);
 		exit(127); // Define a macro in .h ?
 	}
-	waitpid(pid, &status, 0);
 	return (WEXITSTATUS(status));
 }
 
@@ -164,6 +163,31 @@ static char	*strip_quotes(char *token)
 	return (token);
 }
 
+static int	wait_all(t_cmd *cmds, int errno)
+{
+	int	status;
+	int	i;
+
+	waitpid(NULL); // cat | cat | ls
+	i = -1;
+	while (waitpid(cmds[i].pid, &status, 0) != -1)
+	{
+		if (WIFSIGNALED(status) && WTERMSIG(status) != SIGPIPE)
+		{
+			if (WTERMSIG(status) == SIGINT)
+				errno = 130;
+			else if (WTERMSIG(status) == SIGQUIT)
+			{
+				ft_putstr_fd("Quit: 3\n", 2);
+				errno = 131;
+			}
+			else
+				errno = WEXITSTATUS(status);
+		}
+	}
+	return (errno);
+}
+
 int	execute(int errno, char ***ft_env, t_cmd *cmds)
 {
 	int		i;
@@ -190,6 +214,6 @@ int	execute(int errno, char ***ft_env, t_cmd *cmds)
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}
 	set_io(true_stdin, true_stdout, true_stdin, true_stdout);
-	//wait(NULL); // cat | cat | ls
+	errno = wait_all(cmds, errno);
 	return (errno);
 }

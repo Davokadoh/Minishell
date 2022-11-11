@@ -39,6 +39,28 @@ static int	interactive(int errno, char ***ft_env)
 	return (errno);
 }
 
+void	sig_parrent(int sig)
+{
+	if (sig == SIGINT)
+	{
+		write(1, "\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+}
+
+void	parrent_handler(void)
+{
+	struct termios	terminos;
+
+	tcgetattr(0, &terminos);
+	terminos.c_lflag &= ~ECHOCTL;
+	tcsetattr(0, TCSANOW, &terminos);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, &sig_parrent);
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	int		errno;
@@ -46,6 +68,7 @@ int	main(int ac, char **av, char **envp)
 
 	errno = 0;
 	ft_env = init_envp(envp);
+	parrent_handler();
 	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
 		errno = syntax(errno, &ft_env, av[2]);
 	else if (!isatty(0))

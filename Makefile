@@ -70,7 +70,7 @@ W=$$(tput setaf 7)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBS_TARGET)
-	@$(CC) $(CPPFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $(NAME)
+	@$(CC) -o $(NAME) $(CPPFLAGS) $(OBJS) $(LDLIBS) $(LDFLAGS)
 	@echo $(G)
 	@cat $(NAME).asciiart
 	@echo $(W)

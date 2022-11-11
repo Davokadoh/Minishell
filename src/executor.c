@@ -82,21 +82,22 @@ static int	cmd_error(char *path)
 	return (0); //Change magic number to macro
 }
 
-static int	run(char **argv, char **ft_env)
+static int	run(t_cmd *cmd, char **ft_env)
 {
-	pid_t	pid;
+	char	**argv;
 	char	*path;
 	int		status;
 	int		error;
 
+	argv = cmd->argv; //can be scraped
 	status = 0;
-	pid = fork();
-	if (pid == -1)
+	cmd->pid = fork();
+	if (cmd->pid == -1)
 	{
 		perror("Failed to fork");
 		return (66); // Define a macro in .h ?
 	}
-	else if (pid == 0)
+	else if (cmd->pid == 0)
 	{
 		if (argv[0] != NULL && argv[0][0] != '/' && argv[0][0] != '.')
 			path = get_path(argv[0], ft_env);
@@ -181,11 +182,12 @@ static int	wait_all(int last, t_cmd *cmds, int errno)
 	}
 	else
 		errno = WEXITSTATUS(status);
-	i = -1;
-	while (waitpid(cmds[++i].pid, &status, 0) != -1)
+	i = 0;
+	while (i < last && waitpid(cmds[i].pid, &status, 0) != -1)
 	{
 		if (WIFSIGNALED(status) && WTERMSIG(status) != SIGPIPE)
 			break ;
+		i++;
 	}
 	return (errno);
 }
@@ -210,12 +212,18 @@ int	execute(int errno, char ***ft_env, t_cmd *cmds)
 		}
 		set_io(cmds[i].input_fd, cmds[i].output_fd, true_stdin, true_stdout);
 		if (cmds[i].piped || !is_builtin(cmds[i].argv[0]))
-			errno = run(cmds[i].argv, *ft_env);
+		{
+			//if (cmds[i].piped)
+				//shlvldown();
+			errno = run(&cmds[i], *ft_env);
+			//if (cmds[i].piped)
+				//shlvlup();
+		}
 		else
 			errno = run_builtin(cmds[i].argv, ft_env);
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}
 	set_io(true_stdin, true_stdout, true_stdin, true_stdout);
-	errno = wait_all(i, cmds, errno);
+	errno = wait_all(i - 1, cmds, errno);
 	return (errno);
 }

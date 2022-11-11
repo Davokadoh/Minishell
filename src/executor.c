@@ -163,27 +163,29 @@ static char	*strip_quotes(char *token)
 	return (token);
 }
 
-static int	wait_all(t_cmd *cmds, int errno)
+static int	wait_all(int last, t_cmd *cmds, int errno)
 {
 	int	status;
 	int	i;
 
-	waitpid(NULL); // cat | cat | ls
+	waitpid(cmds[last].pid, &status, 0); // cat | cat | ls
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGINT)
+			errno = 130;
+		else if (WTERMSIG(status) == SIGQUIT)
+		{
+			ft_putendl_fd("exit", 2);
+			errno = 131;
+		}
+	}
+	else
+		errno = WEXITSTATUS(status);
 	i = -1;
-	while (waitpid(cmds[i].pid, &status, 0) != -1)
+	while (waitpid(cmds[++i].pid, &status, 0) != -1)
 	{
 		if (WIFSIGNALED(status) && WTERMSIG(status) != SIGPIPE)
-		{
-			if (WTERMSIG(status) == SIGINT)
-				errno = 130;
-			else if (WTERMSIG(status) == SIGQUIT)
-			{
-				ft_putstr_fd("Quit: 3\n", 2);
-				errno = 131;
-			}
-			else
-				errno = WEXITSTATUS(status);
-		}
+			break ;
 	}
 	return (errno);
 }
@@ -214,6 +216,6 @@ int	execute(int errno, char ***ft_env, t_cmd *cmds)
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}
 	set_io(true_stdin, true_stdout, true_stdin, true_stdout);
-	errno = wait_all(cmds, errno);
+	errno = wait_all(i, cmds, errno);
 	return (errno);
 }

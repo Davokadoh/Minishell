@@ -2,7 +2,11 @@
 
 int	is_meta(const char ch)
 {
-	if (ch == '|')
+	if (ch == ';')
+		return (1);
+	else if (ch == '|')
+		return (1);
+	else if (ch == '&')
 		return (1);
 	else if (ch == '<')
 		return (1);
@@ -12,96 +16,73 @@ int	is_meta(const char ch)
 		return (0);
 }
 
-char	*copy_meta(const char *ch, unsigned int *end)
+static char	*copy_meta(const char *token, size_t *end)
 {
-	if (ch[0] == '|' && ch[1] == '|')
-	{
-		*end += 2;
-		return (ft_strdup("||"));
-	}
-	else if (ch[0] == '|')
+	if (token[0] != token[1])
 	{
 		*end += 1;
-		return (ft_strdup("|"));
-	}
-	else if (ch[0] == '<' && ch[1] == '<')
-	{
-		*end += 2;
-		return (ft_strdup("<<"));
-	}
-	else if (ch[0] == '<')
-	{
-		*end += 1;
-		return (ft_strdup("<"));
-	}
-	else if (ch[0] == '>' && ch[1] == '>')
-	{
-		*end += 2;
-		return (ft_strdup(">>"));
-	}
-	else if (ch[0] == '>')
-	{
-		*end += 1;
-		return (ft_strdup(">"));
+		return (ft_substr(token, 0, 1));
 	}
 	else
-		return (NULL);
-
+	{
+		*end += 2;
+		return (ft_substr(token, 0, 2));
+	}
 }
 
-char	**lex(char const *s)
+static int	get_token_end(char *str, size_t start)
 {
-	unsigned int	start;
-	unsigned int	end;
-	unsigned int	s_quote;
-	unsigned int	d_quote;
-	unsigned int	nb;
-	char			**list;
-	int	i;
+	size_t	s_quotes;
+	size_t	d_quotes;
 
-	if (!s)
-		return (NULL);
-	start = 0;
-	nb = 0;
-	s_quote = 0;
-	d_quote = 0;
-	list = malloc(sizeof(char **));//(1 + nb_words(s, c)) * sizeof(char *));
-	list[0] = NULL;
-	if (!list)
-		return (NULL);
-	while (s[start])
+	s_quotes = 0;
+	d_quotes = 0;
+	while (str[start] && ((str[start] != ' ' && !is_meta(str[start])) || s_quotes || d_quotes))
 	{
-		while (s[start] == ' ')
-			start++;
-		end = start;
-		while (s[end] && ((s[end] != ' ' && !is_meta(s[end])) || s_quote || d_quote))
-		{
-			if (s[end] == '"' && !s_quote)
-				d_quote = (d_quote + 1) % 2;
-			else if (s[end] == '\'' && !d_quote)
-				s_quote = (s_quote + 1) % 2;
-			end++;
-		}
-		if (end - start)
-		{
-
-			i = -1;
-			while(list[++i])
-				;
-			list = realloc(list, (i + 2) * sizeof(char **));
-			list[nb++] = ft_substr(s, start, end - start);
-			list[nb] = NULL;
-		}
-		if (is_meta(s[end]))
-		{
-			i = -1;
-			while(list[++i])
-				;
-			list = realloc(list, (i + 2) * sizeof(char **));
-			list[nb++] = copy_meta(&s[end], &end);
-			list[nb] = NULL;
-		}
-		start = end;
+		if (str[start] == '"' && !s_quotes)
+			d_quotes = (d_quotes + 1) % 2;
+		else if (str[start] == '\'' && !d_quotes)
+			s_quotes = (s_quotes + 1) % 2;
+		start++;
 	}
-	return (list);
+	return (start);
+}
+
+static int	add_next_token(char ***tokens, char *str, size_t start)
+{
+	size_t	end;
+	char	*new_str;
+
+	while (str[start] == ' ') //while (is_whitespace() ?)
+		start++;
+	end = get_token_end(str, start);
+	if (end - start)
+	{
+		new_str = ft_substr(str, start, end - start);
+		*tokens = ft_push_str(tokens, new_str);
+		ft_free(new_str);
+	}
+	if (is_meta(str[end]))
+	{
+		new_str = copy_meta(&str[end], &end);
+		*tokens = ft_push_str(tokens, new_str);
+		ft_free(new_str);
+	}
+	return (end);
+}
+
+int	lexer(int errno, char ***ft_env, char *str)
+{
+	size_t	i;
+	char	**tokens;
+
+	if (!str)
+		return (4); //Find correct errno + define macro
+	tokens = NULL;
+	i = 0;
+	while (str[i])
+		i = add_next_token(&tokens, str, i);
+	errno = parse(errno, ft_env, tokens);
+	ft_free_tab(tokens);
+	return (errno);
 }

@@ -14,7 +14,7 @@ static void	set_io(int input_fd, int output_fd, int true_stdin, int true_stdout)
 
 static void	unset_io(int input_fd, int output_fd)
 {
-	if (input_fd != 0)
+	if (input_fd != 1)
 		close(input_fd);
 	if (output_fd != 1)
 		close(output_fd);
@@ -25,7 +25,6 @@ static int	path_error(char **paths, int i)
 	if (!paths[i])
 	{
 		ft_free_tab(paths);
-		perror("Command not found");
 		return (1);
 	}
 	return (0);
@@ -37,66 +36,86 @@ static char	*get_path(char *program_name, char **envp)
 	char	*path;
 	char	**paths;
 
+	//Use ft_getenv instead!!!!!
 	i = -1;
 	while (envp[++i])
 	{
 		if (ft_strnstr(envp[i], "PATH=", 5))
 			paths = ft_split(envp[i] + 5, ':');
 	}
+	//Use ft_getenv instead!!!!!
 	i = -1;
 	while (paths[++i])
 	{
-		paths[i] = ft_append(paths[i], "/");
-		paths[i] = ft_append(paths[i], program_name);
-		if (access(paths[i], F_OK | X_OK) == 0)
+		paths[i] = ft_append(paths[i], "/"); //diff w/ ft_strjoin ?
+		paths[i] = ft_append(paths[i], program_name); //diff w/ ft_strjoin ?
+		if (access(paths[i], F_OK & X_OK) == 0)
 			break ;
 	}
 	if (path_error(paths, i))
-		return (NULL);
+		return (program_name);
 	path = ft_strdup(paths[i]);
 	ft_free_tab(paths);
 	return (path);
 }
 
-static int	run(char **argv, char ***ft_env)
+static int	cmd_error(char *path)
+{
+	DIR	*dir;
+
+	if (path == NULL || ft_strchr(path, '/') == NULL)
+	{
+		ft_putstr_fd("mish: ", 2);
+		ft_putstr_fd(path, 2);
+		ft_putstr_fd(": command not found\n", 2);
+		return (127); //Change magic number to macro
+	}
+	dir = opendir(path);
+	if (dir)
+	{
+		closedir(dir);
+		ft_putstr_fd("mish: ", 2);
+		ft_putstr_fd(path, 2);
+		ft_putstr_fd(": is a directory\n", 2);
+		return (126); //Change magic number to macro
+	}
+	return (0); //Change magic number to macro
+}
+
+static int	run(char **argv, char **ft_env)
 {
 	pid_t	pid;
 	char	*path;
 	int		status;
+	int		error;
 
 	status = 0;
 	pid = fork();
 	if (pid == -1)
 	{
 		perror("Failed to fork");
-		return (66);
+		return (66); // Define a macro in .h ?
 	}
 	else if (pid == 0)
 	{
-		path = get_path(argv[0], *ft_env);
-		if (!path)
-			return (67);
-		execve(path, argv, *ft_env);
-		perror("Failed to execve");
-		return (127);
+		if (argv[0] != NULL && argv[0][0] != '/' && argv[0][0] != '.')
+			path = get_path(argv[0], ft_env);
+		else
+			path = argv[0];
+		error = cmd_error(path);
+		if (error)
+		{
+			ft_free(path);
+			exit(error);
+		}
+		execve(path, argv, ft_env);
+		perror(NULL);
+		exit(127); // Define a macro in .h ?
 	}
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	return (0);
+	return (WEXITSTATUS(status));
 }
 
-/*
-int is_builtin(char *cmd)
-{
-    if (!ft_strncmp(cmd, "echo", 4) || !ft_strncmp(cmd, "cd", 2) || !ft_strncmp(cmd, "pwd", 3)
-    || !ft_strncmp(cmd, "export", 6) || !ft_strncmp(cmd, "unset", 5) || !ft_strncmp(cmd, "env", 3)
-    || !ft_strncmp(cmd, "exit", 4))
-        return (1);
-    return (0);
-}
-*/
-
-static void	expand_errno(char **token)
+static void	expand_errno(int errno, char **token)
 {
 	int				i;
 	unsigned int	s_quotes;
@@ -108,27 +127,27 @@ static void	expand_errno(char **token)
 		if (token[0][i] == '\'')
 			s_quotes = (s_quotes + 1) % 2;
 		if (token[0][i] == '$' && token[0][i + 1] == '?' && !s_quotes)
-			*token = ft_strinsert(token[0], ft_itoa(g_errno), i, i + 2);
+			*token = ft_strinsert(token[0], ft_itoa(errno), i, i + 2);
 	}
 }
-/*
+
 static char	*strip_quotes(char *token)
 {
 	int		i;
 	int		j;
 	char	*tmp;
 
-	i = -1; 
-	while (token[++i]) // -> heap-buffer-overflow
+	i = -1;
+	while (token[++i])
 	{
-		while (token[i] && token [i] != '"' && token [i] != '\'')
+		while (token[i] && token[i] != '"' && token[i] != '\'')
 			i++;
 		j = i + 1;
 		if (token[i] == '"')
-			while (token[j] && token [j] != '"')
+			while (token[j] && token[j] != '"')
 				j++;
 		else if (token[i] == '\'')
-			while (token[j] && token [j] != '\'')
+			while (token[j] && token[j] != '\'')
 				j++;
 		else
 			break ;
@@ -136,20 +155,45 @@ static char	*strip_quotes(char *token)
 		ft_strlcpy(tmp, token, i + 1);
 		ft_strlcpy(&tmp[i], &token[i + 1], j - i);
 		ft_strlcpy(&tmp[j - 1], &token[j + 1], ft_strlen(token) - j);
-		token = realloc(token, sizeof(char *) * (ft_strlen(token) - 2));
+		token = realloc(token, sizeof(char *) * (ft_strlen(token) - 2)); //Illegal use of realloc
 		ft_strlcpy(token, tmp, ft_strlen(tmp) + 1);
-		token[ft_strlen(tmp)] = '\0';
+		ft_free(tmp);
 		i = j - 2;
 	}
 	return (token);
-}*/
+}
 
-int	execute(t_cmd *cmds, char ***ft_env)
+static int	wait_all(t_cmd *cmds, int errno)
 {
+	int	status;
 	int	i;
-	int	j;
-	int	true_stdin;
-	int	true_stdout;
+
+	waitpid(NULL); // cat | cat | ls
+	i = -1;
+	while (waitpid(cmds[i].pid, &status, 0) != -1)
+	{
+		if (WIFSIGNALED(status) && WTERMSIG(status) != SIGPIPE)
+		{
+			if (WTERMSIG(status) == SIGINT)
+				errno = 130;
+			else if (WTERMSIG(status) == SIGQUIT)
+			{
+				ft_putstr_fd("Quit: 3\n", 2);
+				errno = 131;
+			}
+			else
+				errno = WEXITSTATUS(status);
+		}
+	}
+	return (errno);
+}
+
+int	execute(int errno, char ***ft_env, t_cmd *cmds)
+{
+	int		i;
+	int		j;
+	int		true_stdin;
+	int		true_stdout;
 
 	true_stdin = dup(0);
 	true_stdout = dup(1);
@@ -159,17 +203,17 @@ int	execute(t_cmd *cmds, char ***ft_env)
 		j = -1;
 		while (cmds[i].argv[++j])
 		{
-			expand_errno(&cmds[i].argv[j]);
-			//cmds[i].argv[j] = strip_quotes(cmds[i].argv[j]);
+			expand_errno(errno, &cmds[i].argv[j]);
+			cmds[i].argv[j] = strip_quotes(cmds[i].argv[j]);
 		}
 		set_io(cmds[i].input_fd, cmds[i].output_fd, true_stdin, true_stdout);
-		if (is_builtin(cmds[i].argv[0]))
-			g_errno = run_builtin(cmds[i].argv, ft_env);
+		if (cmds[i].piped || !is_builtin(cmds[i].argv[0]))
+			errno = run(cmds[i].argv, *ft_env);
 		else
-			g_errno = run(cmds[i].argv, ft_env);
+			errno = run_builtin(cmds[i].argv, ft_env);
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}
 	set_io(true_stdin, true_stdout, true_stdin, true_stdout);
-	wait(NULL);
-	return (g_errno);
+	errno = wait_all(cmds, errno);
+	return (errno);
 }

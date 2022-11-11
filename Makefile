@@ -10,19 +10,19 @@ UNAME= $(shell uname -s)
 ifeq ($(UNAME), Darwin)
 #INCS		+=	/usr/local/Cellar/readline/8.2.1/include
 #LDFLAGS		+=	-L/usr/local/Cellar/readline/8.2.1/lib
-#INCS		+=	~/.brew/Cellar/readline/8.2.1/include
-#LDFLAGS		+=	-L ~/.brew/Cellar/readline/8.2.1/lib
+INCS		+=	~/.brew/Cellar/readline/8.2.1/include
+LDFLAGS		+=	-L ~/.brew/Cellar/readline/8.2.1/lib
 #else ifeq ($(UNAME), Linux)
 endif
 
 SRC_DIR		:=	src
 SRCS		:=	$(SRC_DIR)/main.c \
 				$(SRC_DIR)/prompt.c \
+				$(SRC_DIR)/syntax_checker.c \
 				$(SRC_DIR)/lexer.c \
 				$(SRC_DIR)/expander.c \
 				$(SRC_DIR)/parser.c \
 				$(SRC_DIR)/executor.c \
-				$(SRC_DIR)/ft_free_tab.c \
 				$(SRC_DIR)/builtins.c \
 				$(SRC_DIR)/ft_echo.c \
 				$(SRC_DIR)/ft_env.c \
@@ -61,8 +61,6 @@ MAKEFLAGS   += --no-print-directory #--silent
 
 .PHONY: all clean fclean re asan debug
 
-# USE TPUTS INSTEAD!!!
-# COLORS
 R=$$(tput setaf 1)
 G=$$(tput setaf 2)
 Y=$$(tput setaf 3)
@@ -72,7 +70,7 @@ W=$$(tput setaf 7)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBS_TARGET)
-	@$(CC) $(CPPFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $(NAME)
+	@$(CC) -o $(NAME) $(CPPFLAGS) $(OBJS) $(LDLIBS) $(LDFLAGS)
 	@echo $(G)
 	@cat $(NAME).asciiart
 	@echo $(W)
@@ -110,6 +108,3 @@ asan: all
 
 debug: CFLAGS += -g3 -D DEBUG=1
 debug: all
-
-test: CFLAGS += -D TEST=1
-test: debug

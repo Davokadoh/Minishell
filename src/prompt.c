@@ -2,10 +2,10 @@
 
 char	*rl_gets(void)
 {
-	char		*line_read = NULL;
+	static char	*tmp = "@msh> ";
 	static char	*previous_line;
+	char		*line_read;
 	char		*prmpt;
-	char		*tmp = "@msh> ";
 
 	prmpt = ft_strjoin(getenv("USER"), tmp);
 	line_read = readline(prmpt);
@@ -25,23 +25,23 @@ char	*rl_gets(void)
 
 void	welcome(void)
 {
-    printf("<>=======() \n");
-    printf("(/\\___   /|\\\\          ()==========<>_ \n");
-    printf("      \\_/ | \\\\        //|\\   ______/ \\) \n");
-    printf("        \\_|  \\\\      // | \\_/ \n");
-    printf("          \\|\\/|\\_   //  /\\/ \n");
-    printf("           (oo)\\ \\_//  / \n");
-    printf("           //_/\\_\\/ /  |\n");
-    printf("          @@/  |=\\  \\  |\n");
-    printf("                \\_=\\_ \\ | \n");
-    printf("                   \\==\\ \\|\\_ \n");
-    printf("                  __(\\===\\(  )\\\n");
-    printf("                (((~) __(_/   | \n");
-    printf("                     (((~) \\  / \n");
-    printf("                 |.------------.|\n");
-    printf("                 ||            ||\n");
-    printf("                 ||   ENTER    ||\n");
-    printf("                 ||    THE     || \n");
-    printf("                 ||  MINISHELL ||\n");
-    printf("                 |+------------+|\n");
+	printf("<>=======() \n");
+	printf("(/\\___   /|\\\\          ()==========<>_ \n");
+	printf("      \\_/ | \\\\        //|\\   ______/ \\) \n");
+	printf("        \\_|  \\\\      // | \\_/ \n");
+	printf("          \\|\\/|\\_   //  /\\/ \n");
+	printf("           (oo)\\ \\_//  / \n");
+	printf("           //_/\\_\\/ /  |\n");
+	printf("          @@/  |=\\  \\  |\n");
+	printf("                \\_=\\_ \\ | \n");
+	printf("                   \\==\\ \\|\\_ \n");
+	printf("                  __(\\===\\(  )\\\n");
+	printf("                (((~) __(_/   | \n");
+	printf("                     (((~) \\  / \n");
+	printf("                 |.------------.|\n");
+	printf("                 ||            ||\n");
+	printf("                 ||   ENTER    ||\n");
+	printf("                 ||    THE     || \n");
+	printf("                 ||  MINISHELL ||\n");
+	printf("                 |+------------+|\n");
 }

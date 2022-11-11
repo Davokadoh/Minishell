@@ -98,7 +98,7 @@ static int	run(char **argv, char **ft_env)
 	}
 	else if (pid == 0)
 	{
-		if (argv[0] != NULL && argv[0][0] != '/')
+		if (argv[0] != NULL && argv[0][0] != '/' && argv[0][0] != '.')
 			path = get_path(argv[0], ft_env);
 		else
 			path = argv[0];

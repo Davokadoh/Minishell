@@ -46,6 +46,6 @@ int	run_builtin(char **argv, t_envp  *envp)
 	if (ft_strncmp(argv[0], "cd", 2) == 0)
 		ft_cd(argv, envp->env);
 	if (ft_strncmp(argv[0], "exit", 4) == 0)
-		ft_exit();
+		ft_exit(argv);
 	return (0);
 }

@@ -161,7 +161,7 @@ static void	ft_free_cmds(t_cmd **cmds)
 	free((*cmds));
 }
 
-int		parse(int errno, char ***ft_env, char **tokens)
+int		parse(int errno, t_envp *ft_env, char **tokens)
 {
 	int		new_errno;
 	int		i;

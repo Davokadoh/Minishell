@@ -21,7 +21,7 @@ int	unclosed_quote(const char *str)
 	return (0);
 }
 
-int	syntax(int errno, char ***ft_env, char *line)
+int	syntax(int errno, t_envp *ft_env, char *line)
 {
 	if (unclosed_quote(line))
 	{

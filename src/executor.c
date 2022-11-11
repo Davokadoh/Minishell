@@ -168,7 +168,7 @@ static int	wait_all(t_cmd *cmds, int errno)
 	int	status;
 	int	i;
 
-	waitpid(NULL); // cat | cat | ls
+	//waitpid(NULL); // cat | cat | ls
 	i = -1;
 	while (waitpid(cmds[i].pid, &status, 0) != -1)
 	{
@@ -188,7 +188,7 @@ static int	wait_all(t_cmd *cmds, int errno)
 	return (errno);
 }
 
-int	execute(int errno, char ***ft_env, t_cmd *cmds)
+int	execute(int errno, t_envp *ft_env, t_cmd *cmds)
 {
 	int		i;
 	int		j;
@@ -208,7 +208,7 @@ int	execute(int errno, char ***ft_env, t_cmd *cmds)
 		}
 		set_io(cmds[i].input_fd, cmds[i].output_fd, true_stdin, true_stdout);
 		if (cmds[i].piped || !is_builtin(cmds[i].argv[0]))
-			errno = run(cmds[i].argv, *ft_env);
+			errno = run(cmds[i].argv, ft_env->env);
 		else
 			errno = run_builtin(cmds[i].argv, ft_env);
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);

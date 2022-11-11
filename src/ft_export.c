@@ -63,17 +63,18 @@ int	add_exp_var(char *l_value, char *r_value, t_envp *envp)
 
     new_entry = ft_strjoin(l_value,"=");
 	new_entry = ft_strjoin(new_entry, r_value);
-    if (!k && !envp->exp_lst)
+    if (!k) //|| !envp->exp_lst)
 	{
 		k = 0;
-		envp->exp_lst = malloc(sizeof(char **) + 2);
+		envp->exp_lst = malloc(sizeof(char **) * (k + 2));
 		envp->exp_lst[k] = ft_strdup(new_entry);
 		envp->exp_lst[k+1] = NULL;
+		k = 1;
 		ft_free(new_entry);
 	}
     else
 	{
-		while(envp->exp_lst[++k])
+		while(envp->exp_lst[k++])
        		;
 		envp->exp_lst = realloc(envp->exp_lst, (k + 2) * sizeof(char **));
 		while(envp->exp_lst[++i])

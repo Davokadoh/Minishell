@@ -29,6 +29,7 @@
 
 void	rl_replace_line (const char *text, int clear_undo);
 
+typedef struct	s_envp  t_envp;
 typedef struct s_cmd    t_cmd;
 
 struct	s_cmd
@@ -41,6 +42,13 @@ struct	s_cmd
 	int		do_run; //Unused yet
 	int		piped;
 	pid_t	pid; //Unused yet
+};
+
+struct s_envp
+{
+	char **env;
+	char **exp_init;
+	char **exp_lst;
 };
 
 //Should be moved to libft
@@ -68,8 +76,8 @@ char	*ft_getenv(char *var, char **env);
 char    **init_envp(char **env);
 void    ft_env(char **env);
 void    ft_setenv(char *var, char *var2, char **env);
-int		ft_unset(char **args, char ***env);
-char    **ft_export(char **args, char **env);
+int		ft_unset(char **args, t_envp  *envp);
+int    	ft_export(char **args, t_envp  *envp);
 int		ft_cd(char **args, char **env);
 int     ft_echo(char **args);
 void    ft_pwd(void);

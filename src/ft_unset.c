@@ -12,31 +12,64 @@
 
 #include "../include/minishell.h"
 
-// enleve un element de la liste d'env
-int	ft_unset(char **args, char ***env)
+void unset_exp(char **args, t_envp *envp, int i)
 {
-	char	**new_env;
-	int		i;
-	int		n;
+	int j;
+	char *name;
 
-	i = -1;
-	new_env = NULL;
-	if (ft_getenv(args[1], *env))
+	j = -1;
+	while(envp->exp_lst[++j])
 	{
-		n = ft_strlen(args[1]);
-		while ((*env)[++i])
-			;
-		new_env = malloc(sizeof(char **) * i - 1);
-		i = -1;
-		while ((*env)[++i])
+		name = get_variable_name(args[i]);
+		if(ft_strnstr(name,get_variable_name(envp->exp_lst[j]),ft_strlen(envp->exp_lst[j])))
 		{
-			if (!ft_strnstr((*env)[i], args[1], n))
-				new_env[i] = ft_strdup((*env)[i]);
+			while(envp->exp_lst[j])
+			{
+				envp->exp_lst[j] = envp->exp_lst[j+1];
+				j++;
+			}	
+			envp->exp_lst[j] = NULL;
+			break;
 		}
-		new_env[i] = NULL;
-		*env = new_env;
-		return (0);
 	}
-	*env = new_env;
-	return (0);
+}
+
+// enleve un element de la liste d'env et exp
+// retourne 0 en cas de succes et 1 en cas d'erreur
+int ft_unset(char **args, t_envp *envp)
+{
+	int	i;
+	int j;
+	int k;
+	char *name;
+
+	i = 0;
+	j = -1;
+	k = -1;
+	while(envp->env[++k])
+		;
+	
+	while(args[++i])
+	{
+		unset_exp(args, envp, i);
+		while(envp->env[++j])
+		{
+			name = get_variable_name(args[i]);
+			if(ft_strnstr(name,get_variable_name(envp->env[j]),ft_strlen(envp->env[j])))
+			{
+				while(envp->env[j])
+				{
+					envp->env[j] = envp->env[j+1];
+					j++;
+				}
+				envp->env[j] = NULL;
+			}
+		}
+		j = -1;
+	}
+	while(envp->env[++j])
+		;
+	if( k > j)
+		return(0);
+	return (1);
 }

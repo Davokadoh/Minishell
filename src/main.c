@@ -21,7 +21,6 @@ static int	from_stdin(int errno, char ***ft_env)
 static int	interactive(int errno, char ***ft_env)
 {
 	char	*line;
-
 	welcome();
 	while (1)
 	{
@@ -64,10 +63,11 @@ void	parrent_handler(void)
 int	main(int ac, char **av, char **envp)
 {
 	int		errno;
-	char	**ft_env;
-
+	t_envp  *env_ex;
+	
+	env_ex = malloc(sizeof(t_envp));
+	env_ex->env = init_envp(envp);
 	errno = 0;
-	ft_env = init_envp(envp);
 	parrent_handler();
 	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
 		errno = syntax(errno, &ft_env, av[2]);
@@ -75,6 +75,8 @@ int	main(int ac, char **av, char **envp)
 		errno = from_stdin(errno, &ft_env);
 	else
 		errno = interactive(errno, &ft_env);
-	ft_free_tab(ft_env);
+	ft_free_tab(env_ex);
+	ft_free_tab(env_ex->exp_init);
+	ft_free_tab(env_ex->exp_lst);
 	return (errno);
 }

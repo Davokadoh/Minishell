@@ -91,7 +91,7 @@ static int	run(t_cmd *cmd, char **ft_env)
 
 	argv = cmd->argv; //can be scraped
 	status = 0;
-	child_handler();
+	//child_handler();
 	cmd->pid = fork();
 	if (cmd->pid == -1)
 	{
@@ -233,6 +233,7 @@ int	execute(int errno, char ***ft_env, t_cmd *cmds)
 			errno = run_builtin(cmds[i].argv, ft_env);
 		unset_io(cmds[i].input_fd, cmds[i].output_fd);
 	}
+	//unset_io(true_stdin, true_stdout);
 	set_io(true_stdin, true_stdout, true_stdin, true_stdout);
 	errno = wait_all(i - 1, cmds, errno);
 	return (errno);

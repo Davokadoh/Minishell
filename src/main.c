@@ -10,6 +10,7 @@ static int	from_stdin(int errno, char ***ft_env)
 {
 	char	*line;
 
+	parent_handler();
 	line = readline(NULL);
 	printf("\033[A\33[2K\r"); //Should use rl_newline
 	fflush(0); // Illegal function!! Replace printf by ft_put_str_fd
@@ -47,9 +48,11 @@ int	main(int ac, char **av, char **envp)
 
 	errno = 0;
 	ft_env = init_envp(envp);
-	parent_handler();
 	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
+	{
+		parent_handler();
 		errno = syntax(errno, &ft_env, av[2]);
+	}
 	else if (!isatty(0))
 		errno = from_stdin(errno, &ft_env);
 	else

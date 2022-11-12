@@ -25,6 +25,7 @@ static int	interactive(int errno, char ***ft_env)
 	welcome();
 	while (1)
 	{
+		parent_handler();
 		line = rl_gets();
 		if (!line || !*line) //rm !*line do stop exiting when empty line
 		{

@@ -34,7 +34,7 @@ void	child_handler(void)
 
 	tcgetattr(0, &terminos);
 	terminos.c_lflag &= ~ECHOCTL;
-	tcsetattr(0, TCSANOW, &terminos);
+	//tcsetattr(0, TCSANOW, &terminos); //If uncommented valgrind says uninit byte(s)
 	signal(SIGQUIT, SIG_DFL);
 	signal(SIGINT, &sig_child);
 }

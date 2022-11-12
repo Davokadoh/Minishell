@@ -14,7 +14,7 @@ static void	set_io(int input_fd, int output_fd, int true_stdin, int true_stdout)
 
 static void	unset_io(int input_fd, int output_fd)
 {
-	if (input_fd != 1)
+	if (input_fd != 0)
 		close(input_fd);
 	if (output_fd != 1)
 		close(output_fd);
@@ -171,7 +171,7 @@ static int	wait_all(int last, t_cmd *cmds, int errno)
 	int	i;
 
 	status = 0;
-	waitpid(cmds[last].pid, &status, 0); // cat | cat | ls
+	waitpid(cmds[last].pid, &status, 0);
 	if (WIFSIGNALED(status))
 	{
 		if (WTERMSIG(status) == SIGINT)
@@ -216,10 +216,18 @@ int	execute(int errno, char ***ft_env, t_cmd *cmds)
 		if (cmds[i].piped || !is_builtin(cmds[i].argv[0]))
 		{
 			//if (cmds[i].piped)
-				//shlvldown();
+			//{
+			//	shlvl = ft_itoa(ft_atoi(ft_getenv("SHLVL", env)) - 1);
+			//	ft_setenv("SHLVL", shlvl, env);
+			//	ft_free(shlvl);
+			//}
 			errno = run(&cmds[i], *ft_env);
 			//if (cmds[i].piped)
-				//shlvlup();
+			//{
+			//	shlvl = ft_itoa(ft_atoi(ft_getenv("SHLVL", env)) + 1);
+			//	ft_setenv("SHLVL", shlvl, env);
+			//	ft_free(shlvl);
+			//}
 		}
 		else
 			errno = run_builtin(cmds[i].argv, ft_env);

@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 15:42:26 by Blaze             #+#    #+#             */
-/*   Updated: 2022/11/10 17:04:13 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/12 15:07:54 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ char	*ft_getenv(char *key, char **env)
 char	**init_envp(char **envp)
 {
 	char	**env;
+	char	*shlvl;
 	int		i;
 
 	if (envp != NULL && *envp != NULL)
@@ -98,6 +99,8 @@ char	**init_envp(char **envp)
 		env[2] = ft_strdup("_=/usr/bin/env");
 		env[3] = NULL;
 	}
-	ft_setenv("SHLVL", ft_itoa(ft_atoi(ft_getenv("SHLVL", env)) + 1), env);
+	shlvl = ft_itoa(ft_atoi(ft_getenv("SHLVL", env)) + 1);
+	ft_setenv("SHLVL", shlvl, env);
+	ft_free(shlvl);
 	return (env);
 }

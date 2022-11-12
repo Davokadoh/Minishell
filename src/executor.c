@@ -91,6 +91,7 @@ static int	run(t_cmd *cmd, char **ft_env)
 
 	argv = cmd->argv; //can be scraped
 	status = 0;
+	child_handler();
 	cmd->pid = fork();
 	if (cmd->pid == -1)
 	{

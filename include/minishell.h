@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 17:01:25 by Blaze             #+#    #+#             */
-/*   Updated: 2022/11/12 14:18:35 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/12 14:40:18 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@ struct	s_cmd
 	int		piped;
 	pid_t	pid; //Unused yet
 };
+
+
+//Signals
+void	parent_handler(void);
+void	child_handler(void);
 
 //Should be moved to libft
 void	ft_free_tab(char **str);

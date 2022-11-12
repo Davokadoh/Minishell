@@ -17,6 +17,7 @@ endif
 
 SRC_DIR		:=	src
 SRCS		:=	$(SRC_DIR)/main.c \
+				$(SRC_DIR)/signals.c \
 				$(SRC_DIR)/prompt.c \
 				$(SRC_DIR)/syntax_checker.c \
 				$(SRC_DIR)/lexer.c \

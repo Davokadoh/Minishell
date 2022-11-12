@@ -78,10 +78,10 @@ int	expand(int errno, char ***ft_env, char *original_line)
 			d_quotes = (d_quotes + 1) % 2;
 		if (line[i] == '$' && line[i + 1] != '?' && !s_quotes)
 			replace_env_var(&line, *ft_env, i);
-		else if (line[i - 1] == ' ' && line[i] == '~' && !s_quotes && !d_quotes)
-		{
-			line = ft_strinsert(line, home, i, i + 1);
-		}
+		else if (line[i] == '~' && !s_quotes && !d_quotes)
+			if (i > 0 && line[i + 1])
+				if (line[i - 1] == ' ' && line[i + 1] == ' ')
+					line = ft_strinsert(line, home, i, i + 1);
 		if (!line[i])
 			break ;
 	}

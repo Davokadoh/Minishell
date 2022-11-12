@@ -20,6 +20,7 @@ static t_cmd	new_cmd(void)
 	cmd.output_fd = 1;
 	cmd.do_run = 1;
 	cmd.piped = 0;
+	cmd.pid = -1;
 	return (cmd);
 }
 

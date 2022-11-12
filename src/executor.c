@@ -170,6 +170,7 @@ static int	wait_all(int last, t_cmd *cmds, int errno)
 	int	status;
 	int	i;
 
+	status = 0;
 	waitpid(cmds[last].pid, &status, 0); // cat | cat | ls
 	if (WIFSIGNALED(status))
 	{

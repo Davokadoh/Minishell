@@ -34,7 +34,7 @@ static int	interactive(int errno, char ***ft_env)
 		errno = syntax(errno, ft_env, line);
 		ft_free(line);
 	}
-	//rl_clear_history();
+	rl_clear_history();
 	printf("Goodbye!\n");
 	return (errno);
 }

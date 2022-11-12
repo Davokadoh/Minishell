@@ -6,7 +6,7 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 17:01:25 by Blaze             #+#    #+#             */
-/*   Updated: 2022/11/11 15:39:07 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/12 14:18:35 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../lib/libft/include/libft.h"
-
-void	rl_replace_line (const char *text, int clear_undo);
 
 typedef struct s_cmd    t_cmd;
 

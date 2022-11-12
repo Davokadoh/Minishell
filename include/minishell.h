@@ -75,7 +75,7 @@ char **ft_triAlpha(char **s);
 //Builtins
 char	*ft_getenv(char *var, char **env);
 char    **init_envp(char **env);
-void    ft_env(char **env);
+void    ft_env(t_envp  *envp);
 void    ft_setenv(char *var, char *var2, char **env);
 int		ft_unset(char **args, t_envp  *envp);
 int    	ft_export(char **args, t_envp  *envp);
@@ -83,6 +83,8 @@ int		ft_cd(char **args, char **env);
 int     ft_echo(char **args);
 void    ft_pwd(void);
 int		ft_exit(char **argv);
+char 	**init_exp(char **env);
+char **incr(char **new_env,char *l_value, char *new_entry);
 
 // utils //Are they just that tho ?
 char **ft_increnv(char **env, char *l_value, char *new_entry); //This could be in category builtins, no ?

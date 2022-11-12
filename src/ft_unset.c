@@ -34,24 +34,12 @@ void unset_exp(char **args, t_envp *envp, int i)
 	}
 }
 
-// enleve un element de la liste d'env et exp
-// retourne 0 en cas de succes et 1 en cas d'erreur
-int ft_unset(char **args, t_envp *envp)
+void unset_env(char **args, t_envp *envp, int i)
 {
-	int	i;
-	int j;
-	int k;
-	char *name;
+		int j;
+		char *name;
 
-	i = 0;
-	j = -1;
-	k = -1;
-	while(envp->env[++k])
-		;
-	
-	while(args[++i])
-	{
-		unset_exp(args, envp, i);
+		j = -1;
 		while(envp->env[++j])
 		{
 			name = get_variable_name(args[i]);
@@ -63,9 +51,28 @@ int ft_unset(char **args, t_envp *envp)
 					j++;
 				}
 				envp->env[j] = NULL;
+				break;
 			}
 		}
-		j = -1;
+}
+
+// enleve un element de la liste d'env et exp
+// retourne 0 en cas de succes et 1 en cas d'erreur
+int ft_unset(char **args, t_envp *envp)
+{
+	int	i;
+	int j;
+	int k;
+
+	i = 0;
+	j = -1;
+	k = -1;
+	while(envp->env[++k])
+		;
+	while(args[++i])
+	{
+		unset_exp(args, envp, i);
+		unset_env(args,envp,i);
 	}
 	while(envp->env[++j])
 		;

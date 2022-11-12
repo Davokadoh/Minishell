@@ -34,7 +34,7 @@ int	is_builtin(char *cmd)
 int	run_builtin(char **argv, t_envp  *envp)
 {
 	if (ft_strncmp(argv[0], "env", 3) == 0)
-		ft_env(envp->env);
+		ft_env(envp);
 	if (ft_strncmp(argv[0], "pwd", 3) == 0)
 		ft_pwd();
 	if (ft_strncmp(argv[0], "echo", 5) == 0)

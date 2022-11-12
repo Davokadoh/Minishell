@@ -63,21 +63,19 @@ void	parrent_handler(void)
 int	main(int ac, char **av, char **envp)
 {
 	int		errno;
-	t_envp  *env_ex;
+	t_envp  env_ex;
 	
-	env_ex = malloc(sizeof(t_envp*));
-	env_ex->env = init_envp(envp);
+	env_ex.env = init_envp(envp);
 	errno = 0;
 	parrent_handler();
 	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
-		errno = syntax(errno, env_ex, av[2]);
+		errno = syntax(errno, &env_ex, av[2]);
 	else if (!isatty(0))
-		errno = from_stdin(errno, env_ex);
+		errno = from_stdin(errno, &env_ex);
 	else
-		errno = interactive(errno, env_ex);
-	ft_free_tab(env_ex->env);
-	ft_free_tab(env_ex->exp_init);
-	ft_free_tab(env_ex->exp_lst);
-	ft_free(env_ex);
+		errno = interactive(errno, &env_ex);
+	ft_free_tab(env_ex.env);
+	ft_free_tab(env_ex.exp_init);
+	ft_free_tab(env_ex.exp_lst);
 	return (errno);
 }

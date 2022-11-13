@@ -35,6 +35,7 @@ SRCS		:=	$(SRC_DIR)/main.c \
 				$(SRC_DIR)/ft_export.c \
 				$(SRC_DIR)/ft_unset.c \
 				$(SRC_DIR)/utils.c \
+				$(SRC_DIR)/exp_utils.c \
 
 BUILD_DIR   :=	.build
 OBJS        :=	$(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)

@@ -6,11 +6,24 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 14:41:59 by btchiman          #+#    #+#             */
-/*   Updated: 2022/11/10 13:34:49 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/13 17:03:52 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+static char	*get_path(char **args, char **env)
+{
+	char	*path;
+
+	if (args[1] == NULL)
+		path = ft_getenv("HOME", env);
+	else if (ft_strncmp(args[1], "-", 1) == 0)
+		path = ft_getenv("OLDPWD", env);
+	else
+		path = args[1];
+	return (path);
+}
 
 int	ft_cd(char **args, char **env)
 {
@@ -20,20 +33,9 @@ int	ft_cd(char **args, char **env)
 	int		errno;
 
 	errno = 0;
-	if (args[1] == NULL)
-	{
-		path = ft_getenv("HOME", env);
-		if (path == NULL)
-			return (errno); //We return errno but its set to 0 ???
-	}
-	else if (ft_strncmp(args[1], "-", 1) == 0)
-	{
-		path = ft_getenv("OLDPWD", env);
-		if (path == NULL)
-			return (errno);
-	}
-	else
-		path = args[1];
+	path = get_path(args, env);
+	if (!path)
+		return (0);
 	oldpwd = getcwd(NULL, 0);
 	errno = chdir(path);
 	pwd = getcwd(NULL, 0);

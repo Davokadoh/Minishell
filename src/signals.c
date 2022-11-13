@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jleroux <marvin@42lausanne.ch>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/13 17:33:45 by jleroux           #+#    #+#             */
+/*   Updated: 2022/11/13 17:33:51 by jleroux          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 static void	sig_parent(int sig)
@@ -34,7 +46,7 @@ void	child_handler(void)
 
 	tcgetattr(0, &terminos);
 	terminos.c_lflag &= ~ECHOCTL;
-	tcsetattr(0, TCSANOW, &terminos); //If uncommented valgrind says uninit byte(s)
+	tcsetattr(0, TCSANOW, &terminos);
 	signal(SIGQUIT, SIG_DFL);
 	signal(SIGINT, &sig_child);
 }

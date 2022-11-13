@@ -1,14 +1,9 @@
 #include "../include/minishell.h"
 
-//TODO si la valuer de gauche existe deja , remplacez !
 char **incr(char **new_env,char *l_value, char *new_entry)
 {
 		int i;
 
-		i = -1;
-		/*while (new_env[++i])
-			;
-		new_env = ft_push_str() //realloc(new_env, (i + 2) * sizeof(char **));*/
 		i = -1;
 		while( new_env && new_env[++i])
 		{
@@ -18,13 +13,11 @@ char **incr(char **new_env,char *l_value, char *new_entry)
 				return (new_env);
 			}	
 		}
-		/*new_env[i] = ft_strdup(new_entry);
-		new_env[i + 1] = NULL;*/
 		new_env = ft_push_str(&new_env,new_entry);
 		return (new_env);
 }
 
-char	**ft_increnv(char **env, char *l_value, char *new_entry)// env[0]
+char	**ft_increnv(char **env, char *l_value, char *new_entry)
 {
 	static char	**new_env;
 	int		i;

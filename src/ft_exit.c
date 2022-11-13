@@ -6,7 +6,7 @@
 /*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 15:07:50 by btchiman          #+#    #+#             */
-/*   Updated: 2022/11/08 20:42:49 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/13 17:30:25 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	num_req(char **argv)
 	ft_putstr_fd("msh : line 0: exit: ", 2);
 	ft_putstr_fd(argv[1], 2);
 	ft_putstr_fd(": numeric argument required\n", 2);
-	return (255); //Change to 2 if linux, therfore -> Define macro!
+	return (255);
 }
 
 int	ft_exit(char **argv)

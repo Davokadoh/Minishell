@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jleroux <marvin@42lausanne.ch>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/13 16:50:55 by jleroux           #+#    #+#             */
+/*   Updated: 2022/11/13 16:51:38 by jleroux          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 char	*ft_strinsert(char *s1, char *s2, int start, int end)
@@ -63,12 +75,10 @@ int	expand(int errno, char ***ft_env, char *original_line)
 	int		s_quotes;
 	int		d_quotes;
 	char	*line;
-	char	*home;
 
 	i = -1;
 	s_quotes = 0;
 	d_quotes = 0;
-	home = ft_getenv("HOME", *ft_env);
 	line = strdup(original_line);
 	while (line[++i])
 	{
@@ -78,10 +88,6 @@ int	expand(int errno, char ***ft_env, char *original_line)
 			d_quotes = (d_quotes + 1) % 2;
 		if (line[i] == '$' && line[i + 1] != '?' && !s_quotes)
 			replace_env_var(&line, *ft_env, i);
-		else if (line[i - 1] == ' ' && line[i] == '~' && !s_quotes && !d_quotes)
-		{
-			line = ft_strinsert(line, home, i, i + 1);
-		}
 		if (!line[i])
 			break ;
 	}

@@ -19,11 +19,13 @@ SRC_DIR		:=	src
 SRCS		:=	$(SRC_DIR)/main.c \
 				$(SRC_DIR)/signals.c \
 				$(SRC_DIR)/prompt.c \
-				$(SRC_DIR)/syntax_checker.c \
+				$(SRC_DIR)/quotes.c \
 				$(SRC_DIR)/lexer.c \
 				$(SRC_DIR)/expander.c \
 				$(SRC_DIR)/parser.c \
 				$(SRC_DIR)/executor.c \
+				$(SRC_DIR)/child.c \
+				$(SRC_DIR)/io.c \
 				$(SRC_DIR)/builtins.c \
 				$(SRC_DIR)/ft_echo.c \
 				$(SRC_DIR)/ft_env.c \

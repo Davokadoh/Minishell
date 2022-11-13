@@ -2,12 +2,15 @@
 
 char	*rl_gets(void)
 {
-	static char	*tmp = "@msh> ";
+	static char	*tmp = "@msh$ ";
 	static char	*previous_line;
 	char		*line_read;
 	char		*prmpt;
 
-	prmpt = ft_strjoin(getenv("USER"), tmp);
+	if (getenv("USER"))
+		prmpt = ft_strjoin(getenv("USER"), tmp);
+	else
+		prmpt = ft_strdup("$");
 	line_read = readline(prmpt);
 	ft_free(prmpt);
 	if (line_read && *line_read)

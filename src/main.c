@@ -12,10 +12,14 @@ static int	from_stdin(int errno, char ***ft_env)
 
 	parent_handler();
 	line = readline(NULL);
-	printf("\033[A\33[2K\r"); //Should use rl_newline
-	fflush(0); // Illegal function!! Replace printf by ft_put_str_fd
-	errno = syntax(errno, ft_env, line);
-	ft_free(line);
+	while (line)
+	{
+		printf("\033[A\33[2K\r"); //Should use rl_newline
+		fflush(0); // Illegal function!! Replace printf by ft_put_str_fd
+		errno = quotes(errno, ft_env, line);
+		ft_free(line);
+		line = readline(NULL);
+	}
 	return (errno);
 }
 
@@ -33,7 +37,7 @@ static int	interactive(int errno, char ***ft_env)
 			ft_free(line);
 			break ;
 		}
-		errno = syntax(errno, ft_env, line);
+		errno = quotes(errno, ft_env, line);
 		ft_free(line);
 	}
 	rl_clear_history();
@@ -51,7 +55,7 @@ int	main(int ac, char **av, char **envp)
 	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
 	{
 		parent_handler();
-		errno = syntax(errno, &ft_env, av[2]);
+		errno = quotes(errno, &ft_env, av[2]);
 	}
 	else if (!isatty(0))
 		errno = from_stdin(errno, &ft_env);

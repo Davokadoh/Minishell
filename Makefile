@@ -10,19 +10,22 @@ UNAME= $(shell uname -s)
 ifeq ($(UNAME), Darwin)
 #INCS		+=	/usr/local/Cellar/readline/8.2.1/include
 #LDFLAGS		+=	-L/usr/local/Cellar/readline/8.2.1/lib
-INCS		+=	~/.brew/Cellar/readline/8.2.1/include
-LDFLAGS		+=	-L ~/.brew/Cellar/readline/8.2.1/lib
+INCS		+=	$(HOME)/.brew/Cellar/readline/8.2.1/include
+LDFLAGS		+=	-L$(HOME)/.brew/Cellar/readline/8.2.1/lib
 #else ifeq ($(UNAME), Linux)
 endif
 
 SRC_DIR		:=	src
 SRCS		:=	$(SRC_DIR)/main.c \
+				$(SRC_DIR)/signals.c \
 				$(SRC_DIR)/prompt.c \
-				$(SRC_DIR)/syntax_checker.c \
+				$(SRC_DIR)/quotes.c \
 				$(SRC_DIR)/lexer.c \
 				$(SRC_DIR)/expander.c \
 				$(SRC_DIR)/parser.c \
 				$(SRC_DIR)/executor.c \
+				$(SRC_DIR)/child.c \
+				$(SRC_DIR)/io.c \
 				$(SRC_DIR)/builtins.c \
 				$(SRC_DIR)/ft_echo.c \
 				$(SRC_DIR)/ft_env.c \
@@ -32,7 +35,6 @@ SRCS		:=	$(SRC_DIR)/main.c \
 				$(SRC_DIR)/ft_export.c \
 				$(SRC_DIR)/ft_unset.c \
 				$(SRC_DIR)/utils.c \
-				$(SRC_DIR)/exp_utils.c \
 
 BUILD_DIR   :=	.build
 OBJS        :=	$(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)

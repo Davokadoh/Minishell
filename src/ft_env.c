@@ -85,7 +85,7 @@ char	**init_envp(char **envp)
 		i = -1;
 		while (envp[++i])
 			env[i] = ft_strdup(envp[i]);
-		env[i-1] = ft_strdup("_=/usr/bin/env");
+		//env[i-1] = ft_strdup("_=/usr/bin/env");
 		env[i] = NULL;
 	}
 	else
@@ -99,6 +99,6 @@ char	**init_envp(char **envp)
 		env[2] = ft_strdup("_=/usr/bin/env");
 		env[3] = NULL;
 	}
-	ft_setenv("SHLVL", ft_itoa(ft_atoi(ft_getenv("SHLVL", env)) + 1), env);
+	//ft_setenv("SHLVL", ft_itoa(ft_atoi(ft_getenv("SHLVL", env)) + 1), env);
 	return (env);
 }

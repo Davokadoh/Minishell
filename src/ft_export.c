@@ -24,7 +24,6 @@ int	add_exp_var(char *l_value, char *r_value, t_envp *envp)
 	
     new_entry = ft_strjoin(l_value,"=");
 	new_entry = ft_strjoin(new_entry, r_value);
-	//envp->exp_lst = ft_increnv(envp->exp_lst, l_value, new_entry);
 	envp->exp_lst = incr(envp->exp_lst, l_value, new_entry);
 	envp->exp_lst = ft_triAlpha(envp->exp_lst);
     ft_free(new_entry);
@@ -37,7 +36,6 @@ int	add_env_var(char *l_value, char *r_value, t_envp *envp)
 
 	new_entry = ft_strjoin(l_value,"=");
 	new_entry = ft_strjoin(new_entry, r_value);
-    //envp->env = ft_increnv(envp->env, l_value, new_entry);
 	envp->env = incr(envp->env, l_value, new_entry);
     ft_free(new_entry);
     return (0);

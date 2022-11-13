@@ -70,7 +70,7 @@ int		is_meta(const char ch);
 char	**split_metachar(char **tokens); //Unused ?
 void	welcome(void);
 char	*rl_gets(void);
-char **ft_triAlpha(char **s);
+char 	**ft_triAlpha(char **s);
 
 //Builtins
 char	*ft_getenv(char *var, char **env);
@@ -87,7 +87,6 @@ char 	**init_exp(char **env);
 char **incr(char **new_env,char *l_value, char *new_entry);
 
 // utils //Are they just that tho ?
-char **ft_increnv(char **env, char *l_value, char *new_entry); //This could be in category builtins, no ?
 char *malloc_substrcpy(char *variable, int start, int end); //How diff from ft_substr ? Move to libft ?
 char *get_variable_name(char *variable); //What is that ? Move to builtins too ?
 char *get_env_variable_value(char *variable); //Same as the above

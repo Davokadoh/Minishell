@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exp_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/13 14:53:15 by btchiman          #+#    #+#             */
+/*   Updated: 2022/11/13 14:53:29 by btchiman         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 char **incr(char **new_env,char *l_value, char *new_entry)
@@ -17,34 +29,6 @@ char **incr(char **new_env,char *l_value, char *new_entry)
 		return (new_env);
 }
 
-char	**ft_increnv(char **env, char *l_value, char *new_entry)
-{
-	static char	**new_env;
-	int		i;
-	
-	if (!new_env)
-	{
-		i = -1;
-		while (env[++i])
-			;
-		new_env = malloc(sizeof (char **) * (i + 2));
-		if (!new_env)
-			return (NULL);
-		i = -1;
-		while(env[++i])
-			new_env[i] = ft_strdup(env[i]);
-		new_env[i] = ft_strdup(new_entry);
-		new_env[i + 1] = NULL;
-		i = -1;
-		while (env[++i])
-			ft_free(env[i]);
-		return (new_env);
-	}
-	else
-		new_env = incr(new_env,l_value, new_entry);
-	return (new_env);
-}
-
 char **init_exp(char **env)
 {
     char **exp;
@@ -61,7 +45,9 @@ char **init_exp(char **env)
     while (env[j])
     {
 		if(ft_strncmp(env[j],"_=",2) != 0)
-			exp[j] = ft_strdup(env[j]);
+		{
+			exp[j] = ft_strdup(env[j]);//leaks
+		}
         j++;
     }
 	exp[j] = NULL;

@@ -93,7 +93,7 @@ char **ft_triAlpha(char **s)
 	k = 1;
 	while (s[j])
 	{
-		while(s[k]) // entre dans la boucle meme si s[k] = NULL
+		while(s[k])
 		{
 			if (ft_strncmp(s[j],s[k], 5) > 0)
 			{

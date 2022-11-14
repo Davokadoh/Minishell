@@ -6,7 +6,7 @@
 /*   By: jleroux <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/13 16:20:31 by jleroux           #+#    #+#             */
-/*   Updated: 2022/11/13 16:49:05 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/13 18:41:32 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static int	wait_all(int last, t_cmd *cmds, int errno)
 	return (errno);
 }
 
-static int	execute_cmd(int errno, char ***ft_env, t_cmd *cmds, int i)
+static int	execute_cmd(int errno, t_envp *ft_env, t_cmd *cmds, int i)
 {
 	char	*shlvl;
 
@@ -63,15 +63,15 @@ static int	execute_cmd(int errno, char ***ft_env, t_cmd *cmds, int i)
 	{
 		if (cmds[i].piped)
 		{
-			shlvl = ft_itoa(ft_atoi(ft_getenv("SHLVL", *ft_env)) - 1);
-			ft_setenv("SHLVL", shlvl, *ft_env);
+			shlvl = ft_itoa(ft_atoi(ft_getenv("SHLVL", ft_env->env)) - 1);
+			ft_setenv("SHLVL", shlvl, ft_env->env);
 			ft_free(shlvl);
 		}
-		errno = run(cmds, i, *ft_env);
+		errno = run(cmds, i, ft_env->env);
 		if (cmds[i].piped)
 		{
-			shlvl = ft_itoa(ft_atoi(ft_getenv("SHLVL", *ft_env)) + 1);
-			ft_setenv("SHLVL", shlvl, *ft_env);
+			shlvl = ft_itoa(ft_atoi(ft_getenv("SHLVL", ft_env->env)) + 1);
+			ft_setenv("SHLVL", shlvl, ft_env->env);
 			ft_free(shlvl);
 		}
 	}
@@ -92,7 +92,7 @@ static void	prep_argv(int errno, t_cmd *cmd)
 	}
 }
 
-int	execute(int errno, char ***ft_env, t_cmd *cmds)
+int	execute(int errno, t_envp *ft_env, t_cmd *cmds)
 {
 	int		i;
 	int		true_stdin;

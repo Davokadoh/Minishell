@@ -6,7 +6,7 @@
 /*   By: jleroux <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/13 16:35:31 by jleroux           #+#    #+#             */
-/*   Updated: 2022/11/13 16:35:33 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/13 18:33:31 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	unclosed_quote(const char *str)
 	return (0);
 }
 
-int	quotes(int errno, char ***ft_env, char *line)
+int	quotes(int errno, t_envp *ft_env, char *line)
 {
 	if (unclosed_quote(line))
 	{

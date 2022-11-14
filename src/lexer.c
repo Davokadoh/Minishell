@@ -71,7 +71,7 @@ static int	add_next_token(char ***tokens, char *str, size_t start)
 	return (end);
 }
 
-int	lexer(int errno, char ***ft_env, char *str)
+int	lexer(int errno, t_envp *ft_env, char *str)
 {
 	size_t	i;
 	char	**tokens;

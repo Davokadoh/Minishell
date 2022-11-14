@@ -6,20 +6,20 @@
 /*   By: Blaze <Blaze@42lausanne.ch>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 15:42:26 by Blaze             #+#    #+#             */
-/*   Updated: 2022/11/12 15:07:54 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/13 18:42:12 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	ft_env(char **env)
+void	ft_env(t_envp  *envp)
 {
 	int	i;
 
 	i = -1;
-	while (env[++i])
+	while (envp->env[++i])
 	{
-		ft_putstr_fd(env[i], 1);
+		ft_putstr_fd(envp->env[i], 1);
 		ft_putstr_fd("\n", 1);
 	}
 }
@@ -85,7 +85,8 @@ char	**init_envp(char **envp)
 			return (NULL);
 		i = -1;
 		while (envp[++i])
-			env[i] = ft_strdup(envp[i]); //Needs to increment SHLVL!!!!
+			env[i] = ft_strdup(envp[i]);
+		//env[i-1] = ft_strdup("_=/usr/bin/env");
 		env[i] = NULL;
 	}
 	else

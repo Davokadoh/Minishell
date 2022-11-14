@@ -6,7 +6,7 @@
 /*   By: jleroux <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/13 16:50:55 by jleroux           #+#    #+#             */
-/*   Updated: 2022/11/13 16:51:38 by jleroux          ###   ########.fr       */
+/*   Updated: 2022/11/13 18:37:17 by jleroux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static void	replace_env_var(char **line, char **ft_env, int i)
 	ft_free(key);
 }
 
-int	expand(int errno, char ***ft_env, char *original_line)
+int	expand(int errno, t_envp *ft_env, char *original_line)
 {
 	int		i;
 	int		s_quotes;
@@ -87,7 +87,7 @@ int	expand(int errno, char ***ft_env, char *original_line)
 		if (line[i] == '"' && !s_quotes)
 			d_quotes = (d_quotes + 1) % 2;
 		if (line[i] == '$' && line[i + 1] != '?' && !s_quotes)
-			replace_env_var(&line, *ft_env, i);
+			replace_env_var(&line, ft_env->env, i);
 		if (!line[i])
 			break ;
 	}

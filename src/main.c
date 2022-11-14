@@ -1,6 +1,6 @@
 #include "../include/minishell.h"
 
-static int	from_stdin(int errno, char ***ft_env)
+static int	from_stdin(int errno, t_envp *ft_env)
 {
 	char	*line;
 
@@ -17,7 +17,7 @@ static int	from_stdin(int errno, char ***ft_env)
 	return (errno);
 }
 
-static int	interactive(int errno, char ***ft_env)
+static int	interactive(int errno, t_envp *ft_env)
 {
 	char	*line;
 	welcome();
@@ -41,22 +41,21 @@ static int	interactive(int errno, char ***ft_env)
 int	main(int ac, char **av, char **envp)
 {
 	int		errno;
-	t_envp  *env_ex;
+	t_envp  env_ex;
 	
-	env_ex = malloc(sizeof(t_envp));
-	env_ex->env = init_envp(envp);
+	env_ex.env = init_envp(envp);
 	errno = 0;
 	if (ac >= 3 && !ft_strncmp(av[1], "-c", 3))
 	{
 		parent_handler();
-		errno = quotes(errno, &ft_env, av[2]);
+		errno = quotes(errno, &env_ex, av[2]);
 	}
 	else if (!isatty(0))
-		errno = from_stdin(errno, &ft_env);
+		errno = from_stdin(errno, &env_ex);
 	else
-		errno = interactive(errno, &ft_env);
-	ft_free_tab(env_ex);
-	ft_free_tab(env_ex->exp_init);
-	ft_free_tab(env_ex->exp_lst);
+		errno = interactive(errno, &env_ex);
+	//ft_free_tab(env_ex.env);
+	//ft_free_tab(env_ex.exp_init);
+	//ft_free_tab(env_ex.exp_lst);
 	return (errno);
 }
